@@ -1,0 +1,688 @@
+---
+title: "Documento de resultados"
+author: "Daniel Miranda, Juan Carlos Castillo, Catalina Miranda & José Conejeros"
+date: "Abril, 2020"
+output: 
+  html_document:
+    theme: cosmo
+    highlight: tango
+    code_folding: hide
+    toc: yes
+    toc_float: true
+---
+
+
+```{r, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(dev = 'jpg')
+```
+
+```{r message=FALSE, warning=FALSE, cache=FALSE, include=FALSE, results="asis"}
+rm(list = ls()) #limpiar la memoria
+#Desactivar notaci?n cient?fica
+options(scipen=999)
+#Paquetes
+library(knitr)
+library(DT)
+library(plyr)
+library(dplyr)
+library(haven)
+library(texreg) 
+library(xtable) 
+library(kableExtra) 
+library(ggplot2)
+library(psych)
+library(purrr)
+library(tidyr)
+library(sjmisc)
+library(Hmisc)
+library(reshape)
+library(VIM)
+library(stringr)
+library(skimr)
+library(lme4)
+library(broom)
+library(survey)
+library(srvyr)
+library(stargazer)
+library(countrycode)
+library(MplusAutomation)
+```
+
+# Load Data 
+
+```{r eval=TRUE, echo=TRUE, warning=FALSE}
+#Load Data processing 
+load("~/Dropbox/book_authoritarianism/Data/Analysis/mergeiccs.Rdata")
+```
+
+
+# Sample Size
+
+```{r, echo=TRUE, eval=TRUE}
+#ICCS LA: 2009 - 2016
+iccs_count <- mergeiccs %>% 
+  group_by(time, ncountry) %>%
+  dplyr::summarise(N=n(), man=mean(s_gender, na.rm=T), age=mean(s_age, na.rm=T)) %>%
+  arrange(ncountry)
+#ID School
+iccs_count2 <- mergeiccs %>% 
+  group_by(time, ncountry, idschool) %>%
+  dplyr::summarise(n=n()) %>%
+  dplyr::summarise(s=n()) %>%
+  arrange(ncountry)
+iccs_count$s <- iccs_count2$s 
+rm(iccs_count2)
+iccs_count$time <- as.character(iccs_count$time) 
+
+#Table
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(iccs_count, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+# Institutional Trust
+
+
+```{r, echo=TRUE, eval=TRUE}
+#Design
+        mergesvy <-  mergeiccs %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+#Adjust and table
+mergesvy[["variables"]][["nac_gob_d"]] <- as.character(mergesvy[["variables"]][["nac_gob_d"]])
+mergesvy[["variables"]][["police_d"]] <- as.character(mergesvy[["variables"]][["police_d"]])
+mergesvy[["variables"]][["pol_parties_d"]] <- as.character(mergesvy[["variables"]][["pol_parties_d"]])
+mergesvy[["variables"]][["people_d"]] <- as.character(mergesvy[["variables"]][["people_d"]])
+
+#########################
+#National Goberment
+#########################
+table_freq_01 <- mergesvy %>%
+        dplyr::group_by(country, time, nac_gob_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_01,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_01, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#########################
+#Police
+#########################
+table_freq_02 <- mergesvy %>%
+        dplyr::group_by(country, time, police_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_02,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_02, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#########################
+#Political Parties
+#########################
+table_freq_03 <- mergesvy %>%
+        dplyr::group_by(country, time, pol_parties_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_03,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_03, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#########################
+#People in general
+#########################
+table_freq_04 <- mergesvy %>%
+        dplyr::group_by(country, time, people_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_04,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_04, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+
+# Support authoritarianism
+
+```{r, echo=TRUE, eval=TRUE}
+#Adjust and table
+mergesvy[["variables"]][["dicta_ben_d"]] <- as.character(mergesvy[["variables"]][["dicta_ben_d"]])
+mergesvy[["variables"]][["dicta_saf_d"]] <- as.character(mergesvy[["variables"]][["dicta_saf_d"]])
+
+#########################
+#Benefits
+#########################
+table_freq_05 <- mergesvy %>%
+        dplyr::group_by(country, time, dicta_ben_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_05,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_05, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#########################
+#Safety
+#########################
+
+table_freq_06 <- mergesvy %>%
+        dplyr::group_by(country, time, dicta_saf_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_05,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_06, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+# Latin American 2009-2016
+
+## Support Authoritarianism
+
+```{r eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+#Students’ endorsement of authoritarian government practices
+#IRT WLE scores with mean of 10 and standard deviation of 2 within each participating country
+dicta <- ggplot(mergeiccs, aes(civic_knowledge, l_autgov, weight=totwgts, linetype = country))
+dicta <-    dicta + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) + 
+    labs(x = "Civic Knowledge", y = "Support for authoritarian practices", colour = "dark") 
+dicta
+#Dictatorships are justified when they bring order and safety 
+dicta1 <- ggplot(mergeiccs, aes(civic_knowledge, dicta_safety, weight=totwgts, linetype = country))
+dicta1 <-    dicta1 + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) +  
+    labs(x = "Civic Knowledge", y = "Support to dictatorship (order and safety)", colour = "dark") 
+dicta1
+#Dictatorships are justified when they bring economic benefits 
+dicta2 <- ggplot(mergeiccs, aes(civic_knowledge, dicta_benefits, weight=totwgts, linetype = country))
+dicta2 <-    dicta2 + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic Knowledge", y = "Support to dictatorship (economic benefits)", colour = "dark") 
+dicta2
+#All graphs
+library(ggpubr)
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g1.png", height = 350)
+ggarrange(dicta, ncol = 1, nrow = 1,  common.legend = TRUE, legend="right")
+dev.off()
+
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g2.png", height = 480)
+ggarrange(dicta1, dicta2, ncol = 1, nrow = 2,  common.legend = TRUE, legend="right")
+dev.off()
+```
+
+## Institutuional Trust 
+
+```{r eval=TRUE, echo=TRUE, message=FALSE, warning=FALSE}
+#Students' trust in civic institutions
+#IRT WLE scores with mean of 10 and standard deviation of 2 within each participating country
+#National Goberment 
+#Local Goberment 
+#Courts of justice 
+#The police 
+#National Parliament 
+
+#Trust in civic institutions
+trust <- ggplot(mergeiccs, aes(civic_knowledge, s_intrust, weight=totwgts, linetype = country))
+trust <-    trust + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) + 
+    labs(x = "Civic Knowledge", y = "Students' trust in civic institutions", colour = "dark") 
+trust
+
+#Trust in civic institutions
+trust2 <- ggplot(mergeiccs, aes(l_autgov, s_intrust, weight=totwgts, linetype = country))
+trust2 <-    trust2 + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) + 
+    labs(x = "Authoritarian support", y = "Students' trust in civic institutions", colour = "dark") 
+trust2
+
+#Trust in National Goberment 
+nac <- ggplot(mergeiccs, aes(civic_knowledge, nac_gob, weight=totwgts, linetype = country))
+nac <-    nac + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) +  
+    labs(x = "Civic Knowledge", y = "Trust in National Goberment ", colour = "dark") 
+nac
+
+#Trust in Local Goberment
+local <- ggplot(mergeiccs, aes(civic_knowledge, local_gob, weight=totwgts, linetype = country))
+local <-    local + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic Knowledge", y = "Trust in Local Goberment", colour = "dark") 
+local
+
+#Trust National Parliament 
+parliament <- ggplot(mergeiccs, aes(civic_knowledge, parliament, weight=totwgts, linetype = country))
+parliament <-    parliament + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic Knowledge", y = "Trust in National Parliament", colour = "dark") 
+parliament
+
+#Political Parties 
+parties <- ggplot(mergeiccs, aes(civic_knowledge, pol_parties, weight=totwgts, linetype = country))
+parties <-    parties + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic Knowledge", y = "Trust in Political Parties", colour = "dark") 
+parties
+
+#Trust Courts of justice 
+courts <- ggplot(mergeiccs, aes(civic_knowledge, courts, weight=totwgts, linetype = country))
+courts <-    courts + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic Knowledge", y = "Trust in Courts of justice", colour = "dark") 
+courts
+
+#Trust The police 
+police <- ggplot(mergeiccs, aes(civic_knowledge, police, weight=totwgts, linetype = country))
+police <-    police + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic Knowledge", y = "Trust in the Police", colour = "dark") 
+police
+
+#Trust people in general 
+people <- ggplot(mergeiccs, aes(civic_knowledge, people, weight=totwgts, linetype = country))
+people <-    people + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic Knowledge", y = "Trust in People", colour = "dark") 
+people
+
+#All graphs
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g3.png", height = 350)
+ggarrange(trust, ncol = 1, nrow = 1,  common.legend = TRUE, legend="right")
+dev.off()
+
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g3b.png", height = 350)
+ggarrange(trust2, ncol = 1, nrow = 1,  common.legend = TRUE, legend="right")
+dev.off()
+
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g4.png", height = 480)
+ggarrange(nac, local, ncol = 1, nrow = 2,  common.legend = TRUE, legend="right")
+dev.off()
+
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g5.png", height = 480)
+ggarrange(parliament, parties, ncol = 1, nrow = 2,  common.legend = TRUE, legend="right")
+dev.off()
+
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g6.png", height = 480)
+ggarrange(courts, police, ncol = 1, nrow = 2,  common.legend = TRUE, legend="right")
+dev.off()
+
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g7.png", height = 350)
+ggarrange(people, ncol = 1, nrow = 1,  common.legend = TRUE, legend="right")
+dev.off()
+```
+
+## Models and Interaction 
+
+```{r, echo=TRUE, eval=TRUE, results="asis"}
+#Modelos de regresión
+#VD: Trust
+#VD: Support authoritarianism
+#VI: Trust 
+#VC: Nivel educacional de los padres, Libros en la casa, género del estudiante, nivel de discusión política, cohortes
+
+##########################################################3
+#OLS
+##########################################################3
+#VD: Support authoritarianism
+m1 <- lm(l_autgov ~ civic_knowledge , data=mergeiccs, w=totwgts)
+m2 <- lm(l_autgov ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc, data=mergeiccs, w=totwgts)
+m3 <- lm(l_autgov ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + factor(time) + factor(idcountry), data=mergeiccs, w=totwgts)
+
+summary(m3)
+
+coef(m2)[1]+(coef(m2)[2]*562)
+coef(m2)[1]+(coef(m2)[2]*311)
+
+#VD: Trust
+m4 <- lm(s_intrust ~ civic_knowledge, data=mergeiccs, w=totwgts)
+
+m5 <- lm(s_intrust ~ civic_knowledge + l_autgov , data=mergeiccs, w=totwgts)
+
+m6 <- lm(s_intrust ~ civic_knowledge*l_autgov, data=mergeiccs, w=totwgts)
+
+m7 <- lm(s_intrust ~ civic_knowledge*l_autgov + s_hisced + s_homelit + s_gender + s_poldisc, data=mergeiccs, w=totwgts)
+
+m8 <- lm(s_intrust ~ civic_knowledge*l_autgov + s_hisced + s_homelit + s_gender + s_poldisc + factor(time) + factor(idcountry), data=mergeiccs, w=totwgts)
+
+summary(m5)
+coef(m5)[1]+(coef(m5)[2]*311)
+coef(m5)[1]+(coef(m5)[2]*562)
+
+#Table
+#library(texreg)
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+#texreg(list(m1, m2, m3), digits = 2)
+#texreg(list(m4, m5, m6, m7, m8), digits = 2)
+htmlreg(list(m1, m2, m3),  caption = "VD: Support authoritarianism")
+htmlreg(list(m4, m5, m6, m7, m8),  caption = "VD: Institutional Trusts")
+
+#Plot
+library(sjPlot)
+
+plot2 <- plot_model(m8, type = "pred", terms = c("civic_knowledge[300, 400, 500, 600, 700]", "l_autgov[30, 40, 50, 60 ,70]"), colors = 'bw', axis.title = c("Civic Knowledge", "Students' trust in civic institutions"), title = c(""), legend.title = "Support authoritarianism")
+
+plot2
+
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g8.png", height = 350)
+ggarrange(plot2, ncol = 1, nrow = 1,  common.legend = TRUE, legend="right")
+dev.off()
+
+
+#Plot
+
+plot3 <- plot_model(m8, type = "pred", terms = c("l_autgov[30, 40, 50, 60 ,70]", "civic_knowledge[300, 400, 500, 600, 700]"), colors = 'bw', axis.title = c("Support for authoritarian practices", "Students' trust in civic institutions"), title = c(""), legend.title = "Civic knowledge")
+
+plot3
+
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g8b.png", height = 350)
+ggarrange(plot3, ncol = 1, nrow = 1,  common.legend = TRUE, legend="right")
+dev.off()
+
+```
+
+---
+
+# OLS by chile
+
+```{r, echo=TRUE, eval=TRUE, results="asis"}
+##########################################################3
+#OLS
+##########################################################3
+#Borramos los modelos generados en el apartado anterior
+rm(list=(ls()[!ls() %in% ("mergeiccs")]))
+
+chi <- mergeiccs  %>% filter(idcountry == 152) 
+
+#VD: Support authoritarianism
+library(miceadds)
+m1 <- lm(l_autgov ~ s_intrust + civic_knowledge, data=chi, w=totwgts)
+m2 <- lm(l_autgov ~ s_intrust + civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=chi, w=totwgts)
+m3 <- lm(l_autgov ~ s_intrust*civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=chi, w=totwgts)
+
+#VD: Trust
+m4 <- lm(s_intrust ~ civic_knowledge, data=chi, w=totwgts)
+m5 <- lm(s_intrust ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=chi, w=totwgts)
+
+#Table
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+#texreg(list(m1, m2, m3, m4, m5), digits = 2)
+#htmlreg(list(m1, m2, m3, m4, m5), digits = 4)
+htmlreg(list(m1, m2, m3),  caption = "VD: Support authoritarianism")
+htmlreg(list(m4, m5),  caption = "VD: Institutional Trusts")
+
+plot2 <- plot_model(m3, type = "pred", terms = c("s_intrust[20,80]", "civic_knowledge[200, 300, 400, 500, 600, 700, 800]"), colors = 'bw', axis.title = c("Students' trust in civic institutions", "Support for authoritarian practices"), title = c(""), legend.title = "Civic Knowledge")
+
+plot2
+
+
+```
+
+
+# OLS by Colombia
+
+```{r, echo=TRUE, eval=TRUE, results="asis"}
+##########################################################3
+#OLS
+##########################################################3
+#Borramos los modelos generados en el apartado anterior
+rm(list=(ls()[!ls() %in% ("mergeiccs")]))
+
+col <- mergeiccs  %>% filter(idcountry == 170) 
+
+#VD: Support authoritarianism
+m1 <- lm(l_autgov ~ s_intrust + civic_knowledge, data=col, w=totwgts)
+m2 <- lm(l_autgov ~ s_intrust + civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=col, w=totwgts)
+m3 <- lm(l_autgov ~ s_intrust*civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=col, w=totwgts)
+
+#VD: Trust
+m4 <- lm(s_intrust ~ civic_knowledge, data=col, w=totwgts)
+m5 <- lm(s_intrust ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=col, w=totwgts)
+
+#Table
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+#texreg(list(m1, m2, m3, m4, m5), digits = 2)
+#htmlreg(list(m1, m2, m3, m4, m5), digits = 4)
+htmlreg(list(m1, m2, m3),  caption = "VD: Support authoritarianism")
+htmlreg(list(m4, m5),  caption = "VD: Institutional Trusts")
+
+plot2 <- plot_model(m3, type = "pred", terms = c("s_intrust[20,80]", "civic_knowledge[200, 300, 400, 500, 600, 700, 800]", "time"), colors = 'bw', axis.title = c("Students' trust in civic institutions", "Support for authoritarian practices"), title = c(""), legend.title = "Civic Knowledge")
+
+plot2
+
+```
+
+
+# OLS by Dominican Republic
+
+```{r, echo=TRUE, eval=TRUE, results="asis"}
+##########################################################3
+#OLS
+##########################################################3
+#Borramos los modelos generados en el apartado anterior
+rm(list=(ls()[!ls() %in% ("mergeiccs")]))
+
+dom <- mergeiccs  %>% filter(idcountry == 214) 
+
+#VD: Support authoritarianism
+m1 <- lm(l_autgov ~ s_intrust + civic_knowledge, data=dom, w=totwgts)
+m2 <- lm(l_autgov ~ s_intrust + civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=dom, w=totwgts)
+m3 <- lm(l_autgov ~ s_intrust*civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=dom, w=totwgts)
+
+#VD: Trust
+m4 <- lm(s_intrust ~ civic_knowledge, data=dom, w=totwgts)
+m5 <- lm(s_intrust ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=dom, w=totwgts)
+
+#Table
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+#texreg(list(m1, m2, m3, m4, m5), digits = 2)
+#htmlreg(list(m1, m2, m3, m4, m5), digits = 4)
+htmlreg(list(m1, m2, m3),  caption = "VD: Support authoritarianism")
+htmlreg(list(m4, m5),  caption = "VD: Institutional Trusts")
+
+plot2 <- plot_model(m3, type = "pred", terms = c("s_intrust[20,80]", "civic_knowledge[200, 300, 400, 500, 600, 700, 800]", "time"), colors = 'bw', axis.title = c("Students' trust in civic institutions", "Support for authoritarian practices"), title = c(""), legend.title = "Civic Knowledge")
+
+plot2
+
+```
+
+# OLS by Mexico
+
+```{r, echo=TRUE, eval=TRUE, results="asis"}
+##########################################################3
+#OLS
+##########################################################3
+#Borramos los modelos generados en el apartado anterior
+rm(list=(ls()[!ls() %in% ("mergeiccs")]))
+
+mex <- mergeiccs  %>% filter(idcountry == 484) 
+
+#VD: Support authoritarianism
+m1 <- lm(l_autgov ~ s_intrust + civic_knowledge, data=mex, w=totwgts)
+m2 <- lm(l_autgov ~ s_intrust + civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=mex, w=totwgts)
+m3 <- lm(l_autgov ~ s_intrust*civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=mex, w=totwgts)
+
+#VD: Trust
+m4 <- lm(s_intrust ~ civic_knowledge, data=mex, w=totwgts)
+m5 <- lm(s_intrust ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=mex, w=totwgts)
+
+#Table
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+#texreg(list(m1, m2, m3, m4, m5), digits = 2)
+#htmlreg(list(m1, m2, m3, m4, m5), digits = 4)
+htmlreg(list(m1, m2, m3),  caption = "VD: Support authoritarianism")
+htmlreg(list(m4, m5),  caption = "VD: Institutional Trusts")
+
+plot2 <- plot_model(m3, type = "pred", terms = c("s_intrust[20,80]", "civic_knowledge[200, 300, 400, 500, 600, 700, 800]", "time"), colors = 'bw', axis.title = c("Students' trust in civic institutions", "Support for authoritarian practices"), title = c(""), legend.title = "Civic Knowledge")
+
+plot2
+
+```
+
+# OLS by Guatemala 2009
+
+```{r, echo=TRUE, eval=TRUE, results="asis"}
+##########################################################3
+#OLS
+##########################################################3
+#Borramos los modelos generados en el apartado anterior
+rm(list=(ls()[!ls() %in% ("mergeiccs")]))
+
+gtm <- mergeiccs  %>% filter(idcountry == 320) 
+
+#VD: Support authoritarianism
+m1 <- lm(l_autgov ~ s_intrust + civic_knowledge, data=gtm, w=totwgts)
+m2 <- lm(l_autgov ~ s_intrust + civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=gtm, w=totwgts)
+m3 <- lm(l_autgov ~ s_intrust*civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=gtm, w=totwgts)
+
+#VD: Trust
+m4 <- lm(s_intrust ~ civic_knowledge, data=gtm, w=totwgts)
+m5 <- lm(s_intrust ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=gtm, w=totwgts)
+
+#Table
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+#texreg(list(m1, m2, m3, m4, m5), digits = 2)
+#htmlreg(list(m1, m2, m3, m4, m5), digits = 4)
+htmlreg(list(m1, m2, m3),  caption = "VD: Support authoritarianism")
+htmlreg(list(m4, m5),  caption = "VD: Institutional Trusts")
+
+plot2 <- plot_model(m3, type = "pred", terms = c("s_intrust[20,80]", "civic_knowledge[200, 300, 400, 500, 600, 700, 800]", "time"), colors = 'bw', axis.title = c("Students' trust in civic institutions", "Support for authoritarian practices"), title = c(""), legend.title = "Civic Knowledge")
+
+plot2
+
+```
+
+
+# OLS by Paraguay 2009
+
+```{r, echo=TRUE, eval=TRUE, results="asis"}
+##########################################################3
+#OLS
+##########################################################3
+#Borramos los modelos generados en el apartado anterior
+rm(list=(ls()[!ls() %in% ("mergeiccs")]))
+
+pry <- mergeiccs  %>% filter(idcountry == 604) 
+
+#VD: Support authoritarianism
+m1 <- lm(l_autgov ~ s_intrust + civic_knowledge, data=pry, w=totwgts)
+m2 <- lm(l_autgov ~ s_intrust + civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=pry, w=totwgts)
+m3 <- lm(l_autgov ~ s_intrust*civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=pry, w=totwgts)
+
+#VD: Trust
+m4 <- lm(s_intrust ~ civic_knowledge, data=pry, w=totwgts)
+m5 <- lm(s_intrust ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=pry, w=totwgts)
+
+#Table
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+#texreg(list(m1, m2, m3, m4, m5), digits = 2)
+#htmlreg(list(m1, m2, m3, m4, m5), digits = 4)
+htmlreg(list(m1, m2, m3),  caption = "VD: Support authoritarianism")
+htmlreg(list(m4, m5),  caption = "VD: Institutional Trusts")
+
+plot2 <- plot_model(m3, type = "pred", terms = c("s_intrust[20,80]", "civic_knowledge[200, 300, 400, 500, 600, 700, 800]", "time"), colors = 'bw', axis.title = c("Students' trust in civic institutions", "Support for authoritarian practices"), title = c(""), legend.title = "Civic Knowledge")
+
+plot2
+```
+
+
+# OLS by Peru 2016
+
+```{r, echo=TRUE, eval=TRUE, results="asis"}
+##########################################################3
+#OLS
+##########################################################3
+#Borramos los modelos generados en el apartado anterior
+rm(list=(ls()[!ls() %in% ("mergeiccs")]))
+
+per <- mergeiccs  %>% filter(idcountry == 600) 
+
+#VD: Support authoritarianism
+m1 <- lm(l_autgov ~ s_intrust + civic_knowledge, data=per, w=totwgts)
+m2 <- lm(l_autgov ~ s_intrust + civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=per, w=totwgts)
+m3 <- lm(l_autgov ~ s_intrust*civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=per, w=totwgts)
+
+#VD: Trust
+m4 <- lm(s_intrust ~ civic_knowledge, data=per, w=totwgts)
+m5 <- lm(s_intrust ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + time, data=per, w=totwgts)
+
+#Table
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+#texreg(list(m1, m2, m3, m4, m5), digits = 2)
+#htmlreg(list(m1, m2, m3, m4, m5), digits = 4)
+htmlreg(list(m1, m2, m3),  caption = "VD: Support authoritarianism")
+htmlreg(list(m4, m5),  caption = "VD: Institutional Trusts")
+
+plot2 <- plot_model(m3, type = "pred", terms = c("s_intrust[20,80]", "civic_knowledge[200, 300, 400, 500, 600, 700, 800]", "time"), colors = 'bw', axis.title = c("Students' trust in civic institutions", "Support for authoritarian practices"), title = c(""), legend.title = "Civic Knowledge")
+
+plot2
+```
+
+
+# Multilevel Models Aproximation:  cluster by schools
+
+```{r, echo=TRUE, eval=TRUE, results="asis"}
+#Modelos de regresión
+#VD: Trust
+#VD: Support authoritarianism
+#VI: Trust 
+#VC: Nivel educacional de los padres, Libros en la casa, género del estudiante, nivel de discusión política, cohortes
+
+##########################################################3
+#OLS
+##########################################################3
+#VD: Support authoritarianism
+m1b <- lmer(l_autgov ~ civic_knowledge + (1|idschool), data=mergeiccs, w=totwgts)
+
+m2b <- lmer(l_autgov ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + (1|idschool), data=mergeiccs, w=totwgts)
+
+m3b <- lmer(l_autgov ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + factor(time) + factor(idcountry) + ( 1|idschool), data=mergeiccs, w=totwgts)
+
+#m4b <- lmer(l_autgov ~ civic_knowledge + s_hisced + s_homelit + s_gender + s_poldisc + ( 1|time) + ( 1|country) + (1|idschool), data=mergeiccs, w=totwgts)
+
+
+#VD: Trust
+m4b <- lmer(s_intrust ~ civic_knowledge + (1|idschool), data=mergeiccs, w=totwgts)
+ 
+m5b <- lmer(s_intrust ~ civic_knowledge + l_autgov + (1|idschool), data=mergeiccs, w=totwgts)
+
+m6b <- lmer(s_intrust ~ civic_knowledge*l_autgov + (1|idschool), data=mergeiccs, w=totwgts)
+
+m7b <- lmer(s_intrust ~ civic_knowledge*l_autgov + s_hisced + s_homelit + s_gender + s_poldisc + (1|idschool), data=mergeiccs, w=totwgts)
+
+m8b <- lmer(s_intrust ~ civic_knowledge*l_autgov + s_hisced + s_homelit + s_gender + s_poldisc + factor(time) + factor(idcountry) + (1|idschool), data=mergeiccs, w=totwgts)
+
+#m9b <- lmer(s_intrust ~ civic_knowledge*l_autgov + s_hisced + s_homelit + s_gender + s_poldisc + + (1|time) + (1|idcountry) + (1|idschool), data=mergeiccs, w=totwgts)
+
+#Table
+#library(texreg)
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+#texreg(list(m1b, m2b, m3b), digits = 2)
+#texreg(list(m4b, m5b, m6b, m7b, m8b, m9b), digits = 2)
+htmlreg(list(m1b, m2b, m3b),  caption = "VD: Support authoritarianism")
+htmlreg(list(m4b, m5b, m6b, m7b, m8b),  caption = "VD: Institutional Trusts")
+
+#Plot
+library(sjPlot)
+
+plot2 <- plot_model(m8b, type = "pred", terms = c("civic_knowledge[300, 400, 500, 600, 700]", "l_autgov[30, 40, 50, 60 ,70]"), colors = 'bw', axis.title = c("Civic Knowledge", "Students' trust in civic institutions"), title = c(""), legend.title = "Support authoritarianism")
+
+plot2
+
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g9.png", height = 350)
+ggarrange(plot2, ncol = 1, nrow = 1,  common.legend = TRUE, legend="right")
+dev.off()
+
+
+#Plot
+
+plot3 <- plot_model(m8b, type = "pred", terms = c("l_autgov[30, 40, 50, 60 ,70]", "civic_knowledge[300, 400, 500, 600, 700]"), colors = 'bw', axis.title = c("Support for authoritarian practices", "Students' trust in civic institutions"), title = c(""), legend.title = "Civic knowledge")
+
+plot3
+
+png(file = "~/Dropbox/book_authoritarianism/Results/graph/g9b.png", height = 350)
+ggarrange(plot3, ncol = 1, nrow = 1,  common.legend = TRUE, legend="right")
+dev.off()
+
+```

@@ -1,0 +1,671 @@
+---
+title: "Trust in political institutions and support for authoritarianism in Latin American students: Does civic knowledge make a difference?"
+author: "Juan Carlos Castillo, Daniel Miranda, Catalina Miranda & José Conejeros"
+date: '`r format(Sys.time(), "%d/%m/%Y")`'
+output: 
+  html_document:
+    theme: cosmo
+    highlight: tango
+    code_folding: hide
+    toc: yes
+    toc_float: true
+---
+
+Below are descriptive and correlational statistics with data from to the International Civic and Citizenship Education Study (ICCS) 2009 and 2016, in which six (Chile, Mexico, Colombia, Paraguay, Guatemala, and the Dominican Republic) and five (Chile, Mexico, Colombia, Peru, and the Dominican Republic) Latin American countries participated, respectively. The following sections are presented: change in support for dictatorship, support for Dictatorship on civic knowledge and support for Dictatorship on institutional trust
+
+```{r global options, warning=FALSE, cache=FALSE, include=FALSE, results="asis"}
+rm(list = ls()) #limpiar la memoria
+#Desactivar notación científica
+options(scipen=999)
+#Paquetes
+library(knitr)
+library(DT)
+library(plyr)
+library(dplyr)
+library(haven)
+library(texreg) 
+library(xtable) 
+library(kableExtra) 
+library(ggplot2)
+library(psych)
+library(purrr)
+library(tidyr)
+library(sjmisc)
+library(Hmisc)
+library(reshape)
+library(VIM)
+library(stringr)
+library(skimr)
+library(lme4)
+library(broom)
+library(survey)
+library(srvyr)
+#Global
+opts_chunk$set(echo = FALSE,
+	             cache = FALSE,
+               prompt = FALSE,       
+               tidy = FALSE,
+               comment = NA,
+               message = FALSE,
+               warning = FALSE)
+opts_knit$set(width = 1000)
+options(max.print = 1000)
+```
+
+# Data Frames
+
++ ICCS 2009: Chile, Mexico, Colombia, Paraguay, Guatemala, and the Dominican Republic
+
+```{r iccs09, warning=FALSE, cache=FALSE, results="asis"}
+#ICCS 2009: Latinamerica module, student questionnaire
+#Chile
+chile09 <-  as.data.frame(read_sas("ICCS2009_IDB_SAS/Data_G8/islchlc2.sas7bdat"))
+#México
+mexico09 <-  as.data.frame(read_sas("ICCS2009_IDB_SAS/Data_G8/islmexc2.sas7bdat"))
+#Colombia
+colombia09 <- as.data.frame(read_sas("ICCS2009_IDB_SAS/Data_G8/islcolc2.sas7bdat"))
+#Paraguay
+paraguay09 <- as.data.frame(read_sas("ICCS2009_IDB_SAS/Data_G8/islpryc2.sas7bdat"))
+#Guatemala
+guatemala09 <- as.data.frame(read_sas("ICCS2009_IDB_SAS/Data_G8/islgtmc2.sas7bdat"))
+#República Dominicana
+dom09 <- as.data.frame(read_sas("ICCS2009_IDB_SAS/Data_G8/isldomc2.sas7bdat"))
+#Append: all obervations preserve
+iccs09 <- rbind(chile09, mexico09, colombia09, paraguay09, guatemala09, dom09)
+#class(iccs09)
+#dim(iccs09)
+#head(iccs09)
+#str(iccs09)
+#names(iccs09)
+#dplyr::glimpse(iccs09) # ver estructura general
+#ICCS 2009
+save(iccs09, file = "BBDD_ICCS/ICCS09.Rdata")
+```
+
++ ICCS 2016: Chile, Mexico, Colombia, Peru, and the Dominican Republic
+
+```{r iccs16, warning=FALSE, cache=FALSE, results="asis"}
+#ICCS 2016: Latinamerica module, student questionnaire
+#Chile
+chile16 <-  as.data.frame(read_sas("ICCS2016_IDB_SAS/Data/islchlc3.sas7bdat"))
+#México
+mexico16 <-  as.data.frame(read_sas("ICCS2016_IDB_SAS/Data/islmexc3.sas7bdat"))
+#Colombia
+colombia16 <- as.data.frame(read_sas("ICCS2016_IDB_SAS/Data/islcolc3.sas7bdat"))
+#República Dominicana
+dom16 <- as.data.frame(read_sas("ICCS2016_IDB_SAS/Data/isldomc3.sas7bdat"))
+#Perú
+peru16 <- as.data.frame(read_sas("ICCS2016_IDB_SAS/Data/islperc3.sas7bdat"))
+#Append: all obervations preserve
+iccs16 <- rbind(chile16, mexico16, colombia16, dom16, peru16)
+#class(iccs16)
+#dim(iccs16)
+#head(iccs16)
+#str(iccs116)
+#names(iccs16)
+#dplyr::glimpse(iccs16) # ver estructura general
+#ICCS 2016
+save(iccs16, file = "BBDD_ICCS/ICCS16.Rdata")
+#Load Data
+load("BBDD_ICCS/ICCS09.Rdata") #29896 obs - 128 vars
+load("BBDD_ICCS/ICCS16.Rdata") #25319 obs - 168 vars
+#skim(iccs09)
+#skim(iccs16)
+```
+
+## Process Data
+
++ Process General Databases ICCS 2009 and ICCS 2016
+
+```{r process, echo=TRUE, eval=TRUE}
+#Chile 2016
+chi16= chile16 %>%
+    rename_all(tolower) %>%
+    dplyr::mutate(time="2015") %>%
+    dplyr::mutate (gob1= 5 - ls3g01a)%>% #invertidos
+    dplyr::mutate (gob2= 5 - ls3g01b)%>%
+    dplyr::mutate (gob3= 5 - ls3g01c)%>%
+    dplyr::mutate (gob4= 5 - ls3g01d)%>%
+    dplyr::mutate (gob5= 5 - ls3g01e)%>%
+    dplyr::mutate (gob6= 5 - ls3g01f)%>%
+    dplyr::mutate (dicta1= 5 - ls3g02d)%>%
+    dplyr::mutate (dicta2= 5 - ls3g02e)%>%
+    dplyr::select(country,totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+
+#Chile 2009
+chi09= chile09 %>%
+      rename_all(tolower) %>%
+      dplyr::mutate(time="2008") %>%
+      dplyr::mutate (gob1= 5 - ls2p02a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls2p02b)%>%
+      dplyr::mutate (gob3= 5 - ls2p02c)%>%
+      dplyr::mutate (gob4= 5 - ls2p02d)%>%
+      dplyr::mutate (gob5= 5 - ls2p02e)%>%
+      dplyr::mutate (gob6= 5 - ls2p02f)%>%
+      dplyr::mutate (dicta1= 5 - ls2p03d)%>%
+      dplyr::mutate (dicta2= 5 - ls2p03e)%>%
+      dplyr::select(country, totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+    
+mergeiccs=full_join(chi16, chi09)
+```
+
++ Replication international analisys
+
+```{r process, echo=TRUE, eval=TRUE}
+    mergesvy <-  mergeiccs %>%
+    filter(country=="CHL") %>%
+    as_survey_design(
+    strata = jkzones, 
+    weights = totwgts, 
+    ids = jkreps, 
+    nest = TRUE)
+
+    # frequency table via taylor series linearization
+    table_freq_01 <- mergesvy %>%
+    dplyr::group_by(time, dicta1) %>%
+    summarize(proportion = survey_mean( , na.rm=TRUE))
+    #help(srvyr)
+      
+```
+
+
+## Sample 
+
++ All observations
+
+
+```{r sample, echo=TRUE, eval=TRUE}
+#Data frames with all variables
+#2009
+dict09 = iccs09 %>%
+  mutate(time          = 2009) %>%
+  mutate(country       = COUNTRY) %>%
+  mutate(idcountry     = IDCNTRY) %>%
+  mutate(idschool       = IDSCHOOL) %>%
+  mutate(idstudent     = IDSTUD) %>%
+  mutate(idstudent = (time*1000000000000 + idcountry*100000000 + idstudent)) %>% #NEW IDSTUDENT
+  mutate(dict_safety   = 5-LS2P03D) %>% #DICTATORSHIPS ARE JUSTIFIED WHEN THEY BRING ORDER AND SAFETY
+  mutate(dict_benefits = 5-LS2P03E) %>% #DICTATORSHIPS ARE JUSTIFIED WHEN THEY BRING ECONOMIC BENEFITS
+  mutate(dict          = (dict_safety + dict_benefits)/2) %>% #MEAN DIC
+  mutate(pv1civ        = PV1CIV) %>%
+  mutate(pv2civ        = PV2CIV) %>%
+  mutate(pv3civ        = PV3CIV) %>%
+  mutate(pv4civ        = PV4CIV) %>%
+  mutate(pv5civ        = PV5CIV) %>%
+  mutate(civic_knowledge = (pv1civ + pv2civ + pv3civ + pv4civ + pv5civ)/5) %>% #MEAN CIVIC KNOWLEDGE 
+  mutate(s_intrust       = INTRUST) %>% #TRUST IN CIVIC INSTITUTIONS 
+  mutate(s_opdisc        = OPDISC) %>%  #OPENNESS IN CLASS DISCUSSION
+  mutate(s_hisced        = HISCED) %>%  #HIGHEST PARENTAL EDUCATIONAL LEVEL 
+  mutate(univ            = ifelse(s_hisced>3, 1, 0)) %>% #UNIVERSITARY PARENTS
+  mutate(s_hisei         = HISEI) %>%   #PARENT'S HIGHEST OCCUPATIONAL STATUS
+  mutate(s_homelit       = HOMELIT) %>% #HOME LITERACY
+  mutate(s_gender        = SGENDER) %>% #GENDER OF STUDENT
+  mutate(s_citcon        = CITCON) %>%  #CONVENTIONAL CITIZENSHIP
+  mutate(s_citsoc        = CITSOC) %>%  #SOCIAL MOVEMENT REL. CITIZENSHIP
+  mutate(s_citeff        = CITEFF) %>%  #CITIZENSHIP SELF-EFFICACY 
+  mutate(s_cntatt        = ATTCNT) %>%  #ATTITUDES TOWARDS OWN COUNTRY 
+  mutate(s_geneql        = GENEQL) %>%  #ATTITUDES TOWARDS GENDER EQUALITY
+  mutate(s_ethrght       = ETHRGHT) %>% #EQUAL RIGHTS FOR ALL ETHNIC GROUPS 
+  mutate(l_attviol       = ATTVIOL) %>% #ATTITUDES: USE OF VIOLENCE 
+  mutate(l_attdiv        = ATTDIFF) %>% #ATTITUDES: NEIGHBOURHOOD DIVERSITY
+  mutate(l_autgov        = AUTGOV) %>%  #AUTHORITARIANISM IN GOVERNMENT 
+  mutate(l_attcorr       = ATTCORR) %>% #CORRUPT PRACTICES IN GOVERNMENT
+  mutate(l_dislaw        = DISLAW) %>%  #ATTITUDES: DISOBEYING THE LAW
+  mutate(l_empclas       = EMPATH) %>%  #EMPATHY TOWARDS CLASSMATES
+  mutate(s_poldisc       = POLDISC) %>% #DISCUSSION OF POL. AND SOC. ISSUES
+  #TRUST
+  mutate(nac_gob         = IS2P27A) %>% #TRUST INSTITUTIONS-NATIONAL GOVERNMENT  
+  mutate(local_gob     = IS2P27B) %>% #TRUST INSTITUTIONS-LOCAL GOVERNMENT 
+  mutate(courts        = IS2P27C) %>% #TRUST INSTITUTIONS-COURTS
+  mutate(police        = IS2P27D) %>% #TRUST INSTITUTIONS-POLICE 
+  mutate(pol_parties   = IS2P27E) %>% #TRUST INSTITUTIONS-POLITICAL PARTIES
+  mutate(parliament    = IS2P27F) %>% #TRUST INSTITUTIONS-PARLIAMENT
+  mutate(media         = IS2P27G) %>% #TRUST INSTITUTIONS-MEDIA
+  mutate(ffaa          = IS2P27H) %>% #TRUST INSTITUTIONS-FFAA 
+  mutate(school        = IS2P27I) %>% #TRUST INSTITUTIONS-SCHOOL
+  mutate(unit_nations  = IS2P27J) %>% #TRUST INSTITUTIONS-UNITED NATIONS 
+  mutate(people        = IS2P27K) %>% #TRUST INSTITUTIONS-PEOPLE
+  #WEITHINGS
+  mutate(totwgts       = TOTWGTS) %>%   #FINAL STUDENT WEIGHT
+  mutate(wgtfac1       = WGTFAC1) %>%   #SCHOOL BASE WEIGHT
+  mutate(wgtadj1s      = WGTADJ1S) %>%  #SCHOOL WEIGHT ADJUSTMENT-STUDENT STUDY
+  mutate(wgtfac2s      = WGTFAC2S) %>%  #CLASS WEIGHT FACTOR
+  mutate(wgtadj2s      = WGTADJ2S) %>%  #CLASS WEIGHT ADJUSTMENT
+  mutate(wgtadj3s      = WGTADJ3S) %>%  #STUDENT WEIGHT ADJUSTMENT
+  mutate(jkzones       = JKZONES) %>%   #JACKKNIFE ZONE - STUDENT STUDY
+  mutate(jkreps        = JKREPS)  %>%  #JACKKNIFE REPLICATE CODE
+  select(411:463)
+  
+#2016  
+dict16 = iccs16 %>%
+  mutate(time            = 2016) %>%
+  mutate(country         = COUNTRY) %>%
+  mutate(idcountry       = IDCNTRY) %>%
+  mutate(idschool        = IDSCHOOL) %>%
+  mutate(idstudent       = IDSTUD) %>%
+  mutate(idstudent       = (time*100000000000 + idcountry*100000000 + idstudent)) %>% #NEW IDSTUDENT
+  mutate(dict_safety     = 5-LS3G02D) %>% #DICTATORSHIPS ARE JUSTIFIED WHEN THEY BRING ORDER AND SAFETY
+  mutate(dict_benefits   = 5-LS3G02E) %>% #DICTATORSHIPS ARE JUSTIFIED WHEN THEY BRING ECONOMIC BENEFITS
+  mutate(dict            = (dict_safety + dict_benefits)/2) %>% #MEAN DIC
+  mutate(pv1civ          = PV1CIV) %>%
+  mutate(pv2civ          = PV2CIV) %>%
+  mutate(pv3civ          = PV3CIV) %>%
+  mutate(pv4civ          = PV4CIV) %>%
+  mutate(pv5civ          = PV5CIV) %>%
+  mutate(civic_knowledge = (pv1civ + pv2civ + pv3civ + pv4civ + pv5civ)/5) %>% #MEAN CIVIC KNOWLEDGE 
+  mutate(s_intrust       = S_INTRUST) %>% #TRUST IN CIVIC INSTITUTIONS 
+  mutate(s_opdisc        = S_OPDISC) %>%  #OPENNESS IN CLASS DISCUSSION
+  mutate(s_hisced        = S_HISCED) %>%  #HIGHEST PARENTAL EDUCATIONAL LEVEL 
+  mutate(univ            = ifelse(s_hisced>3, 1, 0)) %>% #UNIVERSITARY PARENTS
+  mutate(s_hisei         = S_HISEI) %>%   #PARENT'S HIGHEST OCCUPATIONAL STATUS
+  mutate(s_homelit       = S_HOMLIT) %>%  #HOME LITERACY
+  mutate(s_gender        = S_GENDER) %>%  #GENDER OF STUDENT
+  mutate(s_citcon        = S_CITCON) %>%  #CONVENTIONAL CITIZENSHIP
+  mutate(s_citsoc        = S_CITSOC) %>%  #SOCIAL MOVEMENT REL. CITIZENSHIP
+  mutate(s_citeff        = S_CITEFF) %>%  #CITIZENSHIP SELF-EFFICACY 
+  mutate(s_cntatt        = S_CNTATT) %>%  #ATTITUDES TOWARDS OWN COUNTRY 
+  mutate(s_geneql        = S_GENEQL) %>%  #ATTITUDES TOWARDS GENDER EQUALITY
+  mutate(s_ethrght       = S_ETHRGHT) %>% #EQUAL RIGHTS FOR ALL ETHNIC GROUPS 
+  mutate(l_attviol       = L_ATTVIOL) %>% #ATTITUDES: USE OF VIOLENCE 
+  mutate(l_attdiv        = L_ATTDIV) %>%  #ATTITUDES: NEIGHBOURHOOD DIVERSITY
+  mutate(l_autgov        = L_AUTGOV) %>%  #AUTHORITARIANISM IN GOVERNMENT 
+  mutate(l_attcorr       = L_ATTCORR) %>% #CORRUPT PRACTICES IN GOVERNMENT
+  mutate(l_dislaw        = L_DISLAW) %>%  #ATTITUDES: DISOBEYING THE LAW
+  mutate(l_empclas       = L_EMPCLAS) %>% #EMPATHY TOWARDS CLASSMATES
+  mutate(s_poldisc       = S_POLDISC) %>% #DISCUSSION OF POL. AND SOC. ISSUES  
+  #TRUST
+  mutate(nac_gob         = IS3G26A) %>%   #TRUST INSTITUTIONS-NATIONAL GOVERNMENT 
+  mutate(local_gob       = IS3G26B) %>%   #TRUST INSTITUTIONS-LOCAL GOVERNMENT 
+  mutate(courts          = IS3G26C) %>%   #TRUST INSTITUTIONS-COURTS
+  mutate(police          = IS3G26D) %>%   #TRUST INSTITUTIONS-POLICE
+  mutate(pol_parties     = IS3G26E) %>%   #TRUST INSTITUTIONS-POLITICAL PARTIES
+  mutate(parliament      = IS3G26F) %>%   #TRUST INSTITUTIONS-PARLIAMENT
+  mutate(media           = IS3G26G) %>%   #TRUST INSTITUTIONS-MEDIA
+  mutate(ffaa            = IS3G26I) %>%   #TRUST INSTITUTIONS-FFAA
+  mutate(school          = IS3G26J) %>%   #TRUST INSTITUTIONS-SCHOOL
+  mutate(unit_nations    = IS3G26K) %>%   #TRUST INSTITUTIONS-UNITED NATIONS
+  mutate(people          = IS3G26L) %>%   #TRUST INSTITUTIONS-PEOPLE
+  #WEITHINGS
+  mutate(totwgts         = TOTWGTS) %>%   #FINAL STUDENT WEIGHT
+  mutate(wgtfac1         = WGTFAC1) %>%   #SCHOOL BASE WEIGHT
+  mutate(wgtadj1s        = WGTADJ1S) %>%  #SCHOOL WEIGHT ADJUSTMENT-STUDENT STUDY
+  mutate(wgtfac2s        = WGTFAC2S) %>%  #CLASS WEIGHT FACTOR
+  mutate(wgtadj2s        = WGTADJ2S) %>%  #CLASS WEIGHT ADJUSTMENT
+  mutate(wgtadj3s        = WGTADJ3S) %>%  #STUDENT WEIGHT ADJUSTMENT
+  mutate(jkzones         = JKZONES)  %>%  #JACKKNIFE ZONE - STUDENT STUDY
+  mutate(jkreps          = JKREPS)  %>%  #JACKKNIFE REPLICATE CODE
+  select(519:571)
+
+#Merge data
+dict <- rbind(dict09, dict16)
+#All observations with complete row data
+dict2 <- dict[complete.cases(dict),]
+#Number observations
+dict_count <- dict %>% 
+  group_by(time, country) %>%
+  dplyr::summarise(N=n()) %>%
+  mutate(Prop. = N / sum(N))  %>%
+  arrange(country)
+#Table
+kable(dict_count, align = c("cccc"), 
+      col.names = c("Year","Country", "Prop.", "N"),
+      caption = "Sample with all observations", format="html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
++ Missing Value delete
+
+```{r sample without missing, echo=TRUE, eval=TRUE}
+#Number observations delete missing values
+dict_count2 <- dict2 %>% 
+  group_by(time, country) %>%
+  dplyr::summarise(N=n(), Prop. = (n()/nrow(dict2)))  %>%
+  arrange(country)
+#Table  
+kable(dict_count2,  caption = "Sample without missing", format="html",
+      col.names = c("Year","Country", "Prop.", "N")) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+
+# Change in support for dictatorship
+
++ Dictatorships are justified when they bring economic benefits 2016: LS2P03E - LS3G02E
+
+```{r dictatorship, echo=TRUE, eval=TRUE}
+#Dictatorships are justified when they bring economic benefits 2016: LS2P03E - LS3G02E
+bar_civic <- ggplot(subset(dict, !is.na(dict_benefits)), aes(as.factor(dict_benefits), group = country)) +  
+  geom_bar(aes(y = ..prop.., group = country)) +
+  geom_text(aes(y= ..prop.. , label = scales::percent(..prop..)), stat= "count", vjust = -0.5) +
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+  facet_grid(country ~ time) + 
+  ggtitle("Dictatorship are justified when bring economic benefits") +
+  scale_x_discrete(labels = c("Very Disagree", "Disagree", "Agree", "Very Agree")) + 
+  labs(x = "Agreement", y = "%") 
+bar_civic 
+
+bar_civic <- ggplot(dict, aes(as.factor(dict_benefits), group = country)) +  
+  geom_bar(aes(y = ..prop.., group = country), na.rm = TRUE) +
+  geom_text(aes(y= ..prop.. , label = scales::percent(..prop..)), stat= "count", vjust = -0.5) +
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+  facet_grid(country ~ time) + 
+  ggtitle("Dictatorship are justified when bring economic benefits (include missing)") +
+  scale_x_discrete(labels = c("Very Disagree", "Disagree", "Agree", "Very Agree")) + 
+  labs(x = "Agreement", y = "%") 
+bar_civic 
+```
+
++ Dictatorships are justified when they bring order and safety 2009: LS2P03D - LS3G02D
+
+```{r dictatorship2, echo=TRUE, eval=TRUE}
+#Dictatorships are justified when they bring order and safety 2009: LS2P03D - LS3G02D
+bar_civic <- ggplot(subset(dict, !is.na(dict_safety)), aes(as.factor(dict_safety), group = country)) +  
+  geom_bar(aes(y = ..prop.., group = country)) +
+  geom_text(aes(y= ..prop.. , label = scales::percent(..prop..)), stat= "count", vjust = -0.5) +
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+  facet_grid(country ~ time) + 
+  ggtitle("Dictatorship are justified when bring order and security") +
+  scale_x_discrete(labels = c("Very Disagree", "Disagree", "Agree", "Very Agree")) + 
+  labs(x = "Agreement", y = "%") 
+bar_civic 
+
+bar_civic <- ggplot(dict, aes(as.factor(dict_safety), group = country)) +  
+  geom_bar(aes(y = ..prop.., group = country), na.rm = TRUE) +
+  geom_text(aes(y= ..prop.. , label = scales::percent(..prop..)), stat= "count", vjust = -0.5) +
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+  facet_grid(country ~ time) + 
+  ggtitle("Dictatorship are justified when bring order and security (include missing)") +
+  scale_x_discrete(labels = c("Very Disagree", "Disagree", "Agree", "Very Agree")) + 
+  labs(x = "Agreement", y = "%") 
+bar_civic 
+```
+
+# Support for Dictatorship and civic knowledge
+
++ Civic knowledge proxy: Mean to PV1CIV, PV2CIV, PV3CIV, PV4CIV, PV5CIV. 
+
+```{r Civic Knowledge, echo=TRUE, eval=TRUE}
+#Proxy Civic Knowledge
+civic_country_mean09 <- dict %>% filter(time==2009)  %>% group_by(country) %>%
+  dplyr::summarise(mean=mean(civic_knowledge),sd=sd(civic_knowledge),n=n()) %>%
+  dplyr::mutate(se=sd/sqrt(n)) %>%
+  mutate (time=2009)
+
+civic_country_mean16 <- dict %>% filter(time==2016)  %>% group_by(country) %>%  
+  dplyr::summarise(mean=mean(civic_knowledge),sd=sd(civic_knowledge),n=n()) %>%
+  dplyr::mutate(se=sd/sqrt(n)) %>%
+  mutate (time=2016) 
+
+civic_country_mean <- merge(civic_country_mean09, civic_country_mean16, all = T)
+
+kable(civic_country_mean, align = c("cccccc"), caption = "Mean Civic Knowledge") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#Graphs Bar
+#All
+civic_know <- ggplot(civic_country_mean, aes(reorder(to_label(country), -mean),mean), group = time)
+civic_know <- civic_know +  geom_bar(stat = "summary") +
+  facet_grid(~ time) + 
+  geom_text(aes(label = format(mean, digits = 2), vjust=0.3, hjust=-0.2), size=2, colour="black") +
+  coord_flip() +
+  theme(axis.text=element_text(size=5,face="bold"),
+        axis.title=element_text(size=10,face="bold")) + 
+  labs(x="Country", y="Civic Knowledge")
+civic_know
+
+#Boxplot 
+box_civic = ggplot(dict, aes(reorder(to_label(country), -civic_knowledge), civic_knowledge), group = time) 
+box_civic + geom_boxplot() +  
+  facet_grid(~ time) + 
+  coord_flip() + 
+  theme(axis.text=element_text(size=5),
+        axis.title=element_text(size=10,face="bold")) + 
+  labs(x=" ", y="Civic Knowledge")
+```
+
+## Latin American 2009-2016: Dictatorship and civic knowledge
+
++ Dictatorships are justified when they bring economic benefits and civic knowledge
+
+```{r Civic Knowledge and Dictatorship1, echo=TRUE, eval=TRUE}
+#Dictatorships are justified when they bring economic benefits 
+scatter <- ggplot(dict, aes(civic_knowledge, dict_benefits, colour = factor(country))) 
+    scatter + geom_smooth(method = "lm", alpha = 0.1) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic knowledge", y = "Support to dictatorship (economic benefits)", colour = "country") 
+```
+
++ Dictatorships are justified when they bring order and safety and civic knowledge
+
+```{r Civic Knowledge and Dictatorship2, echo=TRUE, eval=TRUE}
+#Dictatorships are justified when they bring order and safety 
+scatter <- ggplot(dict, aes(civic_knowledge, dict_safety, colour = factor(country))) 
+    scatter + geom_smooth(method = "lm", alpha = 0.1) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic knowledge", y = "Support to dictatorship (order and safety)", colour = "country")    
+```
+
++ Dictatorships are justified (means of the previous two) and civic knowledge
+
+```{r Civic Knowledge and Dictatorship3, echo=TRUE, eval=TRUE}
+#Dictatorships are justified mean 
+scatter <- ggplot(dict, aes(civic_knowledge, dict, colour = factor(country))) 
+    scatter + geom_smooth(method = "lm", alpha = 0.1) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic knowledge", y = "Support to dictatorship (mean)", colour = "country")  
+```
+
+## Latin American 2009-2016: institutional trust and civic knowledge
+
+```{r Civic Knowledge and institutional trust, echo=TRUE, eval=TRUE}
+#Trust in civic institutions and civic knowledge
+scatter <- ggplot(dict, aes(civic_knowledge, s_intrust, colour = factor(country))) 
+    scatter + geom_smooth(method = "lm", alpha = 0.1) + 
+      facet_wrap(~ time) +
+    labs(x = "Civic knowledge", y = "Trust in civic institutions", colour = "country") 
+```
+
+# Support for Dictatorship and institutional trust
+
+## Latin American 2009-2016: Institutional trust
+
+```{r Institutional trust, echo=TRUE, eval=TRUE}
+in_trust09 <- dict2 %>% filter(time==2009)  %>% group_by(country) %>%
+  dplyr::summarise(mean=mean(s_intrust),sd=sd(s_intrust),n=n()) %>%
+  dplyr::mutate(se=sd/sqrt(n)) %>%
+  mutate (time=2009)
+
+in_trust16 <- dict2 %>% filter(time==2016)  %>% group_by(country) %>%  
+  dplyr::summarise(mean=mean(s_intrust),sd=sd(s_intrust),n=n()) %>%
+  dplyr::mutate(se=sd/sqrt(n)) %>%
+  mutate (time=2016) 
+
+in_trust_mean <- merge(in_trust09, in_trust16, all = T)
+
+kable(in_trust_mean, align = c("cccccc"), caption = "Mean trust in civic institutions") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#Graphs Bar
+#All
+bar_intrust <- ggplot(in_trust_mean, aes(reorder(to_label(country), mean),mean), group = time)
+bar_intrust <- bar_intrust +  geom_bar(stat = "summary") +
+  facet_grid(~ time) + 
+  geom_text(aes(label = format(mean, digits = 2), vjust=0.3, hjust=-0.2), size=2, colour="black") +
+  coord_flip() +
+  theme(axis.text=element_text(size=5,face="bold"),
+        axis.title=element_text(size=10,face="bold")) + 
+  labs(x="Country", y="Trust in civic institutions")
+bar_intrust
+
+#Boxplot 
+box_intrust = ggplot(dict, aes(reorder(to_label(country), -s_intrust), s_intrust), group = time) 
+box_intrust + geom_boxplot() +  
+  facet_grid(~ time) + 
+  coord_flip() + 
+  theme(axis.text=element_text(size=5),
+        axis.title=element_text(size=10,face="bold")) + 
+  labs(x=" ", y="Trust in civic institutions")
+
+```
+
+
+## Latin American 2009-2016: Dictatorship and institutional trust
+
++ Dictatorships are justified when they bring economic benefits and institutional trust
+
+```{r Institutional trust and Dictatorship, echo=TRUE, eval=TRUE}
+#Dictatorships are justified when they bring economic benefits 
+scatter <- ggplot(dict, aes(s_intrust, dict_benefits, colour = factor(country))) 
+    scatter + geom_smooth(method = "lm", alpha = 0.1) + 
+      facet_wrap(~ time) +
+    labs(x = "Trust in civic institutions", y = "Support to dictatorship (economic benefits)", colour = "country") 
+    
+```
+
+
++ Dictatorships are justified when they bring order and safety and institutional trust
+
+```{r Institutional trust and Dictatorship2, echo=TRUE, eval=TRUE}
+#Dictatorships are justified when they bring order and safety 
+scatter <- ggplot(dict, aes(s_intrust, dict_safety, colour = factor(country))) 
+    scatter + geom_smooth(method = "lm", alpha = 0.1) + 
+      facet_wrap(~ time) +
+    labs(x = "Trust in civic institutions", y = "Support to dictatorship (order and safety)", colour = "country")    
+```
+
++ Dictatorships are justified (means of the previous two) and institutional trust
+
+```{r Institutional trust and Dictatorship3, echo=TRUE, eval=TRUE}
+#Dictatorships are justified mean 
+scatter <- ggplot(dict, aes(s_intrust, dict, colour = factor(country))) 
+    scatter + geom_smooth(method = "lm", alpha = 0.1) + 
+      facet_wrap(~ time) +
+    labs(x = "Trust in civic institutions", y = "Support to dictatorship (mean)", colour = "country")     
+```
+
+
+# Regression Model by country (simple)
+
+```{r Institutional trust and Dictatorship Country, echo=TRUE, eval=TRUE, results='asis'}
+#Models Chile
+ch09= dict %>% filter(country=="CHL" & time==2009) 
+mch09 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=ch09)
+ch16= dict %>% filter(country=="CHL" & time==2016) 
+mch16 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=ch16)
+
+#Models Colombia
+col09= dict %>% filter(country=="COL" & time==2009) 
+mcol09 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=col09)
+col16= dict %>% filter(country=="COL" & time==2016) 
+mcol16 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=col16)
+
+#Models República Dominicana
+dom09= dict %>% filter(country=="DOM" & time==2009) 
+mdom09 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=dom09)
+dom16= dict %>% filter(country=="DOM" & time==2016) 
+mdom16 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=dom16)
+
+#Models México
+mex09= dict %>% filter(country=="MEX" & time==2009) 
+mmex09 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=mex09)
+mex16= dict %>% filter(country=="MEX" & time==2016) 
+mmex16 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=mex16)
+
+#Models Guatemala 2009
+gtm09= dict %>% filter(country=="GTM" & time==2009) 
+mgtm09 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=gtm09)
+
+#Models Paraguay 2009
+pry09= dict %>% filter(country=="PRY" & time==2009) 
+mpry09 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=pry09)
+
+#Models Perú 2016
+per16= dict %>% filter(country=="PER" & time==2016) 
+mper16 = lmer(dict ~ s_intrust + civic_knowledge +  (1 | idschool), weights=totwgts, data=per16)
+
+#Table
+library(stargazer)
+stargazer(l=list(mch09,mch16,mcol09,mcol16,mdom09, mdom16,mmex09, mmex16), digits = 3, type="html", 
+          column.labels=c("Chile 2009", "Chile 2016", "Colombia 2009", "Colombia 2016", "Rep. Dom. 2009", "Rep. Dom. 2016", "Mexico 2009", "Mexico 2016"), 
+          covariate.labels =c("Trust institutions", "Civic Knowledge"), 
+          dep.var.labels = "Support dictatorship")
+
+stargazer(l=list(mgtm09, mpry09, mper16), digits = 3, type="html", 
+          column.labels=c("Guatemala 2009", "Paraguay 2016", "Perú 2009"), 
+          covariate.labels =c("Trust institutions", "Civic Knowledge"), 
+          dep.var.labels = "Support dictatorship")
+```
+
+# Descriptives
+
++ Dictatorships are justified when they bring economic benefits
+
+```{r describe1, echo=TRUE, eval=TRUE}
+tapply(dict$dict_benefits, dict$country, summary)
+```
+
++ Dictatorships are justified when they bring order and security
+
+```{r describe2, echo=TRUE, eval=TRUE}
+tapply(dict$dict_safety, dict$country, summary)
+```
+
++ Institutional trust
+
+```{r describe3, echo=TRUE, eval=TRUE}
+tapply(dict$s_intrust, dict$country, summary)
+```
+
++ Civic Knowledge
+
+```{r describe4, echo=TRUE, eval=TRUE}
+tapply(dict$civic_knowledge, dict$country, summary)
+```
+
+# Multilevel Regression Model (simple)
+
++ Model to 2009
+
+```{r Multilevel, echo=TRUE, eval=TRUE, results='asis'}
+#Model to 2009
+model09 = lmer(dict ~ 1 + s_intrust + civic_knowledge +  (1 | country), weights=totwgts, data=dict09)
+stargazer(model09, digits = 3, type="html", 
+          covariate.labels =c("Trust institutions", "Civic Knowledge"), 
+          dep.var.labels = "Support dictatorship")
+library(sjPlot)
+fig09=plot_model(model09, type = "re", 
+           show.legend = FALSE,
+           show.values = TRUE,
+           facet.grid = FALSE,
+           y.offset = .4,
+           value.offset = .4,
+           value.size = 3.5,
+           color="darkgray",
+           sort.est= 2,
+           title = " ",)
+fig09
+```
+
++ Model to 2016
+
+```{r Multilevel2, echo=TRUE, eval=TRUE, results='asis'}
+#Model to 2016
+model16 = lmer(dict ~ 1 + s_intrust + civic_knowledge +  (1 | country), weights=totwgts, data=dict16)
+stargazer(model16, digits = 3, type="html", 
+          covariate.labels =c("Trust institutions", "Civic Knowledge"), 
+          dep.var.labels = "Support dictatorship")
+
+fig16=plot_model(model16, type = "re", 
+           show.legend = FALSE,
+           show.values = TRUE,
+           facet.grid = FALSE,
+           y.offset = .4,
+           value.offset = .4,
+           value.size = 3.5,
+           color="darkgray",
+           sort.est= 2,
+           title = " ",)
+fig16
+```
+

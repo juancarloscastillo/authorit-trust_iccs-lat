@@ -1,0 +1,1355 @@
+---
+title: "Trust in political institutions and support for authoritarianism in Latin American students: Does civic knowledge make a difference?"
+author: "Daniel Miranda, Juan Carlos Castillo, Catalina Miranda & Jos? Conejeros"
+date: "julio de 2019"
+output: html_document
+---
+
+```{r, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(dev = 'jpg')
+# remove all previous objects
+rm(list = ls()) 
+```
+
+```{r global options, warning=FALSE, cache=FALSE, include=FALSE, results="asis"}
+rm(list = ls()) #limpiar la memoria
+#Desactivar notaci?n cient?fica
+options(scipen=999)
+#Paquetes
+library(knitr)
+library(DT)
+library(plyr)
+library(dplyr)
+library(haven)
+library(texreg) 
+library(xtable) 
+library(kableExtra) 
+library(ggplot2)
+library(psych)
+library(purrr)
+library(tidyr)
+library(sjmisc)
+library(Hmisc)
+library(reshape)
+library(VIM)
+library(stringr)
+library(skimr)
+library(lme4)
+library(broom)
+library(survey)
+library(srvyr)
+```
+
+```{r, include=FALSE}
+#Directorio bases de datos AL
+chi09 <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2009/AL/islchlc2.sas7bdat")
+chi16 <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2016/AL/islchlc3.sas7bdat")
+
+mex09 <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2009/AL/islmexc2.sas7bdat")
+mex16 <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2016/AL/islmexc3.sas7bdat")
+
+
+col09 <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2009/AL/islcolc2.sas7bdat")
+col16 <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2016/AL/islcolc3.sas7bdat")
+
+dom09 <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2009/AL/isldomc2.sas7bdat")
+dom16 <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2016/AL/isldomc3.sas7bdat")
+
+gtm <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2009/AL/islgtmc2.sas7bdat")
+pry <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2009/AL/islpryc2.sas7bdat")
+per <- read_sas("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Bases de datos/ICCS 2016/AL/islperc3.sas7bdat")
+
+```
+
+
+```{r, include=FALSE}
+ruta<-setwd ("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism")
+load("ICCS09.Rdata")
+load("ICCS16.Rdata")
+```
+
+```{r, include=FALSE}
+#Directorio imagenes 
+setwd("C:/Users/catac/Dropbox/F. Pap/Book_authoritarianism/Imagenes descriptivos")
+```
+
+
+```{r, include=FALSE}
+chi16= chi16 %>%
+    rename_all(tolower) %>%
+    dplyr::mutate(time="15") %>%
+    dplyr::mutate (gob1= 5 - ls3g01a)%>% #invertidos
+    dplyr::mutate (gob2= 5 - ls3g01b)%>%
+    dplyr::mutate (gob3= 5 - ls3g01c)%>%
+    dplyr::mutate (gob4= 5 - ls3g01d)%>%
+    dplyr::mutate (gob5= 5 - ls3g01e)%>%
+    dplyr::mutate (gob6= 5 - ls3g01f)%>%
+    dplyr::mutate (dicta1= 5 - ls3g02d)%>%
+    dplyr::mutate (dicta2= 5 - ls3g02e)%>%
+    dplyr::select(country,totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+
+
+chi09= chi09 %>%
+      rename_all(tolower) %>%
+      dplyr::mutate(time="08") %>%
+      dplyr::mutate (gob1= 5 - ls2p02a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls2p02b)%>%
+      dplyr::mutate (gob3= 5 - ls2p02c)%>%
+      dplyr::mutate (gob4= 5 - ls2p02d)%>%
+      dplyr::mutate (gob5= 5 - ls2p02e)%>%
+      dplyr::mutate (gob6= 5 - ls2p02f)%>%
+      dplyr::mutate (dicta1= 5 - ls2p03d)%>%
+      dplyr::mutate (dicta2= 5 - ls2p03e)%>%
+      dplyr::select(country, totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+    
+
+mergeiccs=full_join(chi16, chi09)
+```
+
+
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="CHL") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_01 <- mergesvy %>%
+        dplyr::group_by(time, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_01, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      df1_chi <- df %>% mutate(country="CHI")
+      
+      order_chile=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security - Chile") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_chile)
+```
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="CHL") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_08 <- mergesvy %>%
+        dplyr::group_by(time, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_08, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      df2_chi <- df %>% mutate(country="CHI")
+      
+      order_ch2q1=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_ch2q1)
+```
+
+
+
+```{r, include=FALSE}
+      mex16= mex16 %>%
+      rename_all(tolower) %>%
+      dplyr::mutate(time="15") %>%
+      dplyr::mutate (gob1= 5 - ls3g01a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls3g01b)%>%
+      dplyr::mutate (gob3= 5 - ls3g01c)%>%
+      dplyr::mutate (gob4= 5 - ls3g01d)%>%
+      dplyr::mutate (gob5= 5 - ls3g01e)%>%
+      dplyr::mutate (gob6= 5 - ls3g01f)%>%
+      dplyr::mutate (dicta1= 5 - ls3g02d)%>%
+      dplyr::mutate (dicta2= 5 - ls3g02e)%>%
+      dplyr::select(country,totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+
+mex09= mex09 %>%
+      rename_all(tolower) %>%
+      dplyr::mutate(time="08") %>%
+      dplyr::mutate (gob1= 5 - ls2p02a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls2p02b)%>%
+      dplyr::mutate (gob3= 5 - ls2p02c)%>%
+      dplyr::mutate (gob4= 5 - ls2p02d)%>%
+      dplyr::mutate (gob5= 5 - ls2p02e)%>%
+      dplyr::mutate (gob6= 5 - ls2p02f)%>%
+      dplyr::mutate (dicta1= 5 - ls2p03d)%>%
+      dplyr::mutate (dicta2= 5 - ls2p03e)%>%
+      dplyr::select(country, totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+
+mergeiccs=full_join(mex16,mex09)
+```
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="MEX") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_01 <- mergesvy %>%
+        dplyr::group_by(time, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_01, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+     
+      df1_mex <- df %>% mutate(country="MEX")
+      
+      order_mexico=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security - MEX") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_mexico)
+```
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="MEX") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(time, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_02, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+       df2_mex <- df %>% mutate(country="MEX")
+      order_mex=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_mex)
+```
+
+
+```{r, include=FALSE}
+      col16= col16 %>%
+      rename_all(tolower) %>%
+      dplyr::mutate(time="15") %>%
+      dplyr::mutate (gob1= 5 - ls3g01a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls3g01b)%>%
+      dplyr::mutate (gob3= 5 - ls3g01c)%>%
+      dplyr::mutate (gob4= 5 - ls3g01d)%>%
+      dplyr::mutate (gob5= 5 - ls3g01e)%>%
+      dplyr::mutate (gob6= 5 - ls3g01f)%>%
+      dplyr::mutate (dicta1= 5 - ls3g02d)%>%
+      dplyr::mutate (dicta2= 5 - ls3g02e)%>%
+      dplyr::select(country,totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+
+col09= col09 %>%
+      rename_all(tolower) %>%
+      dplyr::mutate(time="08") %>%
+      dplyr::mutate (gob1= 5 - ls2p02a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls2p02b)%>%
+      dplyr::mutate (gob3= 5 - ls2p02c)%>%
+      dplyr::mutate (gob4= 5 - ls2p02d)%>%
+      dplyr::mutate (gob5= 5 - ls2p02e)%>%
+      dplyr::mutate (gob6= 5 - ls2p02f)%>%
+      dplyr::mutate (dicta1= 5 - ls2p03d)%>%
+      dplyr::mutate (dicta2= 5 - ls2p03e)%>%
+      dplyr::select(country, totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+
+mergeiccs=full_join(col16,col09)
+```
+
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="COL") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_01 <- mergesvy %>%
+        dplyr::group_by(time, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_01, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+       df1_col <- df %>% mutate(country="COL")
+      order_colombia=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security - COL") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_colombia)
+```
+
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="COL") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(time, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_02, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+         df2_col <- df %>% mutate(country="COL")
+      order_colom=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring economic benefits - COL") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_colom)
+```
+
+
+```{r, include=FALSE}
+      dom16= dom16 %>%
+      rename_all(tolower) %>%
+      dplyr::mutate(time="15") %>%
+      dplyr::mutate (gob1= 5 - ls3g01a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls3g01b)%>%
+      dplyr::mutate (gob3= 5 - ls3g01c)%>%
+      dplyr::mutate (gob4= 5 - ls3g01d)%>%
+      dplyr::mutate (gob5= 5 - ls3g01e)%>%
+      dplyr::mutate (gob6= 5 - ls3g01f)%>%
+      dplyr::mutate (dicta1= 5 - ls3g02d)%>%
+      dplyr::mutate (dicta2= 5 - ls3g02e)%>%
+      dplyr::select(country,totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+
+      dom09= dom09 %>%
+      rename_all(tolower) %>%
+      dplyr::mutate(time="08") %>%
+      dplyr::mutate (gob1= 5 - ls2p02a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls2p02b)%>%
+      dplyr::mutate (gob3= 5 - ls2p02c)%>%
+      dplyr::mutate (gob4= 5 - ls2p02d)%>%
+      dplyr::mutate (gob5= 5 - ls2p02e)%>%
+      dplyr::mutate (gob6= 5 - ls2p02f)%>%
+      dplyr::mutate (dicta1= 5 - ls2p03d)%>%
+      dplyr::mutate (dicta2= 5 - ls2p03e)%>%
+      dplyr::select(country, totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+
+mergeiccs=full_join(dom16,dom09)
+```
+
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="DOM") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(time, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_02, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+     
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+         df1_dom <- df %>% mutate(country="DOM")
+      order_dominicana=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security - DOM") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_dominicana)
+```
+
+
+```{r, include=FALSE}
+ mergesvy <-  mergeiccs %>%
+        filter(country=="DOM") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_01 <- mergesvy %>%
+        dplyr::group_by(time, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+```
+
+```{r, include=FALSE}
+df=data.frame(table_freq_01, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+     
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      df2_dom <- df %>% mutate(country="DOM")
+      order_dom=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring economic benefits -DOM") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_dom)
+```
+
+```{r, include=FALSE}
+gtm= gtm %>%
+      rename_all(tolower) %>%
+      dplyr::mutate(time="08") %>%
+      dplyr::mutate (gob1= 5 - ls2p02a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls2p02b)%>%
+      dplyr::mutate (gob3= 5 - ls2p02c)%>%
+      dplyr::mutate (gob4= 5 - ls2p02d)%>%
+      dplyr::mutate (gob5= 5 - ls2p02e)%>%
+      dplyr::mutate (gob6= 5 - ls2p02f)%>%
+      dplyr::mutate (dicta1= 5 - ls2p03d)%>%
+      dplyr::mutate (dicta2= 5 - ls2p03e)%>%
+      dplyr::select(country, totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+mergeiccs=(gtm)
+```
+
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="GTM") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(time, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_02, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+     
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      df1_gtm <- df %>% mutate(country="GTM")
+    
+      order_guatemala=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_guatemala)
+```
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="GTM") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(time, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_02, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+     
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      df2_gtm <- df %>% mutate(country="GTM")
+         
+      order_guatemala=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_guatemala)
+```
+
+
+
+```{r, include=FALSE}
+       per= per %>%
+      rename_all(tolower) %>%
+      dplyr::mutate(time="15") %>%
+      dplyr::mutate (gob1= 5 - ls3g01a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls3g01b)%>%
+      dplyr::mutate (gob3= 5 - ls3g01c)%>%
+      dplyr::mutate (gob4= 5 - ls3g01d)%>%
+      dplyr::mutate (gob5= 5 - ls3g01e)%>%
+      dplyr::mutate (gob6= 5 - ls3g01f)%>%
+      dplyr::mutate (dicta1= 5 - ls3g02d)%>%
+      dplyr::mutate (dicta2= 5 - ls3g02e)%>%
+      dplyr::select(country,totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+mergeiccs=(per)
+```
+
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="PER") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(time, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_02, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+     
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      df1_per <- df %>% mutate(country="PER")
+         order_per=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_per)
+```
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="PER") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(time, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_02, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+     
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+            df2_per <- df %>% mutate(country="PER")
+      order_per=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_per)
+```
+
+```{r, include=FALSE}
+pry= pry %>%
+ rename_all(tolower) %>%
+      dplyr::mutate(time="08") %>%
+      dplyr::mutate (gob1= 5 - ls2p02a)%>% #invertidos
+      dplyr::mutate (gob2= 5 - ls2p02b)%>%
+      dplyr::mutate (gob3= 5 - ls2p02c)%>%
+      dplyr::mutate (gob4= 5 - ls2p02d)%>%
+      dplyr::mutate (gob5= 5 - ls2p02e)%>%
+      dplyr::mutate (gob6= 5 - ls2p02f)%>%
+      dplyr::mutate (dicta1= 5 - ls2p03d)%>%
+      dplyr::mutate (dicta2= 5 - ls2p03e)%>%
+      dplyr::select(country, totwgts, jkzones, jkreps, time, gob1, gob2, gob3, gob4, gob5, gob6, dicta1, dicta2) 
+
+mergeiccs=(pry)
+```
+
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="PRY") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(time, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_02, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+     
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      df1_pry <- df %>% mutate(country="PRY")
+               order_pry=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_pry)
+```
+
+```{r, include=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="PRY") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(time, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      
+```
+
+```{r, include=FALSE}
+      
+      df=data.frame(table_freq_02, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+     
+              df2_pry <- df %>% mutate(country="PRY")
+      order_pry=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_pry)
+```
+
+
+```{r}
+df1 <- rbind(df1_chi, df1_mex, df1_col, df1_dom, df1_per, df1_pry, df1_gtm)
+
+ggplot(df1 , aes(label, proportion)) +
+        facet_grid(country ~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+ 
+scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r}
+df2 <- rbind(df2_chi, df2_mex, df2_col, df2_dom, df2_per, df2_pry, df2_gtm)
+
+ggplot(df2 , aes(label, proportion)) +
+        facet_grid(country ~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+ 
+ scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+
+```{r, warning=FALSE}
+library(purrr)
+
+aux09_i <- c("chi09", "mex09", "col09", "dom09","gtm", "pry","")
+aux16_i <- c("chi16", "mex16", "col16", "dom16", "", "","per")
+pais0_i <- c("CHL","MEX","COL","DOM","GTM","PRY","PER")
+pais_i  <- c("CHI","MEX","COL","DOM","GTM","PRY","PER")
+
+df_final <- NULL 
+
+for(i in 1:7){
+  
+if(aux09_i[i]!="") {aux09 <- get(aux09_i[i])}
+if(aux16_i[i]!="") {aux16 <- get(aux16_i[i])}
+pais0 = pais0_i[i]
+pais = pais_i[i]
+
+aux09 <- aux09 %>% 
+  mutate(dicta1 = case_when(
+    dicta1 %in% c(1,2) ~ 1,
+    dicta1 %in% c(3,4) ~ 2,
+    is.na(dicta1) ~ dicta1,
+    TRUE ~ 0
+  )) %>% 
+  mutate(dicta2 = case_when(
+    dicta2 %in% c(1,2) ~ 1,
+    dicta2 %in% c(3,4) ~ 2,
+    is.na(dicta2) ~ dicta2,
+    TRUE ~ 0
+  )) 
+aux16 <- aux16 %>% 
+  mutate(dicta1 = case_when(
+    dicta1 %in% c(1,2) ~ 1,
+    dicta1 %in% c(3,4) ~ 2,
+    is.na(dicta1) ~ dicta1,
+    TRUE ~ 0
+  )) %>% 
+  mutate(dicta2 = case_when(
+    dicta2 %in% c(1,2) ~ 1,
+    dicta2 %in% c(3,4) ~ 2,
+    is.na(dicta2) ~ dicta2,
+    TRUE ~ 0
+  )) 
+
+if(aux09_i[i]!="" & aux16_i[i]!=""){ mergeiccs=full_join(aux16, aux09) }
+if(aux09_i[i]!="" & aux16_i[i]==""){ mergeiccs= aux09 }
+if(aux09_i[i]=="" & aux16_i[i]!=""){ mergeiccs= aux16 }
+
+mergesvy <-  mergeiccs %>%
+      filter(country==pais0) %>%
+      as_survey_design(
+      strata = jkzones, 
+      weights = totwgts, 
+      ids = jkreps, 
+      nest = TRUE)
+
+# frequency table via taylor series linearization
+  table_freq_01 <- mergesvy %>%
+    dplyr::group_by(time, dicta1) %>%
+    summarize(proportion = survey_mean(,na.rm=TRUE))
+  #help(srvyr)
+
+  df = data.frame(table_freq_01, digits=2)
+
+  df= df %>%
+    mutate(perc = proportion * 100) %>%
+    mutate(p=round(perc, 2)) %>%
+    mutate(label=factor(dicta1, labels=c("Disagree", "Agree"))) %>% 
+    mutate(country=pais)
+  
+  df1_aux <- df
+  
+  df_final <- rbind(df_final, df1_aux)
+  
+}
+
+ggplot(df_final , aes(label, proportion)) +
+        facet_grid(country ~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+ 
+ scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+```
+
+
+```{r, warning=FALSE}
+aux09_i <- c("chi09", "mex09", "col09", "dom09","gtm", "pry","")
+aux16_i <- c("chi16", "mex16", "col16", "dom16", "", "","per")
+pais0_i <- c("CHL","MEX","COL","DOM","GTM","PRY","PER")
+pais_i  <- c("CHI","MEX","COL","DOM","GTM","PRY","PER")
+
+df_final <- NULL 
+
+for(i in 1:7){
+  
+if(aux09_i[i]!="") {aux09 <- get(aux09_i[i])}
+if(aux16_i[i]!="") {aux16 <- get(aux16_i[i])}
+pais0 = pais0_i[i]
+pais = pais_i[i]
+
+aux09 <- aux09 %>% 
+  mutate(dicta1 = case_when(
+    dicta1 %in% c(1,2) ~ 1,
+    dicta1 %in% c(3,4) ~ 2,
+    is.na(dicta1) ~ dicta1,
+    TRUE ~ 0
+  )) %>% 
+  mutate(dicta2 = case_when(
+    dicta2 %in% c(1,2) ~ 1,
+    dicta2 %in% c(3,4) ~ 2,
+    is.na(dicta2) ~ dicta2,
+    TRUE ~ 0
+  )) 
+aux16 <- aux16 %>% 
+  mutate(dicta1 = case_when(
+    dicta1 %in% c(1,2) ~ 1,
+    dicta1 %in% c(3,4) ~ 2,
+    is.na(dicta1) ~ dicta1,
+    TRUE ~ 0
+  )) %>% 
+  mutate(dicta2 = case_when(
+    dicta2 %in% c(1,2) ~ 1,
+    dicta2 %in% c(3,4) ~ 2,
+    is.na(dicta2) ~ dicta2,
+    TRUE ~ 0
+  )) 
+
+if(aux09_i[i]!="" & aux16_i[i]!=""){ mergeiccs=full_join(aux16, aux09) }
+if(aux09_i[i]!="" & aux16_i[i]==""){ mergeiccs= aux09 }
+if(aux09_i[i]=="" & aux16_i[i]!=""){ mergeiccs= aux16 }
+
+mergesvy <-  mergeiccs %>%
+      filter(country==pais0) %>%
+      as_survey_design(
+      strata = jkzones, 
+      weights = totwgts, 
+      ids = jkreps, 
+      nest = TRUE)
+
+# frequency table via taylor series linearization
+  table_freq_01 <- mergesvy %>%
+    dplyr::group_by(time, dicta2) %>%
+    summarize(proportion = survey_mean(,na.rm=TRUE))
+  #help(srvyr)
+
+  df = data.frame(table_freq_01, digits=2)
+
+  df= df %>%
+    mutate(perc = proportion * 100) %>%
+    mutate(p=round(perc, 2)) %>%
+    mutate(label=factor(dicta2, labels=c("Disagree", "Agree"))) %>% 
+    mutate(country=pais)
+  
+  df1_aux <- df
+  
+  df_final <- rbind(df_final, df1_aux)
+  
+}
+
+ggplot(df_final , aes(label, proportion)) +
+        facet_grid(country ~ time) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+ 
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+
+```
+
+```{r, include=FALSE}
+#Data frames with all variables
+#2009
+dict09 = iccs09 %>%
+  mutate(time          = 2008) %>%
+  mutate(country       = COUNTRY) %>%
+  mutate(idcountry     = IDCNTRY) %>%
+  mutate(idschool       = IDSCHOOL) %>%
+  mutate(idstudent     = IDSTUD) %>%
+  mutate(idstudent = (time*1000000000000 + idcountry*100000000 + idstudent)) %>% #NEW IDSTUDENT
+  mutate(dict_safety   = 5-LS2P03D) %>% #DICTATORSHIPS ARE JUSTIFIED WHEN THEY BRING ORDER AND SAFETY
+  mutate(dict_benefits = 5-LS2P03E) %>% #DICTATORSHIPS ARE JUSTIFIED WHEN THEY BRING ECONOMIC BENEFITS
+  mutate(dict          = (dict_safety + dict_benefits)/2) %>% #MEAN DIC
+  mutate(pv1civ        = PV1CIV) %>%
+  mutate(pv2civ        = PV2CIV) %>%
+  mutate(pv3civ        = PV3CIV) %>%
+  mutate(pv4civ        = PV4CIV) %>%
+  mutate(pv5civ        = PV5CIV) %>%
+  mutate(civic_knowledge = (pv1civ + pv2civ + pv3civ + pv4civ + pv5civ)/5) %>% #MEAN CIVIC KNOWLEDGE 
+  mutate(s_intrust       = INTRUST) %>% #TRUST IN CIVIC INSTITUTIONS 
+  mutate(s_opdisc        = OPDISC) %>%  #OPENNESS IN CLASS DISCUSSION
+  mutate(s_hisced        = HISCED) %>%  #HIGHEST PARENTAL EDUCATIONAL LEVEL 
+  mutate(univ            = ifelse(s_hisced>3, 1, 0)) %>% #UNIVERSITARY PARENTS
+  mutate(s_hisei         = HISEI) %>%   #PARENT'S HIGHEST OCCUPATIONAL STATUS
+  mutate(s_homelit       = HOMELIT) %>% #HOME LITERACY
+  mutate(s_gender        = SGENDER) %>% #GENDER OF STUDENT
+  mutate(s_citcon        = CITCON) %>%  #CONVENTIONAL CITIZENSHIP
+  mutate(s_citsoc        = CITSOC) %>%  #SOCIAL MOVEMENT REL. CITIZENSHIP
+  mutate(s_citeff        = CITEFF) %>%  #CITIZENSHIP SELF-EFFICACY 
+  mutate(s_cntatt        = ATTCNT) %>%  #ATTITUDES TOWARDS OWN COUNTRY 
+  mutate(s_geneql        = GENEQL) %>%  #ATTITUDES TOWARDS GENDER EQUALITY
+  mutate(s_ethrght       = ETHRGHT) %>% #EQUAL RIGHTS FOR ALL ETHNIC GROUPS 
+  mutate(l_attviol       = ATTVIOL) %>% #ATTITUDES: USE OF VIOLENCE 
+  mutate(l_attdiv        = ATTDIFF) %>% #ATTITUDES: NEIGHBOURHOOD DIVERSITY
+  mutate(l_autgov        = AUTGOV) %>%  #AUTHORITARIANISM IN GOVERNMENT 
+  mutate(l_attcorr       = ATTCORR) %>% #CORRUPT PRACTICES IN GOVERNMENT
+  mutate(l_dislaw        = DISLAW) %>%  #ATTITUDES: DISOBEYING THE LAW
+  mutate(l_empclas       = EMPATH) %>%  #EMPATHY TOWARDS CLASSMATES
+  mutate(s_poldisc       = POLDISC) %>% #DISCUSSION OF POL. AND SOC. ISSUES
+  #TRUST
+  mutate(nac_gob       = 5 - IS2P27A) %>% #TRUST INSTITUTIONS-NATIONAL GOVERNMENT  
+  mutate(local_gob     = 5 - IS2P27B) %>% #TRUST INSTITUTIONS-LOCAL GOVERNMENT 
+  mutate(courts        = 5 - IS2P27C) %>% #TRUST INSTITUTIONS-COURTS
+  mutate(police        = 5 - IS2P27D) %>% #TRUST INSTITUTIONS-POLICE 
+  mutate(pol_parties   = 5 - IS2P27E) %>% #TRUST INSTITUTIONS-POLITICAL PARTIES
+  mutate(parliament    = 5 - IS2P27F) %>% #TRUST INSTITUTIONS-PARLIAMENT
+  mutate(media         = 5 - IS2P27G) %>% #TRUST INSTITUTIONS-MEDIA
+  mutate(ffaa          = 5 - IS2P27H) %>% #TRUST INSTITUTIONS-FFAA 
+  mutate(school        = 5 - IS2P27I) %>% #TRUST INSTITUTIONS-SCHOOL
+  mutate(unit_nations  = 5 - IS2P27J) %>% #TRUST INSTITUTIONS-UNITED NATIONS 
+  mutate(people        = 5 - IS2P27K) %>% #TRUST INSTITUTIONS-PEOPLE
+  #WEITHINGS5 - 
+  mutate(totwgts       = TOTWGTS) %>%   #FINAL STUDENT WEIGHT
+  mutate(wgtfac1       = WGTFAC1) %>%   #SCHOOL BASE WEIGHT
+  mutate(wgtadj1s      = WGTADJ1S) %>%  #SCHOOL WEIGHT ADJUSTMENT-STUDENT STUDY
+  mutate(wgtfac2s      = WGTFAC2S) %>%  #CLASS WEIGHT FACTOR
+  mutate(wgtadj2s      = WGTADJ2S) %>%  #CLASS WEIGHT ADJUSTMENT
+  mutate(wgtadj3s      = WGTADJ3S) %>%  #STUDENT WEIGHT ADJUSTMENT
+  mutate(jkzones       = JKZONES) %>%   #JACKKNIFE ZONE - STUDENT STUDY
+  mutate(jkreps        = JKREPS)  %>%  #JACKKNIFE REPLICATE CODE
+  select(411:463)
+ 
+#2016  
+dict16 = iccs16 %>%
+  mutate(time            = 2015) %>%
+  mutate(country         = COUNTRY) %>%
+  mutate(idcountry       = IDCNTRY) %>%
+  mutate(idschool        = IDSCHOOL) %>%
+  mutate(idstudent       = IDSTUD) %>%
+  mutate(idstudent       = (time*100000000000 + idcountry*100000000 + idstudent)) %>% #NEW IDSTUDENT
+  mutate(dict_safety     = 5-LS3G02D) %>% #DICTATORSHIPS ARE JUSTIFIED WHEN THEY BRING ORDER AND SAFETY
+  mutate(dict_benefits   = 5-LS3G02E) %>% #DICTATORSHIPS ARE JUSTIFIED WHEN THEY BRING ECONOMIC BENEFITS
+  mutate(dict          = (dict_safety + dict_benefits)/2) %>% 
+  mutate(pv1civ          = PV1CIV) %>%
+  mutate(pv2civ          = PV2CIV) %>%
+  mutate(pv3civ          = PV3CIV) %>%
+  mutate(pv4civ          = PV4CIV) %>%
+  mutate(pv5civ          = PV5CIV) %>%
+  mutate(civic_knowledge = (pv1civ + pv2civ + pv3civ + pv4civ + pv5civ)/5) %>% #MEAN CIVIC KNOWLEDGE 
+  mutate(s_intrust       = S_INTRUST) %>% #TRUST IN CIVIC INSTITUTIONS 
+  mutate(s_opdisc        = S_OPDISC) %>%  #OPENNESS IN CLASS DISCUSSION
+  mutate(s_hisced        = S_HISCED) %>%  #HIGHEST PARENTAL EDUCATIONAL LEVEL 
+  mutate(univ            = ifelse(s_hisced>3, 1, 0)) %>% #UNIVERSITARY PARENTS
+  mutate(s_hisei         = S_HISEI) %>%   #PARENT'S HIGHEST OCCUPATIONAL STATUS
+  mutate(s_homelit       = S_HOMLIT) %>%  #HOME LITERACY
+  mutate(s_gender        = S_GENDER) %>%  #GENDER OF STUDENT
+  mutate(s_citcon        = S_CITCON) %>%  #CONVENTIONAL CITIZENSHIP
+  mutate(s_citsoc        = S_CITSOC) %>%  #SOCIAL MOVEMENT REL. CITIZENSHIP
+  mutate(s_citeff        = S_CITEFF) %>%  #CITIZENSHIP SELF-EFFICACY 
+  mutate(s_cntatt        = S_CNTATT) %>%  #ATTITUDES TOWARDS OWN COUNTRY 
+  mutate(s_geneql        = S_GENEQL) %>%  #ATTITUDES TOWARDS GENDER EQUALITY
+  mutate(s_ethrght       = S_ETHRGHT) %>% #EQUAL RIGHTS FOR ALL ETHNIC GROUPS 
+  mutate(l_attviol       = L_ATTVIOL) %>% #ATTITUDES: USE OF VIOLENCE 
+  mutate(l_attdiv        = L_ATTDIV) %>%  #ATTITUDES: NEIGHBOURHOOD DIVERSITY
+  mutate(l_autgov        = L_AUTGOV) %>%  #AUTHORITARIANISM IN GOVERNMENT 
+  mutate(l_attcorr       = L_ATTCORR) %>% #CORRUPT PRACTICES IN GOVERNMENT
+  mutate(l_dislaw        = L_DISLAW) %>%  #ATTITUDES: DISOBEYING THE LAW
+  mutate(l_empclas       = L_EMPCLAS) %>% #EMPATHY TOWARDS CLASSMATES
+  mutate(s_poldisc       = S_POLDISC) %>% #DISCUSSION OF POL. AND SOC. ISSUES  
+  #TRUST
+  mutate(nac_gob         = 5 - IS3G26A) %>%   #TRUST INSTITUTIONS-NATIONAL GOVERNMENT 
+  mutate(local_gob       = 5 - IS3G26B) %>%   #TRUST INSTITUTIONS-LOCAL GOVERNMENT 
+  mutate(courts          = 5 - IS3G26C) %>%   #TRUST INSTITUTIONS-COURTS
+  mutate(police          = 5 - IS3G26D) %>%   #TRUST INSTITUTIONS-POLICE
+  mutate(pol_parties     = 5 - IS3G26E) %>%   #TRUST INSTITUTIONS-POLITICAL PARTIES
+  mutate(parliament      = 5 - IS3G26F) %>%   #TRUST INSTITUTIONS-PARLIAMENT
+  mutate(media           = 5 - IS3G26G) %>%   #TRUST INSTITUTIONS-MEDIA
+  mutate(ffaa            = 5 - IS3G26I) %>%   #TRUST INSTITUTIONS-FFAA
+  mutate(school          = 5 - IS3G26J) %>%   #TRUST INSTITUTIONS-SCHOOL
+  mutate(unit_nations    = 5 - IS3G26K) %>%   #TRUST INSTITUTIONS-UNITED NATIONS
+  mutate(people          = 5 - IS3G26L) %>%   #TRUST INSTITUTIONS-PEOPLE
+  #WEITHINGS5 - 
+  mutate(totwgts         = TOTWGTS) %>%   #FINAL STUDENT WEIGHT
+  mutate(wgtfac1         = WGTFAC1) %>%   #SCHOOL BASE WEIGHT
+  mutate(wgtadj1s        = WGTADJ1S) %>%  #SCHOOL WEIGHT ADJUSTMENT-STUDENT STUDY
+  mutate(wgtfac2s        = WGTFAC2S) %>%  #CLASS WEIGHT FACTOR
+  mutate(wgtadj2s        = WGTADJ2S) %>%  #CLASS WEIGHT ADJUSTMENT
+  mutate(wgtadj3s        = WGTADJ3S) %>%  #STUDENT WEIGHT ADJUSTMENT
+  mutate(jkzones         = JKZONES)  %>%  #JACKKNIFE ZONE - STUDENT STUDY
+  mutate(jkreps          = JKREPS)  %>%  #JACKKNIFE REPLICATE CODE
+  select(519:571)
+#Merge data
+dict <- rbind(dict09, dict16)
+#All observations with complete row data
+dict2 <- dict[complete.cases(dict),]
+```
+
+```{r}
+dict_count2 <- dict2 %>% 
+  group_by(time, country) %>%
+  dplyr::summarise(N=n(), Prop. = (n()/nrow(dict2)))  %>%
+  arrange(country)
+#Table
+kable(dict_count2,  caption = "Sample without missing", format="html",
+      col.names = c("Year","Country", "Prop.", "N")) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+
+
+```{r}
+dict2$test = as.numeric(dict2$civic_knowledge)
+dict2$test2 = as.numeric(dict2$nac_gob)
+graf <- ggplot(dict2, aes(x=test2, y=test, colour = factor(country)))  + geom_smooth(method = "lm", alpha = 0.1) + 
+        facet_wrap(~ time) +
+        labs(x = "National government", y = "Civic knowledge", colour = "country")
+graf
+
+with(dict2,str(nac_gob))
+```
+
+```{r}
+    dict2$test = as.numeric(dict2$civic_knowledge)
+dict2$test2 = as.numeric(dict2$local_gob)
+graf <- ggplot(dict2, aes(x=test2, y=test, colour = factor(country)))  + geom_smooth(method = "lm", alpha = 0.1) + 
+        facet_wrap(~ time) +
+        labs(x = "Local government", y = "Civic knowledge", colour = "country")
+graf
+
+with(dict2,str(local_gob))
+```
+
+```{r}
+    dict2$test = as.numeric(dict2$civic_knowledge)
+dict2$test2 = as.numeric(dict2$courts)
+graf <- ggplot(dict2, aes(x=test2, y=test, colour = factor(country)))  + geom_smooth(method = "lm", alpha = 0.1) + 
+        facet_wrap(~ time) +
+        labs(x = "Courts of justice", y = "Civic knowledge", colour = "country")
+graf
+
+with(dict2,str(courts))
+    
+```
+
+
+```{r}
+
+   dict2$test = as.numeric(dict2$civic_knowledge)
+dict2$test2 = as.numeric(dict2$police)
+graf <- ggplot(dict2, aes(x=test2, y=test, colour = factor(country)))  + geom_smooth(method = "lm", alpha = 0.1) + 
+        facet_wrap(~ time) +
+        labs(x = "Police", y = "Civic knowledge", colour = "country")
+graf
+
+with(dict2,str(police))
+
+```
+
+
+```{r}
+   dict2$test = as.numeric(dict2$civic_knowledge)
+dict2$test2 = as.numeric(dict2$pol_parties)
+graf <- ggplot(dict2, aes(x=test2, y=test, colour = factor(country)))  + geom_smooth(method = "lm", alpha = 0.1) + 
+        facet_wrap(~ time) +
+        labs(x = "Political parties", y = "Civic knowledge", colour = "country")
+graf
+
+with(dict2,str(pol_parties))
+
+```
+
+```{r}
+
+ dict2$test = as.numeric(dict2$civic_knowledge)
+dict2$test2 = as.numeric(dict2$parliament)
+graf <- ggplot(dict2, aes(x=test2, y=test, colour = factor(country)))  + geom_smooth(method = "lm", alpha = 0.1) + 
+        facet_wrap(~ time) +
+        labs(x = "National Parliament", y = "Civic knowledge", colour = "country")
+graf
+
+with(dict2,str(parliament))  
+
+```
+
+
+```{r}
+
+
+ dict2$test = as.numeric(dict2$civic_knowledge)
+dict2$test2 = as.numeric(dict2$media)
+graf <- ggplot(dict2, aes(x=test2, y=test, colour = factor(country)))  + geom_smooth(method = "lm", alpha = 0.1) + 
+        facet_wrap(~ time) +
+        labs(x = "Media", y = "Civic knowledge", colour = "country")
+graf
+
+with(dict2,str(media))  
+
+```
+
+
+```{r}
+ dict2$test = as.numeric(dict2$civic_knowledge)
+dict2$test2 = as.numeric(dict2$ffaa)
+graf <- ggplot(dict2, aes(x=test2, y=test, colour = factor(country)))  + geom_smooth(method = "lm", alpha = 0.1) + 
+        facet_wrap(~ time) +
+        labs(x = "The Armed Forces", y = "Civic knowledge", colour = "country")
+graf
+
+with(dict2,str(ffaa))  
+
+```
+
+
+```{r}
+
+ dict2$test = as.numeric(dict2$civic_knowledge)
+dict2$test2 = as.numeric(dict2$school)
+graf <- ggplot(dict2, aes(x=test2, y=test, colour = factor(country)))  + geom_smooth(method = "lm", alpha = 0.1) + 
+        facet_wrap(~ time) +
+        labs(x = "Schools", y = "Civic knowledge", colour = "country")
+graf
+
+with(dict2,str(school)) 
+
+```
+
+
+```{r}
+
+ 
+ dict2$test = as.numeric(dict2$civic_knowledge)
+dict2$test2 = as.numeric(dict2$people)
+graf <- ggplot(dict2, aes(x=test2, y=test, colour = factor(country)))  + geom_smooth(method = "lm", alpha = 0.1) + 
+        facet_wrap(~ time) +
+        labs(x = "People in general", y = "Civic knowledge", colour = "country")
+graf
+
+with(dict2,str(people)) 
+
+```
+
+

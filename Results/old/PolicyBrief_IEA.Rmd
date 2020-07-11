@@ -1,0 +1,973 @@
+---
+title: "Supporting democracy from the school"
+subtitle: "A comparison of five Latin American countries"
+author: 
+keywords: Political Socialization, Anti-democractic values, ICCS 2019-2016.
+date: Octubre de 2018
+output: html_document
+---
+  
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(dev = 'jpg')
+# remove all previous objects
+rm(list = ls()) 
+```
+
+
+
+```{r , eval=TRUE, results='asis', echo=FALSE, warning=FALSE, message=FALSE, error=FALSE}
+pacman::p_load(knitr, haven, foreing, ggplot2, reshape, plyr, dplyr, readstata13, VIM, stringr, skimr, xaringan, srvyr, lme4, broom, texreg, mediate, psych, MBESS, MplusAutomation)
+````
+
+
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE}
+##Directorio para imagenes
+setwd("C:/Users/DANIEL/Dropbox/MIDEUC/Corruption and trust/figures")
+
+iccs16=read.dta13("C:/Users/DANIEL/Dropbox/GEMR 2019/Data/Merge/ICCS_School_Teachers_Students_Europe_LA.dta", convert.factors = FALSE)
+
+iccs09=read.dta13("C:/Users/DANIEL/Dropbox/mesa educacion ciudadana/IEA studies/ICCS/Internacional/LA_ICCS.dta", convert.factors = FALSE)
+
+
+
+#iccs=haven::read_dta("C:/Users/DANIEL/Dropbox/MIDEUC/Corruption and trust/ICCS2016.dta")
+
+## Explorar la base
+
+    #class(iccs)
+    #dim(iccs)
+    #head(iccs)
+    #str(iccs)
+    
+    #names(iccs09)
+    #names(iccs16)
+    
+    #dplyr::glimpse(iccs09) # ver estructura general
+    
+    la16= iccs16 %>%
+      rename_all(tolower) %>%
+      mutate(LA = ifelse(country == "CHL", "LA", ifelse(country == "COL", "LA", ifelse(country == "DOM", "LA", ifelse(country == "MEX", "LA", ifelse(country == "PER", "LA", "NOLA")))))) %>%
+      rowwise() %>% 
+      dplyr::mutate(study="16") %>%
+      dplyr::mutate (dicta1= 5 - ls3g02d)%>%
+      dplyr::mutate (dicta2= 5 - ls3g02e)%>%
+      dplyr::mutate (dictadura= mean(c(dicta1, dicta2)))%>%
+      dplyr::mutate (pituto= is3g22a) %>%
+      dplyr::mutate (prensa= is3g22b) %>%
+      dplyr::mutate (police= is3g22f) %>%
+      dplyr::mutate (cortes= is3g22h) %>%
+      dplyr::mutate (dicdum= ifelse(dicta1>2, 1, 0)) %>%
+      dplyr::mutate (univ= ifelse(s_hisced>2, 1, 0)) %>%
+      dplyr::mutate (civic= mean(c(pv1civ, pv2civ, pv3civ, pv4civ, pv5civ))) %>%
+      dplyr::mutate (civic200= (pv1civ /200)) %>%
+      dplyr::filter(LA=="LA") %>%
+      dplyr::select(idcntry, country, idschool, idstud, totwgts, wgtfac1, wgtadj1s, wgtfac2s, wgtadj2s, wgtadj3s, jkzones, jkreps, pv1civ, pv2civ, pv3civ, pv4civ, pv5civ, civic, s_intrust, s_opdisc, s_hisced, s_hisei, s_homlit, s_gender, s_citcon, s_citsoc, s_citresp, s_citeff, s_cntatt, s_abuse, s_civlrn, s_geneql, s_ethrght, l_attviol, l_attdiv, l_atths, l_autgov, l_attcorr, l_dislaw, l_empclas, study, dicta1, dicta2, dictadura, dicdum, univ, s_poldisc, pituto, prensa, police, cortes, civic200, LA)
+    
+    #print
+    #names(la16)
+    #skim(la16)
+    #table(la16$ls3g02d, la16$ls3g02e)
+    #pacman::p_load(Hmisc)
+    #rcorr(la16$ls3g02d, la16$ls3g02b)
+################
+ #la16 %>% 
+      #group_by(study) %>%
+      #skimr::skim(c(civic, l_attviol, l_attdiv, l_autgov, l_attcorr, l_dislaw, l_empclas, dictadura, univ, pituto, dicdum))
+    
+      #la=mergeiccs %>%
+      #filter(country=="CHL" | country=="COL" | country=="MEX" | country=="DOM")
+    
+  #merge4 %>% 
+   #   group_by(study) %>%
+   #  skimr::skim(c(civic, l_attviol, l_attdiv, l_autgov, l_attcorr, l_dislaw, l_empclas, dictadura, univ, s_poldisc))
+
+#iccsp= corr %>%
+#  na.omit() %>%
+#  print
+````
+
+### 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+    la09= iccs09 %>%
+      rowwise() %>%
+      dplyr::mutate(study="09") %>%
+      dplyr::mutate (civic= mean(c(pv1civ, pv2civ, pv3civ, pv4civ, pv5civ))) %>%
+      dplyr::mutate (s_intrust= intrust) %>%
+      dplyr::mutate (s_opdisc= opdisc) %>%
+      dplyr::mutate (s_hisced= hisced) %>%
+      dplyr::mutate (s_hisei= hisei) %>%
+      dplyr::mutate (s_homlit= homelit) %>%
+      dplyr::mutate (s_gender= sgender) %>%
+      dplyr::mutate (s_citcon= citcon) %>%
+      dplyr::mutate (s_citsoc= citsoc) %>%
+      dplyr::mutate (s_citeff= citeff) %>%
+      dplyr::mutate (s_cntatt= attcnt) %>%
+      dplyr::mutate (s_geneql= geneql) %>%
+      dplyr::mutate (s_ethrght= ethrght) %>%
+      dplyr::mutate (l_attviol= attviol) %>%
+      dplyr::mutate (l_attdiv= attdiff) %>%
+      dplyr::mutate (l_autgov= autgov) %>%
+      dplyr::mutate (l_attcorr=attcorr) %>%
+      dplyr::mutate (l_dislaw= dislaw) %>%
+      dplyr::mutate (l_empclas= empath) %>%
+      dplyr::mutate (s_poldisc= poldisc) %>%
+      dplyr::mutate (dicta1= 5 - LS2P03D)%>%
+      dplyr::mutate (dicta2= 5 - LS2P03E)%>%
+      dplyr::mutate (dictadura= mean(c(dicta1, dicta2)))%>%
+      dplyr::mutate (univ= ifelse(s_hisced>3, 1, 0)) %>%
+      dplyr::select(idcntry, country, idschool, idstud, totwgts, wgtfac1, wgtadj1s, wgtfac2s, wgtadj2s, wgtadj3s, jkzones, jkreps, pv1civ, pv2civ, pv3civ, pv4civ, pv5civ, civic, s_intrust, s_opdisc, s_hisced, s_hisei, s_homlit, s_gender, s_citcon, s_citsoc, s_citeff, s_cntatt, s_geneql, s_ethrght, expagg, l_attviol, l_attdiv, l_autgov, l_attcorr, l_dislaw, l_empclas, study, dicta1, dicta2, dictadura, univ, s_poldisc) 
+    
+    #print
+    #names(la09)  
+    #skim(la09)
+    
+    mergeiccs=full_join(la16, la09)
+
+## crear un objeto con el diseño
+    #library(srvyr)
+````
+
+## Change in support for dictatorship in Chile.
+
+```{r, echo=TRUE, warning=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="CHL") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_01 <- mergesvy %>%
+        dplyr::group_by(study, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      # display table only
+      #knitr::kable(table_freq_01, digits = 4)
+      
+      df=data.frame(table_freq_01, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      
+      order_chile=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ study) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+      
+      
+      #############
+      # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(study, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      # display table only
+      #knitr::kable(table_freq_02, digits = 4)
+      
+      df2=data.frame(table_freq_02, digits=2)
+      
+      
+      mergesvy %>%
+        dplyr::group_by(study, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+
+      
+      df2= df2 %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree")))
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      #
+      
+      
+      econ_chile=ggplot(df2, aes(label, proportion)) +
+        facet_wrap(~ study) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+        ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+      
+    #plotly(p)
+    
+    #names(mergesvy)
+    #str(mergesvy)
+    
+    #merge= chile %>%
+    #  na.omit()
+     
+    
+## Diferencias Autoritarismo de Gobierno
+    #res=chile %>%
+    # p= group_by(country, study) %>% 
+    #  do(model = lmer(dictadura ~ 1 + (1 | idschool),weights=totwgts, data = .))
+    
+   # ggplotly(p)
+    
+    #res %>%
+    #  tidy(model)
+    
+    #mod=res %>%
+    #  tidy(model)%>%
+    #  filter(group=="fixed")
+    
+    #ggplot(mod, aes(estimate, reorder(country, estimate), color = (study))) +
+    #  geom_point(size = 2)+
+    #  labs(x = 'Intercepto Apoyo Dictaduta', y = 'País')+
+    #geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), alpha=1/2)
+````
+
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_chile)
+print(econ_chile)
+````
+
+
+## Change in support for dictatorship in Mexico.
+
+```{r, echo=FALSE, warning=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="MEX") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_01 <- mergesvy %>%
+        dplyr::group_by(study, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      # display table only
+      #knitr::kable(table_freq_01, digits = 4)
+      
+      df=data.frame(table_freq_01, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      
+      order_mex=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ study) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+      
+      
+      #############
+      # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(study, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      # display table only
+      #knitr::kable(table_freq_02, digits = 4)
+      
+      df2=data.frame(table_freq_02, digits=2)
+      
+      
+      mergesvy %>%
+        dplyr::group_by(study, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+
+      
+      df2= df2 %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree")))
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      #
+      
+      
+      econ_mex=ggplot(df2, aes(label, proportion)) +
+        facet_wrap(~ study) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+        ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+      
+    #plotly(p)
+    
+    #names(mergesvy)
+    #str(mergesvy)
+    
+    #merge= chile %>%
+    #  na.omit()
+     
+    
+## Diferencias Autoritarismo de Gobierno
+    #res=chile %>%
+    # p= group_by(country, study) %>% 
+    #  do(model = lmer(dictadura ~ 1 + (1 | idschool),weights=totwgts, data = .))
+    
+   # ggplotly(p)
+    
+    #res %>%
+    #  tidy(model)
+    
+    #mod=res %>%
+    #  tidy(model)%>%
+    #  filter(group=="fixed")
+    
+    #ggplot(mod, aes(estimate, reorder(country, estimate), color = (study))) +
+    #  geom_point(size = 2)+
+    #  labs(x = 'Intercepto Apoyo Dictaduta', y = 'País')+
+    #geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), alpha=1/2)
+````
+
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_mex)
+print(econ_mex)
+````
+
+## Change in support for dictatorship in Colombia.
+
+```{r, echo=FALSE, warning=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="COL") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_01 <- mergesvy %>%
+        dplyr::group_by(study, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      # display table only
+      #knitr::kable(table_freq_01, digits = 4)
+      
+      df=data.frame(table_freq_01, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      
+      order_col=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ study) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+      
+      
+      #############
+      # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(study, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      # display table only
+      #knitr::kable(table_freq_02, digits = 4)
+      
+      df2=data.frame(table_freq_02, digits=2)
+      
+      
+      mergesvy %>%
+        dplyr::group_by(study, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+
+      
+      df2= df2 %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree")))
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      #
+      
+      
+      econ_col=ggplot(df2, aes(label, proportion)) +
+        facet_wrap(~ study) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+        ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+      
+    #plotly(p)
+    
+    #names(mergesvy)
+    #str(mergesvy)
+    
+    #merge= chile %>%
+    #  na.omit()
+     
+    
+## Diferencias Autoritarismo de Gobierno
+    #res=chile %>%
+    # p= group_by(country, study) %>% 
+    #  do(model = lmer(dictadura ~ 1 + (1 | idschool),weights=totwgts, data = .))
+    
+   # ggplotly(p)
+    
+    #res %>%
+    #  tidy(model)
+    
+    #mod=res %>%
+    #  tidy(model)%>%
+    #  filter(group=="fixed")
+    
+    #ggplot(mod, aes(estimate, reorder(country, estimate), color = (study))) +
+    #  geom_point(size = 2)+
+    #  labs(x = 'Intercepto Apoyo Dictaduta', y = 'País')+
+    #geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), alpha=1/2)
+````
+
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_col)
+print(econ_col)
+````
+
+## Change in support for dictatorship in Rep. Dominicana.
+
+```{r, echo=FALSE, warning=FALSE}
+        mergesvy <-  mergeiccs %>%
+        filter(country=="DOM") %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+    # frequency table via taylor series linearization
+      table_freq_01 <- mergesvy %>%
+        dplyr::group_by(study, dicta1) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      # display table only
+      #knitr::kable(table_freq_01, digits = 4)
+      
+      df=data.frame(table_freq_01, digits=2)
+      #summary(factor(df$proportion))
+      
+      df= df %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta1, labels=c("Very disagree", "Disagree", "Agree", "Very agree"))) 
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      
+      order_gua=ggplot(df, aes(label, proportion)) +
+        facet_wrap(~ study) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+         ggtitle("Dictatorship are justified when bring order and security") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+      
+      
+      #############
+      # frequency table via taylor series linearization
+      table_freq_02 <- mergesvy %>%
+        dplyr::group_by(study, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+      #help(srvyr)
+      
+      # display table only
+      #knitr::kable(table_freq_02, digits = 4)
+      
+      df2=data.frame(table_freq_02, digits=2)
+      
+      
+      mergesvy %>%
+        dplyr::group_by(study, dicta2) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE))
+
+      
+      df2= df2 %>%
+        mutate(perc = proportion * 100) %>%
+        mutate(p=round(perc, 2)) %>%
+        mutate(label=factor(dicta2, labels=c("Very disagree", "Disagree", "Agree", "Very agree")))
+      
+      #df <- data.frame(trt = c("a", "b", "c", "d"), outcome = c(0.136, 0.212, 0.477, 0.176), study=c(09, 09, 09, 09))
+      #
+      
+      
+      econ_gua=ggplot(df2, aes(label, proportion)) +
+        facet_wrap(~ study) +
+         geom_text(aes(label = p), position = position_dodge(0.3), vjust=-0.1)+
+        theme(axis.text.x = element_text(angle =45, hjust = 1)) +
+        ggtitle("Dictatorship are justified when bring economic benefits") +
+        labs(x = "Response", y = "%") +
+        geom_col()
+      
+    #plotly(p)
+    
+    #names(mergesvy)
+    #str(mergesvy)
+    
+    #merge= chile %>%
+    #  na.omit()
+     
+    
+## Diferencias Autoritarismo de Gobierno
+    #res=chile %>%
+    # p= group_by(country, study) %>% 
+    #  do(model = lmer(dictadura ~ 1 + (1 | idschool),weights=totwgts, data = .))
+    
+   # ggplotly(p)
+    
+    #res %>%
+    #  tidy(model)
+    
+    #mod=res %>%
+    #  tidy(model)%>%
+    #  filter(group=="fixed")
+    
+    #ggplot(mod, aes(estimate, reorder(country, estimate), color = (study))) +
+    #  geom_point(size = 2)+
+    #  labs(x = 'Intercepto Apoyo Dictaduta', y = 'País')+
+    #geom_errorbarh(aes(xmin = estimate - std.error, xmax = estimate + std.error), alpha=1/2)
+````
+
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE} 
+print(order_gua)
+print(econ_gua)
+````
+
+
+## Support for Dictatorship on civic knowledge
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE}    
+    #ggplot(la16, aes(x=study, y=dictadura)) +
+    #  facet_wrap(~ country) +
+    #  stat_summary(fun.y = mean, geom = "bar", fill = "White", colour = "Black")
+
+    scatter <- ggplot(la16, aes(pv1civ, dictadura, colour = factor(country))) 
+    scatter + geom_smooth(method = "lm", alpha = 0.1) + 
+      facet_wrap(~ study) +
+    labs(x = "Civic knowledge", y = "Support to dictatorship", colour = "country") 
+````
+
+
+## Support for Dictatorship on institutional trust
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE}    
+    #ggplot(la16, aes(x=study, y=dictadura)) +
+    #  facet_wrap(~ country) +
+    #  stat_summary(fun.y = mean, geom = "bar", fill = "White", colour = "Black")
+
+    scatter <- ggplot(la16, aes(s_intrust, dictadura, colour = factor(country))) 
+    scatter + geom_smooth(method = "lm", alpha = 0.1) + 
+      facet_wrap(~ study) +
+    labs(x = "Institutional trust", y = "Support to dictatorship", colour = "country") 
+````
+
+
+## Institutional trust on civic knowledge
+
+```{r , eval=TRUE, echo=TRUE, warning=FALSE, tidy=TRUE}    
+    #ggplot(la16, aes(x=study, y=s_intrust)) +
+    #  facet_wrap(~ country) +
+    #  stat_summary(fun.y = mean, geom = "bar", fill = "White", colour = "Black")
+
+    scatter <- ggplot(la16, aes(s_intrust, pv1civ, colour = factor(country))) 
+    scatter + geom_smooth(method = "lm", alpha = 0.1) + 
+      facet_wrap(~ study) +
+    labs(x = "Civic knowledge", y = "Institutional trust", colour = "country") 
+````
+
+
+```{r , eval=FALSE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'} 
+## Models that check hypotheses by country (PERU)
+    peru=la16 %>%
+      filter(country=="PER")
+   
+## Model1 for Peru: Support to dictatorships on civic knowledge and University Education
+    per1= lmer(dictadura ~ univ + pv1civ + (1 | idschool), weights=totwgts, data=peru)
+    #summary(per1)
+
+## Model2 for Peru: Support to dictatorships on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government)    
+    per2= lmer(dictadura ~ univ + pv1civ + pituto + prensa + police + cortes + (1 | idschool), weights=totwgts, data=peru)
+    #summary(per2)
+ 
+## Model2 for Peru: Support to dictatorships on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government) + Institutional trust  
+    per3= lmer(dictadura ~ univ + pv1civ + pituto + prensa + police + cortes + s_intrust + (1 | idschool), weights=totwgts, data=peru)
+    #summary(per3)
+    
+## Model4 for Peru: Institutional trust on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government)  
+    per4= lmer(s_intrust ~ univ + pv1civ + pituto + prensa + police + cortes + (1 | idschool), weights=totwgts, data=peru)
+
+texreg(c(per1, per2, per3))
+texreg(c(per4))
+````
+
+
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'}
+#mediate(dictadura ~ civic200 + (s_intrust), data = peru, n.iter = 10000) %>%
+#    print(short = FALSE)
+    #help(mediate)
+
+````
+
+
+```{r , eval=FALSE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'} 
+## Models that check hypotheses by country (MEXICO)
+    mex=la16 %>%
+      filter(country=="MEX")
+   
+## Model1 for Mexico: Support to dictatorships on civic knowledge and University Education
+    mex1= lmer(dictadura ~ univ + pv1civ + (1 | idschool), weights=totwgts, data=mex)
+    #summary(per1)
+
+## Model2 for Mexico: Support to dictatorships on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government)    
+    mex2= lmer(dictadura ~ univ + pv1civ + pituto + prensa + police + cortes + (1 | idschool), weights=totwgts, data=mex)
+    #summary(per2)
+ 
+## Model2 for Mexico: Support to dictatorships on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government) + Institutional trust  
+    mex3= lmer(dictadura ~ univ + pv1civ + pituto + prensa + police + cortes + s_intrust + (1 | idschool), weights=totwgts, data=mex)
+    #summary(per3)
+    
+## Model4 for Mexico: Institutional trust on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government)  
+    mex4= lmer(s_intrust ~ univ + pv1civ + pituto + prensa + police + cortes + (1 | idschool), weights=totwgts, data=mex)
+
+texreg(c(mex1, mex2, mex3))
+texreg(c(mex4))
+````
+
+
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'}
+#mediate(dictadura ~ civic200 + (s_intrust), data = mex, n.iter = 10000) %>%
+#    print(short = FALSE)
+    #help(mediate)
+
+````
+
+
+```{r , eval=FALSE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'} 
+## Models that check hypotheses by country (COLOMBIA)
+    col=la16 %>%
+      filter(country=="COL")
+   
+## Model1 for Chile: Support to dictatorships on civic knowledge and University Education
+    col1= lmer(dictadura ~ univ + pv1civ + (1 | idschool), weights=totwgts, data=col)
+    #summary(per1)
+
+## Model2 for Chile: Support to dictatorships on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government)    
+    col2= lmer(dictadura ~ univ + pv1civ + pituto + prensa + police + cortes + (1 | idschool), weights=totwgts, data=col)
+    #summary(per2)
+ 
+## Model2 for Chile: Support to dictatorships on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government) + Institutional trust  
+    col3= lmer(dictadura ~ univ + pv1civ + pituto + prensa + police + cortes + s_intrust + (1 | idschool), weights=totwgts, data=col)
+    #summary(per3)
+    
+## Model4 for Chile: Institutional trust on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government)  
+    col4= lmer(s_intrust ~ univ + pv1civ + pituto + prensa + police + cortes + (1 | idschool), weights=totwgts, data=col)
+
+texreg(c(col1, col2, col3))
+texreg(c(col4))
+````
+
+
+```{r , eval=FALSE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'}
+#mediate(dictadura ~ civic200 + (s_intrust), data = col, n.iter = 10000) %>%
+#    print(short = FALSE)
+    #help(mediate)
+
+````
+
+
+```{r , eval=FALSE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'} 
+## Models that check hypotheses by country (REP. DOMINICANA)
+    gua=la16 %>%
+      filter(country=="DOM")
+   
+## Model1 for Chile: Support to dictatorships on civic knowledge and University Education
+    gua1= lmer(dictadura ~ univ + pv1civ + (1 | idschool), weights=totwgts, data=gua)
+    #summary(per1)
+
+## Model2 for Chile: Support to dictatorships on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government)    
+    gua2= lmer(dictadura ~ univ + pv1civ + pituto + prensa + police + cortes + (1 | idschool), weights=totwgts, data=gua)
+    #summary(per2)
+ 
+## Model2 for Chile: Support to dictatorships on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government) + Institutional trust  
+    gua3= lmer(dictadura ~ univ + pv1civ + pituto + prensa + police + cortes + s_intrust + (1 | idschool), weights=totwgts, data=gua)
+    #summary(per3)
+    
+## Model4 for Chile: Institutional trust on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government)  
+    gua4= lmer(s_intrust ~ univ + pv1civ + pituto + prensa + police + cortes + (1 | idschool), weights=totwgts, data=gua)
+
+texreg(c(gua1, gua2, gua3))
+texreg(c(gua4))
+````
+
+
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'}
+#mediate(dictadura ~ civic200 + (s_intrust), data = chile, n.iter = 10000) %>%
+#    print(short = FALSE)
+    #help(mediate)
+
+````
+
+
+```{r , eval=FALSE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'} 
+## Models that check hypotheses by country (CHILE)
+    chile=la16 %>%
+      filter(country=="CHL")
+   
+## Model1 for Chile: Support to dictatorships on civic knowledge and University Education
+    chl1= lmer(dictadura ~ univ + pv1civ + (1 | idschool), weights=totwgts, data=chile)
+    #summary(per1)
+
+## Model2 for Chile: Support to dictatorships on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government)    
+    chl2= lmer(dictadura ~ univ + pv1civ + pituto + prensa + police + cortes + (1 | idschool), weights=totwgts, data=chile)
+    #summary(per2)
+ 
+## Model2 for Chile: Support to dictatorships on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government) + Institutional trust  
+    chl3= lmer(dictadura ~ univ + pv1civ + pituto + prensa + police + cortes + s_intrust + (1 | idschool), weights=totwgts, data=chile)
+    #summary(per3)
+    
+## Model4 for Chile: Institutional trust on civic knowledge, University Education and Good or Bad aspects for democracy (contract friends, press concentration, police arrest and courts influence government)  
+    chl4= lmer(s_intrust ~ univ + pv1civ + pituto + prensa + police + cortes + (1 | idschool), weights=totwgts, data=chile)
+
+texreg(c(chl1, chl2, chl3))
+texreg(c(chl4))
+````
+
+## Models that check hypotheses by country (CHILE)
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'}
+ chile=la16 %>%
+      filter(country=="CHL")
+
+ pathmodel <- mplusObject(
+   TITLE = "Path Model;",
+   VARIABLE=" 
+  cluster = jkreps; 
+  Stratification = jkzones;
+  Weight = totwgts;",
+   ANALYSIS=
+  "type = complex;",
+   MODEL = "
+     dictadura ON pv1civ pituto prensa police cortes
+                  s_intrust
+                  ;
+     s_intrust ON pv1civ pituto prensa police cortes
+                  ;
+   MODEL INDIRECT:
+     dictadura ind pv1civ;
+   ",
+   OUTPUT = "CINTERVAL;",
+   rdata = chile)
+
+fit <- mplusModeler(pathmodel, modelout = "modelChile.inp", run = 1L)
+````
+
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='markup'}
+screenreg(fit, summaries = c("Observations"), digits = 3)
+
+readModels("C:/Users/DANIEL/Dropbox (Personal)/notacoes/modelchile.out", recursive = FALSE, what = "indirect" )
+````
+
+## Models that check hypotheses by country (PERU)
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'}
+ peru=la16 %>%
+      filter(country=="PER")
+
+ pathmodel <- mplusObject(
+   TITLE = "Path Model;",
+   VARIABLE=" 
+  cluster = jkreps; 
+  Stratification = jkzones;
+  Weight = totwgts;",
+   ANALYSIS=
+  "type = complex;",
+   MODEL = "
+     dictadura ON pv1civ pituto prensa police cortes
+                  s_intrust
+                  ;
+     s_intrust ON pv1civ pituto prensa police cortes
+                  ;
+   MODEL INDIRECT:
+     dictadura ind pv1civ;
+   ",
+   OUTPUT = "CINTERVAL;",
+   rdata = peru)
+
+fit <- mplusModeler(pathmodel, modelout = "modelperu.inp", run = 1L)
+````
+
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='markup'}
+screenreg(fit, summaries = c("Observations"), digits = 3)
+
+readModels("C:/Users/DANIEL/Dropbox (Personal)/notacoes/modelperu.out", recursive = FALSE, what = "indirect" )
+````
+
+## Models that check hypotheses by country (MEXICO)
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'}
+ mex=la16 %>%
+      filter(country=="MEX")
+
+ pathmodel <- mplusObject(
+   TITLE = "Path Model;",
+   VARIABLE=" 
+  cluster = jkreps; 
+  Stratification = jkzones;
+  Weight = totwgts;",
+   ANALYSIS=
+  "type = complex;",
+   MODEL = "
+     dictadura ON pv1civ pituto prensa police cortes
+                  s_intrust
+                  ;
+     s_intrust ON pv1civ pituto prensa police cortes
+                  ;
+   MODEL INDIRECT:
+     dictadura ind pv1civ;
+   ",
+   OUTPUT = "CINTERVAL;",
+   rdata = mex)
+
+fit <- mplusModeler(pathmodel, modelout = "modelmex.inp", run = 1L)
+````
+
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='markup'}
+screenreg(fit, summaries = c("Observations"), digits = 3)
+
+readModels("C:/Users/DANIEL/Dropbox (Personal)/notacoes/modelmex.out", recursive = FALSE, what = "indirect" )
+````
+
+## Models that check hypotheses by country (DOMINICANA)
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'}
+ dom=la16 %>%
+      filter(country=="DOM")
+
+ pathmodel <- mplusObject(
+   TITLE = "Path Model;",
+   VARIABLE=" 
+  cluster = jkreps; 
+  Stratification = jkzones;
+  Weight = totwgts;",
+   ANALYSIS=
+  "type = complex;",
+   MODEL = "
+     dictadura ON pv1civ pituto prensa police cortes
+                  s_intrust
+                  ;
+     s_intrust ON pv1civ pituto prensa police cortes
+                  ;
+   MODEL INDIRECT:
+     dictadura ind pv1civ;
+   ",
+   OUTPUT = "CINTERVAL;",
+   rdata = dom)
+
+fit <- mplusModeler(pathmodel, modelout = "modeldom.inp", run = 1L)
+````
+
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='markup'}
+screenreg(fit, summaries = c("Observations"), digits = 3)
+
+readModels("C:/Users/DANIEL/Dropbox (Personal)/notacoes/modeldom.out", recursive = FALSE, what = "indirect" )
+````
+
+## Models that check hypotheses by country (COLOMBIA)
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'}
+ col=la16 %>%
+      filter(country=="COL")
+
+ pathmodel <- mplusObject(
+   TITLE = "Path Model;",
+   VARIABLE=" 
+  cluster = jkreps; 
+  Stratification = jkzones;
+  Weight = totwgts;",
+   ANALYSIS=
+  "type = complex;",
+   MODEL = "
+     dictadura ON pv1civ pituto prensa police cortes
+                  s_intrust
+                  ;
+     s_intrust ON pv1civ pituto prensa police cortes
+                  ;
+   MODEL INDIRECT:
+     dictadura ind pv1civ;
+   ",
+   OUTPUT = "CINTERVAL;",
+   rdata = col)
+
+fit <- mplusModeler(pathmodel, modelout = "modelcol.inp", run = 1L)
+````
+
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='markup'}
+screenreg(fit, summaries = c("Observations"), digits = 3)
+
+readModels("C:/Users/DANIEL/Dropbox (Personal)/notacoes/modelcol.out", recursive = FALSE, what = "indirect" )
+````
+
+
+## Models that check hypotheses by country (COLOMBIA)DUMMY
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='asis'}
+ col=la16 %>%
+      filter(country=="COL")
+
+ pathmodel <- mplusObject(
+   TITLE = "Path Model;",
+   VARIABLE=" 
+  cluster = jkreps; 
+  Stratification = jkzones;
+  Weight = totwgts;
+  categorical = dicdum;",
+   ANALYSIS=
+  "type = complex;",
+   MODEL = "
+     dicdum ON pv1civ pituto prensa police cortes
+                  s_intrust
+                  ;
+     s_intrust ON pv1civ pituto prensa police cortes
+                  ;
+   MODEL INDIRECT:
+     dicdum ind pv1civ;
+   ",
+   OUTPUT = "CINTERVAL;",
+   rdata = col)
+
+fit <- mplusModeler(pathmodel, modelout = "modelcol.inp", run = 1L)
+````
+
+```{r , eval=TRUE, echo=FALSE, warning=FALSE, tidy=TRUE, results='markup'}
+screenreg(fit, summaries = c("Observations"), digits = 3)
+
+readModels("C:/Users/DANIEL/Dropbox (Personal)/notacoes/modelcol.out", recursive = FALSE, what = "indirect" )
+````

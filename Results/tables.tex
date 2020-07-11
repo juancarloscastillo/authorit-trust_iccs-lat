@@ -1,0 +1,374 @@
+\documentclass{article}
+\usepackage{authblk}
+\usepackage{amsfonts}
+\usepackage[version=3]{mhchem}
+\usepackage{textgreek}
+\usepackage[utf8]{inputenc}
+\usepackage{pdflscape}
+\usepackage{lmodern} 
+\usepackage[margin=3cm]{geometry} 
+\setlength\parindent{0pt} % para desindentar los párrafos
+\setlength{\parskip}{0.5em} % espacio entre los párrafos
+\renewcommand{\baselinestretch}{1.25}
+\usepackage{lipsum}
+\usepackage{adjustbox}
+\usepackage{dcolumn}
+% To make cites and references
+\usepackage[hidelinks,pdfusetitle,pdfdisplaydoctitle]{hyperref}
+\usepackage[notocbib]{apacite} 
+\usepackage{doi}
+\renewcommand{\doitext}{}
+%References
+\usepackage[natbibapa]{apacite}
+% Math packages
+\usepackage{amssymb}
+\usepackage{moreverb} % for verbatim ouput
+% Count of words
+\immediate\write18{texcount -inc -incbib -sum entrega2.tex > /tmp/wordcount.tex}
+\newcommand\wordcount{ 
+\verbatiminput{/tmp/wordcount.tex}}
+% Count of characters
+\immediate\write18{texcount -char -freq entrega2.tex > /tmp/charcount.tex}
+\newcommand\charcount{
+\verbatiminput{/tmp/charcount.tex}}
+
+
+\title{Trust in political institutions and support for authoritarianism in Latin American students: Does civic knowledge make a difference?}
+\author{Daniel Miranda, Juan Carlos Castillo, Catalina Miranda \& José Daniel Conejeros.}
+\date{Abril, 2020}
+
+\begin{document}
+\maketitle
+
+Document with tables. 
+
+
+\begin{table}[h] 
+\centering 
+  \label{table:1} 
+\begin{tabular}{@{\extracolsep{3pt}}lccccccc} 
+\\[-5ex]
+\hline \\[-3ex] 
+Country & \multicolumn{1}{c}{Year} & \multicolumn{1}{c}{School} & \multicolumn{1}{c}{Students} & \multicolumn{1}{c}{Woman (\%)} & \multicolumn{1}{c}{Age (mean)} \\ 
+\hline \\[-3.0ex] 
+Chile & 2009 & 177 & 5173 & 0.51 & 14.18 \\ 
+  Chile & 2016 & 178 & 5081 & 0.49 & 14.17 \\ 
+  Colombia & 2009 & 196 & 6200 & 0.54 & 14.38 \\ 
+  Colombia & 2016 & 150 & 5609 & 0.52 & 14.59 \\ 
+  Dominican Republic & 2009 & 145 & 4569 & 0.55 & 14.86 \\ 
+  Dominican Republic & 2016 & 141 & 3937 & 0.51 & 14.19 \\ 
+  Mexico & 2009 & 215 & 6565 & 0.52 & 14.08 \\ 
+  Mexico & 2016 & 213 & 5526 & 0.50 & 14.03 \\ 
+  Guatemala & 2009 & 145 & 3998 & 0.49 & 15.52 \\ 
+  Paraguay & 2009 & 149 & 3391 & 0.52 & 14.82 \\ 
+  Peru & 2016 & 206 & 5166 & 0.48 & 14.03 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+
+\break
+
+\begin{table}[h] 
+\centering 
+  \label{table:1} 
+\begin{tabular}{@{\extracolsep{3pt}}lccccccc} 
+\\[-5ex]
+\hline \\[-3ex] 
+\multicolumn{4}{l}{\textbf{How much do you trust each of the following groups, institutions or sources of information?}} \\ 
+\\[-3ex]
+\hline \\[-3ex] 
+Variable & Levels & \multicolumn{1}{c}{ICCS09 Code} & \multicolumn{1}{c}{ICCS16 Code} \\ 
+\hline \\[-3ex] 
+National Government & \multicolumn{1}{l}{1. Completely} & IS2P27A & IS3G26A \\ 
+Local Government  & \multicolumn{1}{l}{2. Quite a lot} & IS2P27B & IS3G26B \\ 
+Courts of justice & \multicolumn{1}{l}{3. A little} & IS2P27C & IS3G26C \\ 
+The police & \multicolumn{1}{l}{4. Not at all} & IS2P27D & IS3G26D \\ 
+Political parties &  & IS2P27E & IS3G26E \\ 
+National Parliament & & IS2P27F & IS3G26F  \\ 
+Media (television, newspapers, radio) & & IS2P27G & IS3G26G  \\ 
+The Armed Forces & & IS2P27H & IS3G26I \\ 
+Schools & & IS2P27I & IS3G26J  \\ 
+The United Nations &  & IS2P27J & IS3G26K  \\ 
+People in general & & IS2P27K & IS3G26L \\ 
+Social media (Twitter, blogs, YouTube) & &  & IS3G26H \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+
+\break
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{table}[h]
+\begin{tabular}{@{}llcc@{}}
+\\[-5ex]
+\toprule
+\hline \\[-3ex] 
+\multicolumn{4}{l}{\textbf{\begin{tabular}[c]{@{}l@{}}Authoritarian government practices: How much do you agree or disagree with the following \\ statements about the government and its leaders/their power?\end{tabular}}} \\ \midrule
+\hline \\[-3ex] 
+\multicolumn{1}{c}{Variables} & \multicolumn{1}{c}{Levels} & \multicolumn{1}{c}{ICCS09} & \multicolumn{1}{c}{ICCS16} \\ \midrule
+\hline \\[-3ex] 
+\begin{tabular}[c]{@{}l@{}}a. It is better for government leaders to make \\ decisions without consulting anybody\end{tabular} & 1. Strongly disagree & LS2P02A & LS3G01A \\
+\begin{tabular}[c]{@{}l@{}}b. People in government must enforce their \\ authority even if it means violating the \\ rights of some citizens\end{tabular} & 2. Disagree & LS2P02B & LS3G01B \\
+\begin{tabular}[c]{@{}l@{}}c. People in government lose part of their \\ authority when they admit their mistakes\end{tabular} & 3. Agree & LS2P02C & LS3G01C \\
+\begin{tabular}[c]{@{}l@{}}d. People whose opinions are different than \\ those of the government must be \\ considered its enemies\end{tabular} & 4. Strongly agree & LS2P02D & LS3G01D \\
+\begin{tabular}[c]{@{}l@{}}e. The most important opinion of a country \\ should be that of the president\end{tabular} &  & LS2P02E & LS3G01E \\
+\begin{tabular}[c]{@{}l@{}}f. It is fair that the government does not \\ comply with the law when it thinks it \\ is not necessary\end{tabular} &  & LS2P02F & LS3G01F \\ 
+\begin{tabular}[c]{@{}l@{}}g. Concentration of power in one person \\ guarantees order\end{tabular} &  & LS2P03A & LS3G02A \\
+\begin{tabular}[c]{@{}l@{}}h. The government should close \\ communication media that are critical\end{tabular} &  & LS2P03B & LS3G02B \\
+\begin{tabular}[c]{@{}l@{}}i. If the president does not agree with \\ Congress, he/she should dissolve it\end{tabular} &  & LS2P03C & LS3G02C \\ \midrule
+\hline \\[-3ex] 
+\multicolumn{4}{l}{\textbf{\begin{tabular}[c]{@{}l@{}}Justify the Dictatorship: How much do you agree or disagree with the following statements \\ about the government and its their power?\end{tabular}}} \\ \midrule
+\hline \\[-3ex] 
+\begin{tabular}[c]{@{}l@{}}a. Dictatorships are justified when they \\ bring order and safety.\end{tabular} & \begin{tabular}[c]{@{}l@{}}1. Strongly disagree \\ 2. Disagree\end{tabular} & LS2P03D & LS3G02D \\
+\begin{tabular}[c]{@{}l@{}}b. Dictatorships are justified when they \\ bring economic benefits\end{tabular} & \begin{tabular}[c]{@{}l@{}}3. Agree \\ 4. Strongly agree\end{tabular} & LS2P03E & LS3G02E \\
+\hline \\[-3ex] 
+\bottomrule
+\end{tabular}
+\end{table}
+
+\break
+
+
+\begin{table}[h] 
+\centering 
+  \label{table:1} 
+\begin{tabular}{@{\extracolsep{3pt}}lccc} 
+\hline \\[-3ex]
+Country & \multicolumn{1}{c}{ICCS 2009} & \multicolumn{1}{c}{ICCS 2016} & \multicolumn{1}{c}{Diff.} \\ 
+\hline \\[-3.0ex] 
+  Chile & 483 (3.5) & 482 (3.1)   & -1 (5.6) \\ 
+  Colombia & 462 (2.9) & 482 (3.4) & 20 (5.5) \blacktriangle \\ 
+  Dominican Republic & 380 (2.4) & 381 (3.0) & 1 (5.0) \\ 
+  Mexico & 452 (2.8) & 467 (2.5) & 15 (4.9) \blacktriangle \\ 
+  Guatemala & 435 (3.8) & - & -  \\ 
+  Paraguay & 424 (3.4) & - & -  \\ 
+  Peru & - & 438 (3.5)  & - \\ 
+\hline \\[-1.8ex] 
+\end{tabular}
+    \begin{tablenotes}
+      \small
+      \item  Notes:  Statistically significant differences ($p<0.05$) \blacktriangle  \blacktriangledown \\
+      () Standard errors appear in parentheses.
+    \end{tablenotes}
+\end{table} 
+
+
+
+\break
+
+\begin{landscape}
+\begin{table}[h]
+\begin{tabular}{@{}lclclclclccc@{}}
+\toprule
+\hline \\[-3ex]
+ & \multicolumn{2}{c}{\textbf{Chile}} & \multicolumn{2}{c}{\textbf{Colombia}} & \multicolumn{2}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Dominican \\ Republic\end{tabular}}} & \multicolumn{2}{c}{\textbf{Mexico}} & \textbf{Peru} & \textbf{Guatemala} & \textbf{Paraguay} \\ \midrule
+ \hline \\[-3ex]
+ & \textbf{2009} & \textbf{2016} & \textbf{2009} & \textbf{2016} & \textbf{2009} & \textbf{2016} & \textbf{2009} & \textbf{2016} & \textbf{2016} & \textbf{2009} & \textbf{2009} \\ \midrule
+ \hline \\[-3ex]
+National Government & 0.65 & 0.50 \blacktriangledown & 0.62 & 0.55 \blacktriangledown & 0.74 & 0.78 \blacktriangledown & 0.58 & 0.57 & 0.49 & 0.45 & 0.66 \\
+Local Government & 0.63 & 0.53 \blacktriangledown & 0.60 & 0.56 & 0.70 & 0.70 & 0.55 & 0.57 & 0.55 & 0.55 & 0.66 \\
+Courts of justice & 0.56 & 0.50 \blacktriangledown & 0.50 & 0.48 & 0.63 & 0.63 & 0.49 & 0.61 \blacktriangle & 0.46 & 0.48 & 0.49 \\
+The police & 0.71 & 0.64 \blacktriangledown & 0.55 & 0.49 & 0.56 & 0.56 & 0.43 & 0.49 & 0.50 & 0.33 & 0.45 \\
+Political parties & 0.34 & 0.33 & 0.35 & 0.28 \blacktriangledown & 0.51 & 0.50 & 0.35 & 0.37 & 0.33 & 0.26 & 0.32 \\
+National Parliament & 0.54 & 0.42 \blacktriangledown & 0.49 & 0.46 & 0.67 & 0.73 \blacktriangle & 0.54 & 0.56 & 0.42 & 0.49 & 0.59 \\
+Media & 0.74 & 0.62 \blacktriangledown & 0.72 & 0.69 & 0.76 & 0.78 & 0.57 & 0.56 & 0.62 & 0.70 & 0.74 \\
+The Armed Forces & 0.81 & 0.74 & 0.80 & 0.78 & 0.68 & 0.74 & 0.62 & 0.71 \blacktriangle & 0.64 & 0.63 & 0.61 \\
+Schools & 0.80 & 0.71 & 0.87 & 0.85 & 0.88 & 0.91 & 0.72 & 0.73 & 0.78 & 0.88 & 0.88 \\
+The United Nations & 0.65 & 0.60 & 0.62 & 0.63 & 0.68 & 0.73 & 0.66 & 0.71 & 0.67 & 0.66 & 0.70 \\
+People in general & 0.52 & 0.48 \blacktriangledown & 0.49 & 0.43 \blacktriangledown & 0.61 & 0.62 & 0.47 & 0.52 & 0.47 & 0.47 & 0.57 \\
+Social media &  & 0.54 &  & 0.49 &  & 0.61 &  & 0.48 & 0.45 &  &  \\ \midrule
+\hline \\[-3ex]
+\textbf{Average Country} & 0.63 & 0.55 \blacktriangledown & 0.60 & 0.56 \blacktriangledown  & 0.68 & 0.69 \approx & 0.54 & 0.57 \blacktriangle & 0.53 & 0.54 & 0.61 \\ \bottomrule
+\hline \\[-3ex]
+\end{tabular}
+\begin{tablenotes}
+ \small
+ \item  Note: Statistically significant differences ($p<0.05$)  \blacktriangle  \blacktriangledown
+\end{tablenotes}
+\end{table}
+\end{landscape}
+
+
+
+\break
+
+
+\begin{landscape}
+\begin{table}[h]
+\begin{tabular}{@{}lccccccccccc@{}}
+\toprule
+\hline \\[-3ex]
+ & \multicolumn{2}{c}{\textbf{Chile}} & \multicolumn{2}{c}{\textbf{Colombia}} & \multicolumn{2}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Dominican \\ Republic\end{tabular}}} & \multicolumn{2}{c}{\textbf{Mexico}} & \textbf{Peru} & \textbf{Guatemala} & \textbf{Paraguay} \\ \midrule
+ \hline \\[-3ex]
+ & \textbf{2009} & \textbf{2016} & \textbf{2009} & \textbf{2016} & \textbf{2009} & \textbf{2016} & \textbf{2009} & \textbf{2016} & \textbf{2016} & \textbf{2009} & \textbf{2009} \\ \midrule
+ \hline \\[-3ex]
+\begin{tabular}[c]{@{}l@{}}It is better for government leaders to make decisions \\ without consulting anybody\end{tabular} & 0.16 & 0.14 & 0.12 & 0.13 & 0.34 & 0.31 & 0.24 & 0.26 & 0.20 & 0.18 & 0.21 \\
+\begin{tabular}[c]{@{}l@{}}People in government must enforce their authority \\ even if it means violating the rights of some citizens\end{tabular} & 0.25 & 0.23 & 0.23 & 0.22 & 0.42 & 0.37 & 0.26 & 0.30 & 0.31 & 0.25 & 0.24 \\
+\begin{tabular}[c]{@{}l@{}}People in government lose part of their authority \\ when they admit their mistakes\end{tabular} & 0.43 & 0.35 & 0.46 & 0.46 & 0.60 & 0.64 & 0.48 & 0.53 & 0.52 & 0.51 & 0.48 \\
+\begin{tabular}[c]{@{}l@{}}People whose opinions are different than those of \\ the government must be considered its enemies\end{tabular} & 0.16 & 0.15 & 0.11 & 0.12 & 0.31 & 0.29 & 0.21 & 0.25 & 0.18 & 0.14 & 0.17 \\
+\begin{tabular}[c]{@{}l@{}}The most important opinion of a country should \\ be that of the president\end{tabular} & 0.55 & 0.38 \blacktriangledown & 0.50 & 0.50 & 0.62 & 0.69 & 0.45 & 0.41 & 0.56 & 0.48 & 0.57 \\
+\begin{tabular}[c]{@{}l@{}}It is fair that the government does not comply with \\ the law when it thinks it is not necessary\end{tabular} & 0.30 & 0.21 \blacktriangledown & 0.24 & 0.21 & 0.43 & 0.38 & 0.29 & 0.29 & 0.28 & 0.28 & 0.29 \\
+\begin{tabular}[c]{@{}l@{}}Concentration of power in one person guarantees \\ order\end{tabular} & 0.52 & 0.44 \blacktriangledown & 0.51 & 0.54 & 0.68 & 0.74 & 0.56 & 0.56 & 0.63 & 0.60 & 0.58 \\
+\begin{tabular}[c]{@{}l@{}}The government should close communication \\ media that are critical\end{tabular} & 0.21 & 0.22 & 0.16 & 0.37 & 0.36 & 0.26 & 0.32 & 0.71 & 0.29 & 0.18 & 0.18 \\
+\begin{tabular}[c]{@{}l@{}}If the president does not agree with Congress,\\ he/she should dissolve it.\end{tabular} & 0.32 & 0.35 & 0.29 & 0.31 & 0.46 & 0.49 & 0.37 & 0.39 & 0.43 & 0.45 & 0.41 \\
+\begin{tabular}[c]{@{}l@{}}Dictatorships are justified when they bring \\ order and safety.\end{tabular} & 0.65 & 0.57 \blacktriangledown & 0.74 & 0.73 & 0.70 & 0.73 & 0.69 & 0.67 & 0.77 & 0.78 & 0.69 \\
+\begin{tabular}[c]{@{}l@{}}Dictatorships are justified when they bring \\ economic benefits\end{tabular} & 0.64 & 0.52 \blacktriangledown & 0.70 & 0.68 & 0.66 & 0.70 & 0.66 & 0.66 & 0.72 & 0.75 & 0.65 \\
+\hline \\[-3ex]
+\textbf{Average Country} & 0.38 & 0.32 \blacktriangledown & 0.37 & 0.37  \approx & 0.51 & 0.52  \approx & 0.41 & 0.42  \approx & 0.45 & 0.42 & 0.41 \\ \bottomrule
+\hline \\[-3ex]
+\end{tabular}
+\begin{tablenotes}
+ \small
+ \item  Note: Statistically significant differences ($p<0.05$)  \blacktriangle  \blacktriangledown
+\end{tablenotes}
+\end{table}
+\end{landscape}
+
+\break 
+
+\begin{landscape}
+\begin{table}
+\begin{center}
+\begin{tabular}{l c c c c c }
+\hline
+ & Authoritarianism  & Authoritarianism & Authoritarianism & Trust & Trust \\
+\hline
+(Intercept)                 & $75.87^{***}$ & $-178.68^{***}$ & $-180.92^{***}$ & $63.10^{***}$ & $0.07$        \\
+                            & $(0.32)$      & $(23.00)$       & $(23.01)$       & $(0.26)$      & $(27.35)$     \\
+Civic Knowledge            & $-0.08^{***}$ & $-0.08^{***}$   & $-0.07^{***}$   & $-0.03^{***}$ & $-0.03^{***}$ \\
+                            & $(0.00)$      & $(0.00)$        & $(0.00)$        & $(0.00)$      & $(0.00)$      \\
+Trust in civic institutions                  & $0.17^{***}$  & $0.17^{***}$    & $0.26^{***}$    &               &               \\
+                            & $(0.00)$      & $(0.00)$        & $(0.02)$        &               &               \\
+Highest parental educational level                  &               & $0.03$          & $0.03$          &               & $0.03$        \\
+                            &               & $(0.03)$        & $(0.03)$        &               & $(0.03)$      \\
+Home Literacy                 &               & $-0.19^{***}$   & $-0.19^{***}$   &               & $-0.31^{***}$ \\
+                            &               & $(0.04)$        & $(0.04)$        &               & $(0.04)$      \\
+Girl                  &               & $-1.16^{***}$   & $-1.16^{***}$   &               & $-1.04^{***}$ \\
+                            &               & $(0.08)$        & $(0.08)$        &               & $(0.09)$      \\
+Political discussion                 &               & $-0.02^{***}$   & $-0.02^{***}$   &               & $0.12^{***}$  \\
+                            &               & $(0.00)$        & $(0.00)$        &               & $(0.00)$      \\
+2016                       &               & $0.13^{***}$    & $0.13^{***}$    &               & $0.03^{*}$    \\
+                            &               & $(0.01)$        & $(0.01)$        &               & $(0.01)$      \\
+\textbf{Interaction} &  &    &    &       &               \\
+Trust::Civic Knowledge &               &                 & $-0.00^{***}$   &               &               \\
+                            &               &                 & $(0.00)$        &               &               \\
+\hline
+R$^2$                       & 0.39          & 0.39            & 0.39            & 0.05          & 0.07          \\
+Adj. R$^2$                  & 0.39          & 0.39            & 0.39            & 0.05          & 0.07          \\
+Num. obs.                   & 51794         & 50281           & 50281           & 51954         & 50420         \\
+RMSE                        & 97.78         & 97.69           & 97.67           & 117.01        & 116.37        \\
+\hline
+\multicolumn{6}{l}{\scriptsize{$^{***}p<0.001$, $^{**}p<0.01$, $^*p<0.05$. Standard errors appear in parentheses.}}
+\end{tabular}
+\label{table:coefficients}
+\end{center}
+\end{table}
+\end{landscape}
+
+
+
+\begin{center} 
+Table 6: Regression Models: Support Authoritarianism and Civic Knowledge in Latin América
+\end{center}
+
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{l c c c }
+\hline
+ & Model 1 & Model 2 & Model 3 \\
+\hline
+(Intercept)          & $85.49^{***}$ & $85.93^{***}$ & $85.44^{***}$ \\
+                     & $(0.21)$      & $(0.30)$      & $(0.34)$      \\
+Civic knowledge     & $-0.08^{***}$ & $-0.08^{***}$ & $-0.08^{***}$ \\
+                     & $(0.00)$      & $(0.00)$      & $(0.00)$      \\
+Parent's education  &               & $-0.06^{*}$   & $0.05$        \\
+                     &               & $(0.03)$      & $(0.03)$      \\
+Books at home        &               & $-0.28^{***}$ & $-0.23^{***}$ \\
+                     &               & $(0.04)$      & $(0.04)$      \\
+Girl (vs boy)        &               & $-1.37^{***}$ & $-1.32^{***}$ \\
+                     &               & $(0.08)$      & $(0.08)$      \\
+Political discussion &               & $0.00$        & $-0.00$       \\
+                     &               & $(0.00)$      & $(0.00)$      \\
+2016(vs 2009)        &               &               & $1.04^{***}$  \\
+                     &               &               & $(0.08)$      \\
+Colombia             &               &               & $0.79^{***}$  \\
+                     &               &               & $(0.17)$      \\
+Dominican Republic   &               &               & $-0.42$       \\
+                     &               &               & $(0.25)$      \\
+Guatemala            &               &               & $0.10$        \\
+                     &               &               & $(0.32)$      \\
+Mexico               &               &               & $0.55^{***}$  \\
+                     &               &               & $(0.15)$      \\
+Paraguay             &               &               & $-0.50$       \\
+                     &               &               & $(0.39)$      \\
+Peru                 &               &               & $0.06$        \\
+                     &               &               & $(0.21)$      \\
+\hline
+R$^2$                & 0.36          & 0.36          & 0.36          \\
+Adj. R$^2$           & 0.36          & 0.36          & 0.36          \\
+Num. obs.            & 54769         & 52148         & 52148         \\
+RMSE                 & 99.05         & 99.25         & 99.04         \\
+\hline
+\multicolumn{4}{l}{\scriptsize{$^{***}p<0.001$, $^{**}p<0.01$, $^*p<0.05$}}
+\end{tabular}
+\label{tab6}
+\end{center}
+\end{table}
+
+\break
+\begin{center} 
+Table 7: Regression Models: Institutional Trust and Civic Knowledge in Latin América
+\end{center}
+
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{l c c c c c }
+\hline
+ & Model 1 & Model 2 & Model 3 & Model 4 & Model 5 \\
+\hline
+(Intercept)                & $63.10^{***}$ & $42.89^{***}$ & $13.74^{***}$ & $11.94^{***}$ & $13.20^{***}$ \\
+                           & $(0.26)$      & $(0.51)$      & $(1.25)$      & $(1.28)$      & $(1.29)$      \\
+Civic knowledge            & $-0.03^{***}$ & $-0.01^{***}$ & $0.05^{***}$  & $0.04^{***}$  & $0.04^{***}$  \\
+                           & $(0.00)$      & $(0.00)$      & $(0.00)$      & $(0.00)$      & $(0.00)$      \\
+Support authoritarianism   &               & $0.23^{***}$  & $0.81^{***}$  & $0.75^{***}$  & $0.72^{***}$  \\
+                           &               & $(0.01)$      & $(0.02)$      & $(0.02)$      & $(0.02)$      \\
+Knowledge x authoritarianims&               &               & $-0.00^{***}$ & $-0.00^{***}$ & $-0.00^{***}$ \\
+                           &               &               & $(0.00)$      & $(0.00)$      & $(0.00)$      \\
+Parent's education         &               &               &               & $0.02$        & $-0.02$       \\
+                           &               &               &               & $(0.03)$      & $(0.03)$      \\
+Books at home              &               &               &               & $-0.31^{***}$ & $-0.27^{***}$ \\
+                           &               &               &               & $(0.04)$      & $(0.04)$      \\
+Girl (vs boys)             &               &               &               & $-0.67^{***}$ & $-0.73^{***}$ \\
+                           &               &               &               & $(0.09)$      & $(0.09)$      \\
+Political discussion       &               &               &               & $0.11^{***}$  & $0.11^{***}$  \\
+                           &               &               &               & $(0.00)$      & $(0.00)$      \\
+2016 (vs 2009)             &               &               &               &               & $0.06$        \\
+                           &               &               &               &               & $(0.10)$      \\
+Colombia                   &               &               &               &               & $-0.32$       \\
+                           &               &               &               &               & $(0.19)$      \\
+Dominican Repuiblic        &               &               &               &               & $2.61^{***}$  \\
+                           &               &               &               &               & $(0.29)$      \\
+Guatemala                  &               &               &               &               & $-3.47^{***}$ \\
+                           &               &               &               &               & $(0.37)$      \\
+Mexico                     &               &               &               &               & $-0.19$       \\
+                           &               &               &               &               & $(0.18)$      \\
+Paraguay                   &               &               &               &               & $-0.25$       \\
+                           &               &               &               &               & $(0.46)$      \\
+Peru                       &               &               &               &               & $-2.51^{***}$ \\
+                           &               &               &               &               & $(0.24)$      \\
+\hline
+R$^2$                      & 0.05          & 0.09          & 0.10          & 0.11          & 0.12          \\
+Adj. R$^2$                 & 0.05          & 0.09          & 0.10          & 0.11          & 0.12          \\
+Num. obs.                  & 51954         & 51794         & 51794         & 50281         & 50281         \\
+RMSE                       & 117.01        & 114.45        & 113.75        & 113.41        & 112.94        \\
+\hline
+\multicolumn{6}{l}{\scriptsize{$^{***}p<0.001$, $^{**}p<0.01$, $^*p<0.05$}}
+\end{tabular}
+\end{center}
+\end{table}
+
+\break
+
+
+\end{document}
