@@ -2,18 +2,18 @@
     "collab_server" : "",
     "contents" : "",
     "created" : 1596521324742.000,
-    "dirty" : true,
+    "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "785535493",
+    "hash" : "0",
     "id" : "17F1AE95",
-    "lastKnownWriteTime" : 1596688733,
-    "last_content_update" : 1596695033479,
+    "lastKnownWriteTime" : 1596700942,
+    "last_content_update" : 1596700942986,
     "path" : "C:/Users/Daniel Miranda/Dropbox (MIDE)/MIDEUC/1.publicaciones/authorit_trust/authorit-trust_iccs-lat/book_cap_trust.Rmd",
     "project_path" : "book_cap_trust.Rmd",
     "properties" : {
-        "cursorPosition" : "241,0",
-        "scrollLine" : "227"
+        "cursorPosition" : "20,14",
+        "scrollLine" : "0"
     },
     "read_only" : false,
     "read_only_alternatives" : [
