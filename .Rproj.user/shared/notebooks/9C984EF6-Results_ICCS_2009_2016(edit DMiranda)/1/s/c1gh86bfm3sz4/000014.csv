@@ -1,0 +1,21 @@
+"0","#########################
+#Political Parties
+#########################
+table_freq_03 <- mergesvy %>%
+        dplyr::group_by(country, time, pol_parties_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, ""ci""))
+#########################
+#Political Parties
+#########################
+table_freq_03 <- mergesvy %>%
+        dplyr::group_by(country, time, pol_parties_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, ""ci""))
+#Table
+#print(xtable(table_freq_03,  caption = ""Sample"", format=""text""), include.rownames=FALSE)
+kable(table_freq_03, align = c(""lcccccc"")) %>%
+  kable_styling(bootstrap_options = c(""striped"", ""hover""))
+"
+"0","#Table"
+"0","#print(xtable(table_freq_03,  caption = ""Sample"", format=""text""), include.rownames=FALSE)"
+"0","kable(table_freq_03, align = c(""lcccccc"")) %>%"
+"0","  kable_styling(bootstrap_options = c(""striped"", ""hover""))"

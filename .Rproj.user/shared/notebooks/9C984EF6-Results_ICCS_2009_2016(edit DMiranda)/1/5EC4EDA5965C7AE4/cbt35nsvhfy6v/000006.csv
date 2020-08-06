@@ -1,0 +1,16 @@
+"0","#Table
+#print(xtable(table_freq_01,  caption = ""Sample"", format=""text""), include.rownames=FALSE)
+kable(table_freq_01, align = c(""lcccccc"")) %>%
+  kable_styling(bootstrap_options = c(""striped"", ""hover""))
+"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"

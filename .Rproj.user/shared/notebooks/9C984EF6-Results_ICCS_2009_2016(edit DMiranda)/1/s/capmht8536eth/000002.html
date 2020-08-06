@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+<script src="lib/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="lib/bootstrap-3.3.5/css/simplex.min.css" rel="stylesheet" />
+<script src="lib/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="lib/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="lib/kePrint-0.0.1/kePrint.js"></script>
+
+</head>
+<body>
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> country </th>
+   <th style="text-align:center;"> time </th>
+   <th style="text-align:center;"> dicta_ben_d </th>
+   <th style="text-align:center;"> proportion </th>
+   <th style="text-align:center;"> proportion_low </th>
+   <th style="text-align:center;"> proportion_upp </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> CHL </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.3599497 </td>
+   <td style="text-align:center;"> 0.3400556 </td>
+   <td style="text-align:center;"> 0.3798438 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> CHL </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.6400503 </td>
+   <td style="text-align:center;"> 0.6201562 </td>
+   <td style="text-align:center;"> 0.6599444 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> CHL </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> CHL </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.4844084 </td>
+   <td style="text-align:center;"> 0.4650626 </td>
+   <td style="text-align:center;"> 0.5037541 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> CHL </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.5155916 </td>
+   <td style="text-align:center;"> 0.4962459 </td>
+   <td style="text-align:center;"> 0.5349374 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> CHL </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> COL </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.3004007 </td>
+   <td style="text-align:center;"> 0.2878003 </td>
+   <td style="text-align:center;"> 0.3130012 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> COL </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.6995993 </td>
+   <td style="text-align:center;"> 0.6869988 </td>
+   <td style="text-align:center;"> 0.7121997 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> COL </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> COL </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.3248039 </td>
+   <td style="text-align:center;"> 0.3035032 </td>
+   <td style="text-align:center;"> 0.3461047 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> COL </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.6751961 </td>
+   <td style="text-align:center;"> 0.6538953 </td>
+   <td style="text-align:center;"> 0.6964968 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> COL </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> DOM </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.3398834 </td>
+   <td style="text-align:center;"> 0.3180054 </td>
+   <td style="text-align:center;"> 0.3617615 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> DOM </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.6601166 </td>
+   <td style="text-align:center;"> 0.6382385 </td>
+   <td style="text-align:center;"> 0.6819946 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> DOM </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> DOM </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.2997769 </td>
+   <td style="text-align:center;"> 0.2781407 </td>
+   <td style="text-align:center;"> 0.3214131 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> DOM </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.7002231 </td>
+   <td style="text-align:center;"> 0.6785869 </td>
+   <td style="text-align:center;"> 0.7218593 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> DOM </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GTM </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.2540651 </td>
+   <td style="text-align:center;"> 0.2357930 </td>
+   <td style="text-align:center;"> 0.2723373 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GTM </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.7459349 </td>
+   <td style="text-align:center;"> 0.7276627 </td>
+   <td style="text-align:center;"> 0.7642070 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> GTM </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MEX </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.3382672 </td>
+   <td style="text-align:center;"> 0.3235268 </td>
+   <td style="text-align:center;"> 0.3530077 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MEX </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.6617328 </td>
+   <td style="text-align:center;"> 0.6469923 </td>
+   <td style="text-align:center;"> 0.6764732 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MEX </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MEX </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.3357496 </td>
+   <td style="text-align:center;"> 0.3159656 </td>
+   <td style="text-align:center;"> 0.3555335 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MEX </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.6642504 </td>
+   <td style="text-align:center;"> 0.6444665 </td>
+   <td style="text-align:center;"> 0.6840344 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MEX </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PER </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.2820944 </td>
+   <td style="text-align:center;"> 0.2654873 </td>
+   <td style="text-align:center;"> 0.2987014 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PER </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.7179056 </td>
+   <td style="text-align:center;"> 0.7012986 </td>
+   <td style="text-align:center;"> 0.7345127 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PER </td>
+   <td style="text-align:center;"> 2016 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PRY </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 0 </td>
+   <td style="text-align:center;"> 0.3533853 </td>
+   <td style="text-align:center;"> 0.3347247 </td>
+   <td style="text-align:center;"> 0.3720458 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PRY </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> 1 </td>
+   <td style="text-align:center;"> 0.6466147 </td>
+   <td style="text-align:center;"> 0.6279542 </td>
+   <td style="text-align:center;"> 0.6652753 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PRY </td>
+   <td style="text-align:center;"> 2009 </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+   <td style="text-align:center;"> NA </td>
+  </tr>
+</tbody>
+</table>
+</body>
+</html>

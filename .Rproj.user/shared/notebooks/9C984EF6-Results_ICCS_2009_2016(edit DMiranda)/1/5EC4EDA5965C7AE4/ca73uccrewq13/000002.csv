@@ -1,0 +1,16 @@
+"0","#Table
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = ""Sample"", format=""text""), include.rownames=FALSE)
+kable(iccs_count, align = c(""lcccccc"")) %>%
+  kable_styling(bootstrap_options = c(""striped"", ""hover""))
+"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
+"2","over-long path"
