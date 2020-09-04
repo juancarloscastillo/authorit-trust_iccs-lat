@@ -21,17 +21,34 @@
 %References
 \usepackage[natbibapa]{apacite}
 % Math packages
-\usepackage{amssymb}
-\usepackage{moreverb} % for verbatim ouput
+%\usepackage{amssymb}
+%\usepackage{moreverb} % for verbatim ouput
 % Count of words
-\immediate\write18{texcount -inc -incbib -sum entrega2.tex > /tmp/wordcount.tex}
-\newcommand\wordcount{ 
-\verbatiminput{/tmp/wordcount.tex}}
+%\immediate\write18{texcount -inc -incbib -sum entrega2.tex > /tmp/wordcount.tex}
+%\newcommand\wordcount{ 
+%\verbatiminput{/tmp/wordcount.tex}}
 % Count of characters
-\immediate\write18{texcount -char -freq entrega2.tex > /tmp/charcount.tex}
-\newcommand\charcount{
-\verbatiminput{/tmp/charcount.tex}}
+%\immediate\write18{texcount -char -freq entrega2.tex > /tmp/charcount.tex}
+%\newcommand\charcount{
+%\verbatiminput{/tmp/charcount.tex}}
 
+\usepackage{verbatim}
+\usepackage{fancyvrb} % esto ( y lo de abajo) es para poder insertar codigo R con \code{}
+\fvset{fontfamily=courier}
+\DefineVerbatimEnvironment{Sinput}{Verbatim}
+{fontseries=b, fontsize=\footnotesize, xleftmargin=0.2cm}
+\DefineVerbatimEnvironment{Routput}{Verbatim}
+{fontsize=\footnotesize, xleftmargin=1cm}
+\DefineVerbatimEnvironment{Routput}{Verbatim}
+{fontseries=b,fontsize=\scriptsize, xleftmargin=0.2cm}
+\DefineVerbatimEnvironment{Binput}{Verbatim}
+{fontseries=b, fontsize=\scriptsize,frame=single, label=\fbox{lavaan model syntax}, framesep=2mm}
+%\DefineShortVerb{\!}
+\DefineVerbatimEnvironment{Rinput}{Verbatim}
+{fontseries=b, fontsize=\scriptsize, frame=single, label=\fbox{R code}, framesep=5mm}
+\newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\let\proglang=\textsf
+\let\code=\texttt
 
 \title{Trust in political institutions and support for authoritarianism in Latin American students: Does civic knowledge make a difference?}
 \author{Daniel Miranda, Juan Carlos Castillo, Catalina Miranda \& José Daniel Conejeros.}
@@ -80,17 +97,9 @@ Chile & 2009 & 177 & 5173 & 0.51 & 14.18 \\
 Variable & Levels & \multicolumn{1}{c}{ICCS09 Code} & \multicolumn{1}{c}{ICCS16 Code} \\ 
 \hline \\[-3ex] 
 National Government & \multicolumn{1}{l}{1. Completely} & IS2P27A & IS3G26A \\ 
-Local Government  & \multicolumn{1}{l}{2. Quite a lot} & IS2P27B & IS3G26B \\ 
-Courts of justice & \multicolumn{1}{l}{3. A little} & IS2P27C & IS3G26C \\ 
-The police & \multicolumn{1}{l}{4. Not at all} & IS2P27D & IS3G26D \\ 
-Political parties &  & IS2P27E & IS3G26E \\ 
-National Parliament & & IS2P27F & IS3G26F  \\ 
-Media (television, newspapers, radio) & & IS2P27G & IS3G26G  \\ 
-The Armed Forces & & IS2P27H & IS3G26I \\ 
-Schools & & IS2P27I & IS3G26J  \\ 
-The United Nations &  & IS2P27J & IS3G26K  \\ 
-People in general & & IS2P27K & IS3G26L \\ 
-Social media (Twitter, blogs, YouTube) & &  & IS3G26H \\ 
+National Parliament & \multicolumn{1}{l}{2. Quite a lot} & IS2P27F & IS3G26F  \\ 
+Political parties &  \multicolumn{1}{l}{3. A little} & IS2P27E & IS3G26E \\ 
+Courts of justice & \multicolumn{1}{l}{4. Not at all} & IS2P27C & IS3G26C \\ 
 \hline \\[-1.8ex] 
 \end{tabular} 
 \end{table} 
@@ -104,24 +113,11 @@ Social media (Twitter, blogs, YouTube) & &  & IS3G26H \\
 \\[-5ex]
 \toprule
 \hline \\[-3ex] 
-\multicolumn{4}{l}{\textbf{\begin{tabular}[c]{@{}l@{}}Authoritarian government practices: How much do you agree or disagree with the following \\ statements about the government and its leaders/their power?\end{tabular}}} \\ \midrule
+\multicolumn{4}{l}{\textbf{\begin{tabular}[c]{@{}l@{}} How much do you agree or disagree with the following statements \\ about the government and its their power?\end{tabular}}} \\ \midrule
 \hline \\[-3ex] 
-\multicolumn{1}{c}{Variables} & \multicolumn{1}{c}{Levels} & \multicolumn{1}{c}{ICCS09} & \multicolumn{1}{c}{ICCS16} \\ \midrule
-\hline \\[-3ex] 
-\begin{tabular}[c]{@{}l@{}}a. It is better for government leaders to make \\ decisions without consulting anybody\end{tabular} & 1. Strongly disagree & LS2P02A & LS3G01A \\
-\begin{tabular}[c]{@{}l@{}}b. People in government must enforce their \\ authority even if it means violating the \\ rights of some citizens\end{tabular} & 2. Disagree & LS2P02B & LS3G01B \\
-\begin{tabular}[c]{@{}l@{}}c. People in government lose part of their \\ authority when they admit their mistakes\end{tabular} & 3. Agree & LS2P02C & LS3G01C \\
-\begin{tabular}[c]{@{}l@{}}d. People whose opinions are different than \\ those of the government must be \\ considered its enemies\end{tabular} & 4. Strongly agree & LS2P02D & LS3G01D \\
-\begin{tabular}[c]{@{}l@{}}e. The most important opinion of a country \\ should be that of the president\end{tabular} &  & LS2P02E & LS3G01E \\
-\begin{tabular}[c]{@{}l@{}}f. It is fair that the government does not \\ comply with the law when it thinks it \\ is not necessary\end{tabular} &  & LS2P02F & LS3G01F \\ 
-\begin{tabular}[c]{@{}l@{}}g. Concentration of power in one person \\ guarantees order\end{tabular} &  & LS2P03A & LS3G02A \\
-\begin{tabular}[c]{@{}l@{}}h. The government should close \\ communication media that are critical\end{tabular} &  & LS2P03B & LS3G02B \\
-\begin{tabular}[c]{@{}l@{}}i. If the president does not agree with \\ Congress, he/she should dissolve it\end{tabular} &  & LS2P03C & LS3G02C \\ \midrule
-\hline \\[-3ex] 
-\multicolumn{4}{l}{\textbf{\begin{tabular}[c]{@{}l@{}}Justify the Dictatorship: How much do you agree or disagree with the following statements \\ about the government and its their power?\end{tabular}}} \\ \midrule
-\hline \\[-3ex] 
-\begin{tabular}[c]{@{}l@{}}a. Dictatorships are justified when they \\ bring order and safety.\end{tabular} & \begin{tabular}[c]{@{}l@{}}1. Strongly disagree \\ 2. Disagree\end{tabular} & LS2P03D & LS3G02D \\
-\begin{tabular}[c]{@{}l@{}}b. Dictatorships are justified when they \\ bring economic benefits\end{tabular} & \begin{tabular}[c]{@{}l@{}}3. Agree \\ 4. Strongly agree\end{tabular} & LS2P03E & LS3G02E \\
+\begin{tabular}[c]{@{}l@{}}g. Concentration of power in one person \\ guarantees order\end{tabular} & \begin{tabular}[c]{@{}l@{}}1. Strongly disagree \\ 2. Disagree\end{tabular}  & LS2P03A & LS3G02A \\
+\begin{tabular}[c]{@{}l@{}}a. Dictatorships are justified when they \\ bring order and safety.\end{tabular} &  \begin{tabular}[c]{@{}l@{}} 3. Agree \\ 4. Strongly agree\end{tabular} & LS2P03D & LS3G02D \\
+\begin{tabular}[c]{@{}l@{}}b. Dictatorships are justified when they \\ bring economic benefits\end{tabular} & & LS2P03E & LS3G02E \\
 \hline \\[-3ex] 
 \bottomrule
 \end{tabular}

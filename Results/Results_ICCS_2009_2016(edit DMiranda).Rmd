@@ -48,6 +48,7 @@ library(stargazer)
 library(countrycode)
 library(MplusAutomation)
 library(ggpubr)
+library(corrplot)
 ```
 
 # Data
@@ -478,7 +479,7 @@ kable(table_freq_06, align = c("lcccccc")) %>%
 dicta <- ggplot(mergeiccs, aes(civic_knowledge, l_autgov, weight=totwgts, linetype = country))
 dicta <-    dicta + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
       facet_wrap(~ time) + 
-    labs(x = "Civic Knowledge", y = "Support for authoritarian practices", colour = "dark") 
+    labs(x = "Civic Knowledge", y = "Support for authoritarianism", colour = "dark") 
 dicta
 #Dictatorships are justified when they bring order and safety 
 dicta1 <- ggplot(mergeiccs, aes(civic_knowledge, dicta_safety, weight=totwgts, linetype = country))
@@ -492,8 +493,25 @@ dicta2 <-    dicta2 + geom_smooth(method = "lm", alpha = 0.1, color="black", siz
       facet_wrap(~ time) +
     labs(x = "Civic Knowledge", y = "Support to dictatorship (economic benefits)", colour = "dark") 
 dicta2
+
+library(GGally)
+ 
+# Check correlations (as scatterplots), distribution and print corrleation coefficient 
+ggpairs(mergeiccs, title="correlogram with ggpairs()") 
+
+
+#png("graph/corr.png")
+corr <- ggpairs(mergeiccs, columns = c("civic_knowledge", "s_intrust", "l_autgov"), ggplot2::aes(colour=country),
+columnLabels = c("Civic knowledge", "Trust", "Authoritarianism"))
+print(corr)
+#dev.off()
+
+ggsave("graph/corr.png", corr, width = 6, height = 6)
+
+
 #All graphs
 library(ggpubr)
+
 png(file = "C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/g1.png", height = 300)
 ggarrange(dicta, ncol = 1, nrow = 1,  common.legend = TRUE, legend="right")
 dev.off()
@@ -518,7 +536,7 @@ dev.off()
 trust <- ggplot(mergeiccs, aes(civic_knowledge, s_intrust, weight=totwgts, linetype = country))
 trust <-    trust + geom_smooth(method = "lm", alpha = 0.1, color="black", size=0.5) + 
       facet_wrap(~ time) + 
-    labs(x = "Civic Knowledge", y = "Students' trust in civic institutions", colour = "dark") 
+    labs(x = "Civic Knowledge", y = "Trust in institutions", colour = "dark") 
 trust
 
 #Trust in civic institutions
@@ -601,6 +619,11 @@ dev.off()
 png(file = "C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/g7.png", height = 300)
 ggarrange(people, ncol = 1, nrow = 1,  common.legend = TRUE, legend="right")
 dev.off()
+
+
+trudic=ggarrange(trust, dicta, ncol = 1, nrow = 2,  common.legend = TRUE, legend="right")
+trudic
+ggsave("graph/trudic.png", trudic, width = 6, height = 6)
 
 ```
 

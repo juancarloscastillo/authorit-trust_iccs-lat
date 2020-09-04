@@ -1,0 +1,592 @@
+---
+title: "Documento de resultados"
+author: "Daniel Miranda, Juan Carlos Castillo, Catalina Miranda & José Conejeros"
+date: "Abril, 2020"
+output:
+  html_document:
+    code_folding: hide
+    highlight: tango
+    theme: cosmo
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+---
+
+
+```{r, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(dev = 'jpg')
+```
+
+```{r message=FALSE, warning=FALSE, cache=FALSE, include=FALSE, results="asis"}
+rm(list = ls()) #limpiar la memoria
+#Desactivar notaci?n cient?fica
+options(scipen=999)
+#Paquetes
+library(knitr)
+library(DT)
+library(plyr)
+library(dplyr)
+library(haven)
+library(texreg) 
+library(xtable) 
+library(kableExtra) 
+library(ggplot2)
+library(psych)
+library(purrr)
+library(tidyr)
+library(sjmisc)
+library(Hmisc)
+library(reshape)
+library(VIM)
+library(stringr)
+library(skimr)
+library(lme4)
+library(broom)
+library(survey)
+library(srvyr)
+library(stargazer)
+library(countrycode)
+library(MplusAutomation)
+library(GGally)
+library(lme4)
+library(sjPlot)
+library(viridis)
+library(hrbrthemes)
+
+pacman::p_load(stargazer, # Reporte a latex
+sjPlot, sjmisc, # reporte y gráficos
+corrplot, # grafico correlaciones
+xtable, # Reporte a latex
+Hmisc, # varias funciones
+psych, # fa y principal factors
+psy, # scree plot function
+nFactors, # parallel
+GPArotation, devtools, CTT, lavaan, texreg) 
+```
+
+# Load Data 
+
+```{r eval=TRUE, echo=TRUE, warning=FALSE}
+#Load Data processing 
+load("C:/Users/Daniel Miranda/Dropbox (MIDE)/MIDEUC/1.publicaciones/authorit_trust/authorit-trust_iccs-lat/Data/Analysis/mergeiccs.Rdata")
+
+names(mergeiccs)
+
+mergeiccs$idsch= mergeiccs %>%
+  group_indices(idcountry, time, idschool)
+
+
+mergeiccs= mergeiccs%>%
+  mutate(parental_education=s_hisced) %>%
+  mutate(books_at_home=s_homelit) %>%
+  mutate(gender=s_gender) %>%
+  mutate(political_discussion=s_poldisc)%>%
+  mutate(trust_average  = ((nac_gob + courts + parliament + pol_parties+ police + local_gob)/6), na.rm=T) %>% #TRUST INDEX
+  mutate(authori_average  = (dicta7 +  dicta_safety + dicta_benefits)/3) 
+  
+```
+
+
+# Sample Size (tables)
+
+```{r, echo=TRUE, eval=TRUE}
+#ICCS LA: 2009 - 2016
+iccs_count <- mergeiccs %>% 
+  group_by(time, ncountry) %>%
+  dplyr::summarise(N=n(), man=mean(s_gender, na.rm=T), age=mean(s_age, na.rm=T)) %>%
+  arrange(ncountry)
+#ID School
+iccs_count2 <- mergeiccs %>% 
+  group_by(time, ncountry, idschool) %>%
+  dplyr::summarise(n=n()) %>%
+  dplyr::summarise(s=n()) %>%
+  arrange(ncountry)
+iccs_count$s <- iccs_count2$s 
+rm(iccs_count2)
+iccs_count$time <- as.character(iccs_count$time) 
+
+#Table
+#print(xtable(iccs_count[, c(2:1,6,3:5)],  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(iccs_count, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+# Institutional Trust (dummy tables)
+
+```{r, echo=TRUE, eval=FALSE}
+#Design
+        mergesvy <-  mergeiccs %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+#Adjust and table
+mergesvy[["variables"]][["nac_gob_d"]] <- as.character(mergesvy[["variables"]][["nac_gob_d"]])
+mergesvy[["variables"]][["parliament_d"]] <- as.character(mergesvy[["variables"]][["parliament_d"]])
+mergesvy[["variables"]][["pol_parties_d"]] <- as.character(mergesvy[["variables"]][["pol_parties_d"]])
+mergesvy[["variables"]][["courts_d"]] <- as.character(mergesvy[["variables"]][["courts_d"]])
+
+#########################
+#National Government
+#########################
+table_freq_01 <- mergesvy %>%
+        dplyr::group_by(country, time, nac_gob_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_01,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_01, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#########################
+#Parliament
+#########################
+table_freq_02 <- mergesvy %>%
+        dplyr::group_by(country, time, parliament_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_02,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_02, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#########################
+#Political Parties
+#########################
+table_freq_03 <- mergesvy %>%
+        dplyr::group_by(country, time, pol_parties_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_03,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_03, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#########################
+#People in general
+#########################
+table_freq_04 <- mergesvy %>%
+        dplyr::group_by(country, time, courts_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_04,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_04, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+# Support authoritarianism (dummy tables)
+
+```{r, echo=TRUE, eval=FALSE}
+#Adjust and table
+mergesvy[["variables"]][["dicta7_d"]] <- as.character(mergesvy[["variables"]][["dicta7_d"]])
+mergesvy[["variables"]][["dicta9_d"]] <- as.character(mergesvy[["variables"]][["dicta9_d"]])
+mergesvy[["variables"]][["dicta_ben_d"]] <- as.character(mergesvy[["variables"]][["dicta_ben_d"]])
+mergesvy[["variables"]][["dicta_saf_d"]] <- as.character(mergesvy[["variables"]][["dicta_saf_d"]])
+
+#########################
+#Power concentration
+#########################
+table_freq_05 <- mergesvy %>%
+        dplyr::group_by(country, time, dicta7_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_05,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_05, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#########################
+#Close parliament
+#########################
+table_freq_06 <- mergesvy %>%
+        dplyr::group_by(country, time, dicta9_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_05,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_06, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#########################
+#Benefits
+#########################
+table_freq_07 <- mergesvy %>%
+        dplyr::group_by(country, time, dicta_ben_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_05,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_07, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+#########################
+#Safety
+#########################
+
+table_freq_08 <- mergesvy %>%
+        dplyr::group_by(country, time, dicta_saf_d) %>%
+        summarize(proportion = survey_mean(,na.rm=TRUE, "ci"))
+#Table
+#print(xtable(table_freq_05,  caption = "Sample", format="text"), include.rownames=FALSE)
+kable(table_freq_08, align = c("lcccccc")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+
+# Indexes
+```{r}
+
+````
+
+
+# Trust in institutions index (Government, Parliament, Political parties and Courts)
+```{r}
+names(mergeiccs)
+
+mergesvy <-  mergeiccs %>%
+        as_survey_design(
+        strata = jkzones, 
+        weights = totwgts, 
+        ids = jkreps, 
+        nest = TRUE)
+
+#mergesvy
+
+trust <- mergesvy %>%
+        dplyr::group_by(country) %>%
+        summarize(govern = survey_mean(nac_gob, na.rm=TRUE), parliam = survey_mean(parliament, na.rm=TRUE), polpar = survey_mean(pol_parties, na.rm=TRUE), courts = survey_mean(courts, na.rm=TRUE), index = survey_mean(s_intrust, na.rm=TRUE), local = survey_mean(local_gob, na.rm=TRUE), police = survey_mean(police, na.rm=TRUE))%>%
+        arrange(index) %>%
+        mutate(country = factor(country, levels = .$country))
+
+trust
+
+#png("trust_items.png", width=800, height=500)
+ggplot(trust, aes(, country)) +
+  geom_point(aes(govern, shape="a. Government"), size=3) +
+  #geom_point(aes(local, shape="a. Local Government"), size=3) +
+  geom_point(aes(parliam, shape="b. Parliament"), size=3)+
+  geom_point(aes(polpar, shape="c. Political parties"), size=3)+
+  geom_point(aes(courts, shape="d. Courts"), size=3)+
+  #geom_point(aes(police, shape="d. Police"), size=3)+
+  theme(legend.title=element_blank())+
+  #geom_point(aes(index, shape="e. Trust_average"))+
+  ggtitle("", sub = "") + ylab("") + xlab("Average") + xlim(1,4)
+#dev.off()
+```
+
+# Authoritarianism index (Power concentrations, Close parliament, Dictatorship justification if safety, Dictatorship justification if economic benefits)
+
+```{r }
+auth <- mergesvy %>%
+        dplyr::group_by(country) %>%
+        summarize(dicta7 = survey_mean(dicta7, na.rm=TRUE), dicta10 = survey_mean(dicta_safety, na.rm=TRUE), dicta11 = survey_mean(dicta_benefits, na.rm=TRUE), index = survey_mean(authori_average, na.rm=TRUE))%>%
+        arrange(index) %>%
+        mutate(country = factor(country, levels = .$country))
+
+auth
+
+#png("auth_items.png", width=800, height=500)
+ggplot(auth, aes(, country)) +
+  geom_point(aes(dicta7, shape="a. Concentration power guarantee order"), size=3)+
+  geom_point(aes(dicta10, shape="b. Support dictatorship if safety"), size=3)+
+  geom_point(aes(dicta11, shape="c. Support dictatorship if benefits"), size=3)+
+  theme(legend.title=element_blank())+
+  #geom_point(aes(index, shape="d. authori_average"))+
+  ggtitle("", sub = "") + ylab("") + xlab("Average") + xlim(1,4)
+#dev.off()
+```
+
+
+
+```{r echo=FALSE, eval=FALSE}
+
+my_data <- mergeiccs[, c("dicta7", "dicta_safety", "dicta_benefits", "country")]
+
+ggpairs(my_data, title="correlogram with ggpairs()", columns = 1:3, ggplot2::aes(colour=country), columnLabels = c("Power", "Dictatorship Safe", "Dictatorship Ben"))
+
+
+## Gráfico libro FCE
+  study=c("CIVED_1999", "ICCS_2009", "ICCS_2016")
+  marcha=c(0.42, 0.64, 0.61)
+  rayar=c(0.28, 0.43, 0.40)
+  bloquear=c(0.17, 0.24, 0.31)
+  toma=c(0.13, 0.24, 0.28)
+  data=data.frame(study, marcha, rayar, bloquear, toma)
+  data
+  library(ggplot2)
+  ggplot(data, aes(, study)) +
+    geom_point(aes(marcha, shape="a. Participaría en marcha"), size=3) +
+    geom_point(aes(rayar, shape="b. Participaría en rayados"), size=3)+
+    geom_point(aes(bloquear, shape="c. Participaría en bloqueo de calles"), size=3)+
+    geom_point(aes(toma, shape="d. Participaría en toma de edificios"), size=3)+
+    theme(legend.title=element_blank())+
+    ggtitle("", sub = "") + ylab("") + xlab("% de seguro/probablemente lo haré") + xlim(0.0,0.8)
+
+```
+
+
+# Evaluation and rescaling of scales (trust index)
+
+```{r}
+### Trust
+
+cfa_1 <- '
+#latent variables
+pol_trust =~ nac_gob + courts + parliament + pol_parties
+'
+
+fit_1 <- cfa(cfa_1,data=mergeiccs)
+
+standardizedSolution(fit_1)
+
+#summary(fit_1, fit.measures=TRUE, standardized=TRUE)
+
+fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+
+#mod=modificationindices(fit_1)
+#subset(mod, mi>3.84, select=lhs:mi)
+
+## add predicted variable to data base
+  head(lavPredict(fit_1))
+  idx <- lavInspect(fit_1, "case.idx")
+  fscores <- lavPredict(fit_1)
+  #str(fscores)
+  
+  ## loop over factors
+  for (fs in colnames(fscores)) {
+    mergeiccs[idx, fs] <- fscores[ , fs]
+  }
+  #head(mergeiccs)
+
+## Rescaling variable to mean=50, sd=10
+  a=score.transform(mergeiccs$pol_trust, mu.new = 50, sd.new = 10, normalize = TRUE)
+  #names(a)
+  #head(a)
+  a1=as.data.frame(a)
+  #View(a1)
+  mergeiccs$trust=a1[, "new.scores"]
+  mergeiccs[mapply(is.infinite, mergeiccs)] <- NA
+    
+## Correlational checks
+  #names(mergeiccs)
+  corr=mergeiccs %>%
+    dplyr::select(pv1civ, s_intrust, pol_trust, trust)
+  #skim(corr)
+  cor(corr)
+  corr=na.omit(corr)
+  
+  corMat  <- round(cor(corr), 2) # estimar matriz pearson
+  corMat # muestra matriz
+  
+  #M=cor(corMat) # matriz simple de correlaciones de los datos
+  #corrplot(M, type="lower") # lower x bajo diagonal
+
+```
+
+# Evaluation and rescaling of scales (authoritarianism index)
+
+```{r}
+###Authoritarianism
+
+cfa_2 <- '
+#latent variables
+authori =~ dicta7 + dicta_safety + dicta_benefits
+'
+
+fit_2 <- cfa(cfa_2,data=mergeiccs)
+
+standardizedSolution(fit_2)
+
+#summary(fit_2, fit.measures=TRUE, standardized=TRUE)
+
+fitMeasures(fit_2, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
+
+#mod=modificationindices(fit_2)
+#subset(mod, mi>3.84, select=lhs:mi)
+
+## add predicted variable to data base
+  head(lavPredict(fit_2))
+  idx <- lavInspect(fit_2, "case.idx")
+  fscores <- lavPredict(fit_2)
+  #str(fscores)
+  
+  ## loop over factors
+  for (fs in colnames(fscores)) {
+    mergeiccs[idx, fs] <- fscores[ , fs]
+  }
+  #head(mergeiccs)
+
+## Rescaling variable to mean=50, sd=10
+  a=score.transform(mergeiccs$authori, mu.new = 50, sd.new = 10, normalize = TRUE)
+  #names(a)
+  #head(a)
+  a1=as.data.frame(a)
+  #View(a1)
+  mergeiccs$supdicta=a1[, "new.scores"]
+  mergeiccs[mapply(is.infinite, mergeiccs)] <- NA
+    
+## Correlational checks
+  #names(mergeiccs)
+  corr=mergeiccs %>%
+    dplyr::select(pv1civ, l_autgov, authori_average, supdicta)
+  #skim(corr)
+  cor(corr)
+  corr=na.omit(corr)
+  
+  corMat  <- round(cor(corr), 2) # estimar matriz pearson
+  corMat # muestra matriz
+  
+  #M=cor(corMat) # matriz simple de correlaciones de los datos
+  #corrplot(M, type="lower") # lower x bajo diagonal
+
+```
+
+# Correlations between scales
+
+```{r}
+## CORRELATION MATRIX
+
+my_data <- mergeiccs[, c("pv1civ", "trust", "supdicta", "country")]
+#skim(my_data)
+
+#png("correlations.png", width=1000, height=500)
+ggpairs(my_data, title="corrlations between scales", columns = 1:3, ggplot2::aes(colour=country), columnLabels = c("Civic knowledge", "Trust", "Authoritarianism"))
+#dev.off()
+
+### GRAPHS by country
+
+
+#png("trust_country.png", width=1000, height=500)
+
+ggplot(mergeiccs, aes(fill=factor(country), y=trust, x=factor(time))) + 
+  coord_cartesian(ylim=c(40, 60))+
+  stat_summary(fun= "mean", geom = "bar")+
+    #geom_bar(position="dodge", stat="identity") +
+    scale_fill_viridis(discrete = T, option = "E") +
+    ggtitle("Levels of trust") +
+    facet_grid(.~country) +
+    theme_ipsum() +
+    theme(legend.position="none") +
+    xlab("")
+#dev.off()
+
+#table(mergeiccs$time, mergeiccs$country)
+#png("aut_country.png", width=1000, height=500) 
+
+ggplot(mergeiccs, aes(fill=factor(country), y=supdicta, x=factor(time))) + 
+  coord_cartesian(ylim=c(40, 60))+
+  stat_summary(fun= "mean", geom = "bar")+
+    #geom_bar(position="dodge", stat="identity") +
+    scale_fill_viridis(discrete = T, option = "E") +
+    ggtitle("Levels of authoritarianism") +
+    facet_grid(.~country) +
+    theme_ipsum() +
+    theme(legend.position="none") +
+    xlab("")
+
+#dev.off()
+
+#getwd()
+
+```
+
+
+## Models LA
+
+```{r, echo=TRUE, eval=TRUE, results="asis"}
+#Modelos de regresión
+#VD: Trust
+#VD: Support authoritarianism
+#VI: Trust 
+#VC: Nivel educacional de los padres, Libros en la casa, género del estudiante, nivel de discusión política, cohortes
+
+##########################################################3
+#OLS
+##########################################################3
+#VD: Support authoritarianism
+
+mergeiccs$Country= factor(mergeiccs$idcountry, levels=c(152, 170, 214, 320, 484, 600, 604), labels= c("Chile", "Colombia", "Dominicana",  "Guatemala", "Mexico", "Peru", "Paraguay"))
+#str(mergeiccs$Country)
+
+mergeiccs= mergeiccs%>%
+  mutate(civic_know100=pv1civ/100)
+
+m0 <- lmer(supdicta ~ 1  +  (1 | idsch),  data=mergeiccs )
+m1 <- lmer(supdicta ~ civic_know100 +  (1 | idsch),  data=mergeiccs )
+m2 <- lmer(supdicta ~ civic_know100 + parental_education + books_at_home + gender + political_discussion +  (1 | idsch),  data=mergeiccs)
+m3 <- lmer(supdicta ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + factor(Country)+ (1 | idsch),  data=mergeiccs )
+m4 <- lmer(supdicta ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) * factor(idcountry)+ (1 | idsch),  data=mergeiccs )
+
+tab_model(m0, m1, m2, m3 ,show.ci = FALSE, dv.labels = c("M0: Null","M1: Authoritarianism", "M2: Authoritarianism", "M3: Authoritarianism"), auto.label =TRUE)
+
+#texreg(list(m0, m1, m2, m3))
+#help(texreg)
+
+
+m0a <- lmer(trust ~ 1 +  (1 | idsch),  data=mergeiccs )
+m1a <- lmer(trust ~ civic_know100 +  (1 | idsch),  data=mergeiccs )
+m2a <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion +  (1 | idsch),  data=mergeiccs)
+m3a <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + factor(Country)+ (1 | idsch),  data=mergeiccs )
+m4a <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) * factor(Country)+ (1 | idsch),  data=mergeiccs )
+
+tab_model(m0a, m1a, m2a, m3a ,show.ci = FALSE, dv.labels = c("M0: Null","M1: Trust", "M2: Trust", "M3: Trust") , auto.label = TRUE)
+
+```
+
+# Model of Trust by country (Model 3: with knowledge, education, books, gender, discussion and time)
+
+```{r}
+
+chi <- mergeiccs  %>% filter(idcountry == 152) 
+col <- mergeiccs  %>% filter(idcountry == 170) 
+dom <- mergeiccs  %>% filter(idcountry == 214) 
+mex <- mergeiccs  %>% filter(idcountry == 484) 
+gtm <- mergeiccs  %>% filter(idcountry == 320) 
+pry <- mergeiccs  %>% filter(idcountry == 604)
+per <- mergeiccs  %>% filter(idcountry == 600) 
+
+
+chi3 <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + (1 | idsch),  data=chi )
+col3 <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + (1 | idsch),  data=col )
+dom3 <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + (1 | idsch),  data=dom )
+mex3 <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + (1 | idsch),  data=mex )
+gtm3 <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + (1 | idsch),  data=gtm )
+pry3 <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + (1 | idsch),  data=pry )
+per3 <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + (1 | idsch),  data=per )
+
+tab_model(chi3, col3, dom3, mex3, gtm3, pry3, per3 ,show.ci = FALSE, dv.labels = c("Chile", "Colombia", "Dominicana", "Mexico", "Guatemala", "Paraguay", "Peru"))
+
+
+```
+
+# Model of Support for authoritarianism by country (Model 3: with knowledge, education, books, gender, discussion and time)
+
+```{r}
+
+chi <- mergeiccs  %>% filter(idcountry == 152) 
+col <- mergeiccs  %>% filter(idcountry == 170) 
+dom <- mergeiccs  %>% filter(idcountry == 214) 
+mex <- mergeiccs  %>% filter(idcountry == 484) 
+gtm <- mergeiccs  %>% filter(idcountry == 320) 
+pry <- mergeiccs  %>% filter(idcountry == 604)
+per <- mergeiccs  %>% filter(idcountry == 600) 
+
+
+chi3 <- lmer(supdicta ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + (1 | idsch),  data=chi )
+col3 <- lmer(supdicta ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + (1 | idsch),  data=col )
+dom3 <- lmer(supdicta ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + (1 | idsch),  data=dom )
+mex3 <- lmer(supdicta ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + (1 | idsch),  data=mex )
+gtm3 <- lmer(supdicta ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + (1 | idsch),  data=gtm )
+pry3 <- lmer(supdicta ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + (1 | idsch),  data=pry )
+per3 <- lmer(supdicta ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + (1 | idsch),  data=per )
+
+tab_model(chi3, col3, dom3, mex3, gtm3, pry3, per3 ,show.ci = FALSE, dv.labels = c("Chile", "Colombia", "Dominicana", "Mexico", "Guatemala", "Paraguay", "Peru"))
+
+
+#texreg(chi3)
+
+
+```
+

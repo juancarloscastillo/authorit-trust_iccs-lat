@@ -1,0 +1,335 @@
+---
+title: "Trust in political institutions and support for authoritarianism in Latin American students: Does civic knowledge make a difference?"
+
+author: "Daniel Miranda, Juan Carlos Castillo, Catalina Miranda & José Daniel Conejeros."
+date: 'Borrador: `r format(Sys.time(), "%d/%m/%Y")`'
+output:
+  pdf_document:
+    fig_caption: yes
+    #latex_engine: xelatex
+fontsize: 11pt
+geometry: left=2cm,right=2.5cm,top=2cm,bottom=2.5cm
+header-includes:
+- \usepackage[utf8]{inputenc}
+- \usepackage{multicol}
+- \usepackage{chngcntr}
+linkcolor: blue
+csl: apa.csl
+abstract: Trust in political institutions represents a central component of democratic systems. When citizens lack confidence in state bodies as the government and the parliament, the legitimacy of democracy is dangerously challenged. To this regard, in the case of Latin America, we observe a critical scenario, with a steady decrease of institutional trust in the last decade, accompanied by alarming levels of support for authoritarian regimes. Most of the evidence in this regards refers to adult  population, leaving sidelined the young generations who certainly have a stake in the future of democracy in the region. Focusing on the role of the acquisition of civic knowledge at school as a protecting factor of democracy, this research analyzes how authoritarian attitudes affects trust in political institutions as well as evaluates the role of civic knowledge on its relation in eighth-grade students. The data corresponds to the International Civic and Citizenship Education Study (ICCS) 2009 and 2016, in which seven Latin American Countries have participated. The two most relevant results indicates that authoritarianism is positively linked with trust in institutions, and, that association vary across levels of civic knowledge indicating the relevant role of civic knowledge. These patterns of associations are pretty similar across time and countries, showing a particularity of the region. The consequences for democracy and citizenship education are addressed in the conclusion. \par  \vspace{0.5cm}   \textit{\textbf{Keywords:}} \textit{Institutional Trust, Authoritarianism, Civic Knowledge, Latin American Students.}
+
+link-citations: yes
+urlcolor: blue
+bibliography: trust.bib
+---
+
+# Introducción
+
+La literatura especializada plantea que la confianza institucional es un aspecto central tanto del funcionamiento de las democracias como de su legitimidad [@lipset1959; @uslaner2018; @zmerli2017]. Esto es particularmente relevante en la región de América Latina, que muestra uno de los menores niveles de confianza a nivel mundial [@catterberg2006]. Parte de las explicaciones de esta baja confianza es que las instituciones en América Latina se han desarrollado entre la presencia de gobiernos autoritarios e intentos de consolidación democrática, así como también altos índices de corrupción [@bargsted2017]. El vínculo histórico entre autoritarismos y desarrollo institucional abre la siguiente pregunta: ¿en qué medida el apoyo a regímenes autoritarios se vincula con la evaluación que las personas hacen de sus instituciones?
+
+Uno de los aspectos centrales a tomar en cuenta al momento de evaluar la confianza en las instituciones y su vínculo con las creencias autoritarias es el rol que puede jugar el conocimiento político como antecedente. En un sentido ideal, el conocimiento cívico-político es considerado como _la madre_ la confianza [@galston2001; @galston2007]. Dado que parte relevante del conocimiento respecto de temas políticos se transmite intencionadamente a nivel escolar, resulta de especial relevancia conocer en qué medida el conocimiento adquirido en edad juvenil se asocia o no a la confianza en instituciones. En estudios internacionales que evalúan dicho aspecto, los países de América tienden a obtener niveles más bajos de conocimiento que países desarrollados [@schulz2018]. Adicionalmente, se ha observado el rol que juega el conocimiento cívico-político sobre una serie de aspectos como: confianza institucional, diferentes tipos de participación, tolerancia, creencias autoritarias entre otras [@castillo2014; @miranda2018; @sandoval-hernandez2019]. Sin embargo, aún queda pendiente profundizar sobre la heterogeneidad con que este factor puede influir sobre la confianza o si este puede condicionar otros resultados. En ese sentido se abre la interrogante sobre el rol que puede jugar el conocimiento cívico para comprender no solo los niveles de confianza que los jóvenes depositan (o no) sobre las instituciones, sino también rol que puede jugar sobre la relación entre autoritarismo y confianza institucional.
+
+En este contexto, el presente capítulo se propone, por un lado, evaluar el efecto que tiene el autoritarismo sobre la evaluación de las instituciones cívico-políticas. Por otro lado, se propone explorar el rol que juega el conocimiento cívico sobre esta asociación.
+
+# Confianza institucional
+
+La confianza institucional se concibe como una evaluación que se hace sobre una institución cívico-política [@vandermeer2016]. Para Offe (1999) esta evaluación se basa en la expectativa acerca de funcionamiento de esta [@offe1999; @segovia2008]. Adicionalmente, Hardin (2001) propone que dicha evaluación se produce de manera situada en un contexto particular. Así, la confianza en las instituciones políticas como el parlamento o partidos políticos puede ser entendido como la evaluación que los ciudadanos hacen del funcionamiento que estas tienen en un contexto dado.
+
+Los niveles de confianza institucional puede variar de acuerdo a una serie de características tanto contextuales como individuales. En el primer grupo se consideran aspectos como la performance económica, la distribución de la riqueza o el cambio político [@martini2020; @citrin2018]. Para el caso del nivel individual se consideran diversas variables como aspectos genéticos, de personalidad, la eficacia percibida de las instituciones políticas y sociales  [@torney-purta2004], la conciencia de corruptibilidad [@carrasco2019] y/o la efectividad percibida de la institución [@lauglo2013]. También, se ha vinculado con las características socio-económicas. Aquí destaca el nivel educacional, desde el cuál se propone que a mayor educación los ciudadanos cuentan con mayor información, apoyan en mayor medidas valores democráticos y adquieren mayores habilidades para evaluar el funcionamiento de las instituciones [@lipset1960; @vandermeer2016].
+
+Dado que el contexto en que se produce el desarrollo de confianza institucional es relevante para la formación del juicio se hace importante destacar las particularidades del desarrollo institucional en América Latina. En los países de la región el desarrollo de las instituciones democráticas fue contradictorio, desigual y discontinuo marcado por una alternancia entre autoritarismo, democracia y semi-democracias [@bargsted2017]. Esto se traduce en una des-legitimación histórica y progresiva de las instituciones, consistente con los bajos niveles de confianza observados en la región [@latinobarometro2018].
+
+A pesar que hoy en su mayoría los países pueden ser considerados democráticos, en la última década se han presentado una serie de eventos que erosionan la confianza política. Por un lado, la región se caracteriza por democracias interrumpidas e inestabilidad política a lo largo del siglo sXX y lo que va del SXXI, con la permanente amenaza del autoritarismo. Sin ir más lejos, en la última década se observan crisis democráticas importantes como en Venezuela, Brasil, Perú, Bolivia o Chile, sólo por mencionar las más evidentes. En estos países se ha observado el cierre de medios de comunicación, el cierre del parlamento, cuestionamientos a los procesos eleccionarios, violación de Derechos Humanos, entre otros. Por otro lado, recientemente se han observado escándalos de corrupción ampliamente difundidos que erosionan la expectativa sobre las instituciones y su funcionamiento. Por ejemplo, en 2010 se transparenta que Perú, Colombia, República Dominicana y México estaban envueltos en el caso Odebrecht, el cual consiste en millonarios sobornos a figuras políticas en diversos países de la región. En este contexto, cabe preguntarse ¿en que medida estas actitudes autoritarias se vinculan con la evaluación que se hace de las instituciones?  
+
+
+## Autoritarismo y confianza institucional.
+
+Las dictaduras pasadas y actuales en América Latina le heredan a la región el reconocimiento tener cierta tendencia al autoritarismo. Consistentemente se observa que una alta proporción de ciudadanos considera que “in some circumstances an authoritarian government is preferable than a demo-cratic one” (15%) o que "people like one do not care about a democratic government than an authoritarian one" (28%). Ambas opciones poco democráticas suman que un 43% de personas en America Latina no apoyan de manera decidida la democracia como mejor forma de Gobierno [@latinobarometro2018]. En población juvenil, un estudio de [@schulz2018] examina en dos períodos de tiempo (ICCS 2009 e ICCS 2016) el apoyo de los estudiantes de 8vo básico a gobiernos con prácticas autoritarias en cinco países de América Latina. Muestra que aunque la mayoría de los jóvenes rechaza lás prácticas autoritarias una proporción importante está dispuesta a apoyarlas [@schulz2018]. En ese sentido el nivel de apoyo a prácticas autoritarias o a este tipo de gobiernos puede ser considerado como parte de la cultura política [@almond1989]. 
+
+La adherencia a prácticas autoritarias se conecta fácilmente con el autoritarismo de derechas. Este concepto, ampliamente utilizado en la psicología social, nace en los años 30 para explicar la adherencia a movimientos fascistas. Consiste básicamente en una orientación ideológica a apoyar la autoridad fuerte y castigar la desviación normativa (Altemeyer, 1981). Luego de varias versiones (Ver Duckitt, 2015) se proponen tres dimensiones centrales: sumisión autoritaria, que describe el grado de sumisión hacia la autoridad establecida; agresión autoritaria, que se entiende como una actitud agresiva en contra de grupos o personas sancionados por la autoridad (percepción); y, convencionalismo, que describe el grado de adherencia a convenciones, tradiciones y normas sociales [@funke2005; @altemeyer1996].
+
+La orientación al autoritarismo ha sido ampliamente vinculada con diversas actitudes sociales como tradicionalismo, orientación a la dominancia social, prejuicio hacia minorías o sexismo [@jedinger2019]. A la base de esta orientación se encuentra la necesidad de seguridad, orden y certeza que explicaría su conexión con este tipo actitudes. Sin embargo, ha sido escasamente estudiado su vínculo con confianza institucional.
+
+El presente estudio se focaliza en la sumisión autoritaria argumentando su conexión con la valoración de las instituciones como representación de la autoridad. Altemeyer propone que las personas con alta sumisión autoritaria creen que se debe confiar en las autoridades percibidas como legitimas, que se les debe obediencia y respeto, que las autoridades [@altemeyer1996]. Como autoridades legitimas se consideran aquellas que tienen una autoridad legal o moral sobre el comportamiento de los otros, entre las que puede encontrarse oficiales religiosos o autoridades cívicas como la policía, jueces o cabeza del gobierno. Dado que las instituciones cívicas representan el poder político y regulatorio del comportamiento social, es esperable que personas con  mayores niveles de sumisión autoritaria manifiesten mayores grados adherencia a este tipo de instituciones (H1).
+
+
+## El rol del conocimiento cívico.
+
+El conocimiento cívico puede ser definido como la capacidad (proficiency) de conocimiento acerca de diversos dominios como: sistemas cívico-sociales, principios cívicos, procedimientos de partición e identidades cívicas[@schulz2018]. Dicha definición presenta grandes similitudes con dos conceptos ampliamente utilizados en la literatura politológica. Conocimiento político, referido a la información que los ciudadanos manejan acerca del sistema político y sofisticación política, una aproximación más compleja a la expertise sobre temas políticos [@rapeli2013]. Más allá de las especificidades conceptuales, en todos reconocen el rol que juega este tipo de conocimiento para comprender mejor diversas actitudes y comportamientos relevantes en el marco democrático [@rapeli2013].
+
+En cuanto al vínculo con las instituciones cívico-políticas literatura previa plantea que aquellos con mayores niveles de conocimiento presentarán un mayor apego a la vida pública [@galston2001; @galston2007]. Esto implica que a mayores niveles de conocimiento cívico mayores niveles de confianza institucional. Sin embargo, estudios comparados en población juvenil muestran evidencia mixta. A partir del estudio CIVED 1999, ICCS 2019 e ICCS 2016 es posible observar que en países desarrollados con bajos índices de corrupción la asociación es positiva, mientras que en países con menor desarrollo y baja alta corrupción la asociación es negativa [@sandoval-hernandez2019; @torney-purta2004]. Para el caso de los países de América Latina la interpretación que predomina es que los jóvenes con alto conocimiento desconfían o son más escépticos, desarrollando en un sentido de crítica hacia las instituciones.
+
+La literatura muestra sistemáticamente que las personas con mayores niveles de conocimiento cívico tienden a involucrarse políticamente de manera diferente que aquellos con menores niveles de conocimiento [@rapeli2013]. Por ejemplo, desarrollan mayores niveles de tolerancia política [@miranda2018], presentan mayores niveles de participación política [@castillo2014; @castillo2015], presentan menores niveles de autoritarismo [@sandoval-hernandez2019]. Así, es esperable que los niveles de conocimiento cívico se asocien con los niveles de actitudes políticas como la mayor confianza institucional (H2).
+
+Adicionalmente, el conocimiento cívico juega un rol relevante sobre la consistencia entre actitudes y comportamiento político [@zaller1992]. Es decir, este conocimiento puede condicionar la fuerza de la relación entre actitudes políticas y comportamiento. En la misma línea, evidencia previa muestra que personas con mayores niveles de conocimiento muestran mayor asociación entre autoritarismo y conservadurismo [@federico2011], e incluso se invierte la relación entre autoritarismo y actitudes hacia la redistribución de ingresos [@jedinger2019]. Sin embargo, no se ha estudiado el rol que puede jugar el conocimiento sobre la relación entre autoritarismo y confianza institucional. Este capitulo avanzará explorando este rol, ya no sólo evaluando el cambio en la fuerza de la relación mencionada sino también el posible cambio en su dirección. Siguiendo las evidencias previas se propone exploratoriamente que ante diferentes niveles de conocimiento cívico se observaran diferentes niveles de intensidad en la asociación entre autoritarismo y confianza institucional (H3). 
+
+
+# Metodología:
+
+## a. Data
+
+Los datos analizados en esta investigación corresponden al International Civic and Citizenship Education Study (ICCS) para 6 países de América Latina en su versión 2009 y 5 países para el 2016. Este estudio está a cargo de la Asociación Internacional para la Evaluación del logro educativo (IEA) y ha sido aplicada en tres momentos en el tiempo: CIVED 1999; ICCS 2009 e ICCS 2016. Su propósito es investigar la manera en que los los sistemas educativos preparan a los jóvenes para asumir sus roles como ciudadanos. Los resultados de ICCS han contribuido en el debate acerca de impartir educación cívica y ciudadana en escuelas alrededor de todo el mundo.
+
+El estudio ICCS contempla una muestra representativa a nivel nacional de 29.896 estudiantes de octavo grado (edad promedio de 13 años) en Chile, Colombia, República Dominicana, México y Guatemala. Mientras que para el 2016 son 25.319 estudiantes de  Chile, Colombia, República Dominicana, México, Perú y Paraguay. La selección de los estudiante se realiza mediante un muestreo aleatorio estratificado en dos etapas. En primera instancia se selecciono un mínimo de 150 escuelas por país y se escoge aleatoriamente al menos un curso por escuela, incluyendo como participantes a todos los estudiantes de aquel curso [@schulz2011]. A continuación se resume los tamaños muestrales de estudiantes y escuelas para cada país-año:
+
+\begin{center}
+Table 1. Distribution students ICCS per country/year
+\end{center}
+```{r, echo=FALSE, fig.align='center', warning=FALSE}
+library(knitr)
+include_graphics("C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/tab1.png")
+```
+
+
+El International Civic and Citizenship Education Study (ICCS) se basa en una prueba internacional de conocimiento cívico que evalúan el conocimiento, capacidad de análisis y razonamiento cívico y ciudadano de los estudiantes. A su vez, también contempla un cuestionario que mide percepciones, actitudes y antecedentes de los estudiantes sobre temas relativos a la ciudadanía, participación en la escuela, clima escolar, entre otras variables. Por último, considera una serie de instrumentos para capturar información de maestros, escuelas y sistemas educativos [@schulz2011].
+
+
+## b. Variables
+
+\textbf{\textit{Dependent Variables}}
+
+En este estudio se utilizan como variable dependiente la confianza a las instituciones evaluado por doce indicadores que consideran instituciones cívicas de corte político, medios de comunicación y confianza interpersonal. Las respuestas calificaron su nivel de confianza bajo las siguientes categorías: \textit{"completamente", "bastante", "un poco", "para nada"}. La siguiente tabla describe cada indicador del ICCS para el año 2009 y 2016:
+
+\break
+\begin{center}
+Table 2. Dependt Variable: Institutional trust in students
+\end{center}
+```{r, echo=FALSE, fig.align='center', warning=FALSE}
+library(knitr)
+include_graphics("C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/tab2.png")
+```
+
+\textbf{\textit{Independent Variables}}
+
+Como principales variables independientes se utiliza en nivel de apoyo a prácticas autoritarias de los gobiernos y el puntaje de conocimiento alcanzado en la prueba internacional ICCS para Latino América.
+
+El apoyo al autoritarismo se utilizó dos preguntas con un total de 9 indicadores para identificar en qué medida los estudiantes respaldaban prácticas no democráticas y dos que miden la justificación de dictaduras por beneficios económicos y orden y seguridad). Los estudiantes calificaron su nivel de acuerdo como \textit{"totalmente de acuerdo", "de acuerdo", "en desacuerdo", "totalmente en desacuerdo"} para cada una de estas preguntas.
+
+
+\begingroup
+\parskip=0pt
+\begin{center}
+Table 3. Dependt Variable: Support for authoritarianism in students  (continue)
+\end{center}
+```{r, echo=FALSE, fig.align='center'}
+include_graphics("C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/tab2b.png")
+```
+\endgroup
+
+La prueba de conocimiento cívico consiste en un set de 79 ítemes que se aplican organizados en siete formatos distintos, en que cada estudiante responde un cuadernillo que contiene tres subgrupos de preguntas. Para estimar el nivel de conocimiento cívico en función de este diseño, se utiliza un modelo de Ítem Response Theory (IRT) para estimar cinco valores plausibles como puntaje. Esta variable presenta un promedio internacional de 500 puntos y una desviación estándar de 100. A continuación se resumen los puntajes para cada uno de los países en el año 2009 y 2016:
+
+\begin{center}
+Table 4. Independent Variable: Civic Knowledge Score
+\end{center}
+```{r, echo=FALSE, fig.align='center'}
+library(knitr)
+include_graphics("C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/tab3.png")
+```
+
+El resto de las variables independientes cumplen el objetivo de controlar la asociación estadística entre el apoyo a autoritarismos, confianza en instituciones políticas y conocimiento cívico. En ese sentido, se utiliza un *proxy* para evaluar el origen socio-económico del estudiante y el capital cultural. Para la primera dimensión se utiliza una medida estandarizada que captura el mayor nivel educacional alcanzado por el padre o la madre, para la segunda dimensión se utiliza el número de libros en el hogar. A esto se agregar un indicador que identifica el género del estudiante y un indicador del nivel de discusión política que realiza el estudiante con amigos y familia fuera de la sala de clases.
+
+## c. Analytical Strategy
+
+A nivel descriptivo se evalúan las diferencias estadísticas para cada uno de los indicadores de confianza institucional entre los años 2009 y 2016. Luego se utilizan dos indicadores que resumen la información de confianza en instituciones políticas y apoyo a prácticas autoritarias (ambos construidos mediante un análisis factorial confirmatorio). Finalmente, se estiman modelos de regresión OLS a nivel agregado para evaluar la asociación entre conocimiento cívico y los indicadores descritos, utilizando los controles estadísticos mencionados en el apartado anterior.
+
+\break
+
+# Results
+
+En esta sección se describen los principales resultados del estudio. Primero se presentan a nivel general los cambios descriptivos entre el 2009 y 2016 para la confianza institucional y el apoyo a autoritarismos para cada país del estudio. En segundo lugar se presentan las asociaciones entre las variables de interés a través de elementos gráficos y modelos de regresión OLS a nivel agregado para el contexto latinoamericano.
+
+## a. Descriptive trends across time of institutional trust
+
+Como se observa en la tabla 5, en los países evaluados el 2009 y el 2016 sobresalen algunos resultados relevantes respecto de la confianza. Primero, los jóvenes tienden a mostrar mayores altos niveles de confianza en todas las instituciones evaluadas. Esto es notoriamente más alto que los niveles de confianza observados en población adulta. Por ejemplo, en el reporte Latinobarometro del 2018 se indica que las distintas instituciones evaluadas reciben niveles de confianza más bajo que lo observado en jóvenes estudiantes de 14 años. Un 48% confía bastante o algo en las fuerzas armadas, un 35% en la policía, un 21% en el congreso y un 13% en los partidos políticos.
+
+Segundo, al igual que en población adulta las instituciones políticas, particularmente los partidos políticos, son las que reciben los menores niveles de confianza (Nota: República Dominicana presenta niveles mucho mayores de confianza respecto de los otros países, aunque siguiendo las mismas tendencias entre instituciones. Para mostrar el patrón mayoritario se excluye este país de los ejemplos presentados. En 2009 entre un 26%(Guatemala) y un 35%(Colombia y México) confían en los partidos políticos, mientras que en 2016 entre un 28% (Colombia) y un 33% (Chile y Perú) lo hacen. En contraste, las instituciones que reciben mayores niveles de confianza son las Fuerzas Armadas, las Escuelas, los Medios de comunicación y las Naciones Unidas. Por ejemplo, en 2009 las Fuerzas Armadas reciben entre un 81% (Colombia) y un 61% (Paraguay) de confianza, mientras que en 2016 entre un 78% (Colombia) y un 64% (Perú). Las escuelas se niveles de confianza algo superiores. En 2009 reciben entre un 88% (Guatemala) y un 72% (México) de confianza, mientras que en 2016 entre un 85% (Colombia) y un 71% (Chile).
+
+Tercero, se observan niveles medios de confianza interpersonal. En 2009 los jóvenes declaran confiar en las personas entre un 47% (Guatemala y México) y un 57%(Paraguay), mientras que en 2016 entre un 43% (Colombia) y un 52%(México). Aunque América Latina es reconocida como una región del mundo que presenta mucha desconfianza interpersonal en población adulta [@latinobarometro2018], llama la atención que en población escolar de 8vo grado esta desconfianza no es tan extrema.
+
+Finalmente, respecto del cambio o estabilidad de la confianza entre 2009 y 2016, se observa cierta diversidad entre países. Por un lado, República Dominicana y México tienden a mantenerse estables o incluso a incrementarse los niveles de confianza para la mayoría de las instituciones evaluadas. Llama la atención que en México la confianza en las FF AA y las cortes de justicia hayan aumentado un 9% y un 12% respectivamente. Por otro lado, Chile y Colombia muestran una tendencia general a la baja en la confianza en la mayoría de las instituciones evaluadas. En Chile caen significativamente la confianza en el Gobierno central, Gobiernos locales, las Cortes de Justicia, la Policía, el Parlamento y la confianza en las personas; mientras que en Colombia caen significativamente la confianza en el Gobierno central, los Partidos Políticos y la confianza en las personas.
+
+\break
+## b. Descriptive trends across time of support for authoritarian practices
+
+\begin{center}
+Table 5. Institutional Trust in Latin América by country/year
+\end{center}
+```{r echo=FALSE, fig.align='center'}
+library(knitr)
+include_graphics("C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/tab4.png", dpi=NA)
+
+```
+
+La tabla 6 resume los niveles de apoyo a prácticas autoritarias en los 7 países participantes el año 2009 y 2016. Sobresalen tres aspectos. Primero, considerando las once ítemes como un representación de prácticas autoritarias que los gobiernos de América Latina realizan o han realizado, se aprecia que aquellos aspectos reciben un menor apoyo (un tercio o menos) por parte de los jóvenes están ligadas a interrupción o violación de derechos y libertad de expresión. Estas son: “It is better for government leaders to make decisions without consulting anybody”, "People in government must enforce their authority even if it menas violating the rights of some citizens", “People whose opinions are different than those of the government must be considered its enemies” y "the government should close communications media that are critical". En este último llama la atención el cambio que se produce entre 2009 y 2016 en México y Colombia, de un 32% a un 71% de apoyo y de un 16% a un 31% respectivamente.Segundo, se observa que aquellas prácticas autoritarias que reciben mayor apoyo (más de un tercio) por parte de los jóvenes son: "People in government lose part of their authority when they admit their mistakes", "The most important opinion of a country should be that of the president", "Concentration of power in one person guarantees order", " Dictatorships are justified when they bring order and safety" y "Dictatorships are justified when they bring economic benefits". Estas prácticas se destacan por estar vinculadas a las formas de ejercer la autoridad. Llama particularmente la atención el alto apoyo que reciben ítemes referidos a dictaduras si estas traen beneficios económicos, sociales y de orden. Este aspecto ha sido ampliamente discutido como una alarma acerca de la persistencia de creencias autoritarias en América Latina [@schulz2018 , @sandoval-hernandez2019]. Finalmente, entre 2009 y 2016 se aprecia cierta estabilidad en el apoyo hacia este tipo de prácticas con un par de excepciones. Por un lado, el aumento de apoyo observado en Colombia y México sobre la opción de cerrar los medios de comunicación críticos, ya mencionado. Por otro lado, las caídas observadas en Chile para cinco prácticas autoritarias.
+
+
+\begin{center}
+Table 6. Support Authoritarianism in Latin América by country/year
+\end{center}
+```{r, echo=FALSE, fig.align='center'}
+library(knitr)
+include_graphics("C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/tab5.png", dpi=NA)
+```
+
+## c. Association of institutional trust, support authoritarianism and civic knowledge
+
+Respecto del rol que juega el conocimiento cívico sobre el apoyo a prácticas autoritarias y sobre los niveles de confianza, descriptivamente se puede observar que a mayores niveles de conocimiento cívico disminuyen los niveles de apoyo a prácticas autoritarias; pero también disminuyen los niveles de confianza (Ver figuras 1 y 2). Jóvenes que entienden mejor los aspectos conceptuales del sistema político tienden a desvalidar las prácticas autoritarias de los gobiernos, pues al parecer entienden mejor que ese tipo de prácticas son inconsistentes con la vida democrática. Sin embargo, esos mismos jóvenes mejor preparados en conocimiento cívico confían menos en las instituciones que conforman el sistema político. Adicionalmente, es posible observar que aquellos que apoyan en mayor medida prácticas autoritarias, tienden a confiar más en instituciones cívico-políticas que aquellos menor apoyo autoritario (ver figura 3), lo que resulta un poco contraintuitivo a la luz de supuestos teóricos presentados anteriormente.
+
+```{r, echo=FALSE, fig.align='center', fig.cap='Trust in civic institutions and Support for authoritarianism'}
+library(knitr)
+include_graphics("C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/g3b.png", dpi=NA)
+
+```
+
+```{r, echo=FALSE, fig.align='center', fig.cap='Trust in civic institutions and Civic Knowledge in students'}
+library(knitr)
+include_graphics("C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/g3.png", dpi=NA)
+
+```
+
+```{r, echo=FALSE, fig.align='center', fig.cap='Support for authoritarianism and Civic Knowledge in students'}
+library(knitr)
+include_graphics("C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/g1.png", dpi=NA)
+```
+
+
+\break
+
+Este resultado general muestra dos facetas del conocimiento cívico y propone el desafío de comprender esta relación. Para avanzar en esa comprensión se estimaron una serie de modelos de regresión que se presentan a continuación. La tabla 6 presenta los modelos estimados con apoyo a prácticas autoritarias como variable dependiente. El modelo 1 ingresa conocimiento cívico como principal predictor. El resultado indica que a mayores niveles de conocimiento se observarán menores niveles de apoyo a prácticas autoritarias. Esto se traduce en que jóvenes que obtienen un bajo desempeño en la prueba de conocimiento (bajo los 311 puntos), lo que implica un bajo conocimiento sobre la institucionalidad política y los mecanismos legales involucrados, obtienen 60,86 puntos en la escala de apoyo en las prácticas autoritarias (esto es más de una desviación estándar por encima del promedio de la escala). En contraste, jóvenes que obtienen un alto desempeño en la prueba de conocimiento (sobre 562 puntos), lo que implica mayor capacidad de relacionar los procesos de organización e influencia política y social junto a los mecanismos legales e institucionales para controlarlos, obtienen 40,99 puntos en la escala de apoyo en las prácticas autoritarias (esto es una desviación estándar por debajo del promedio de la escala). El modelo 2 ingresa una serie de controles estadísticos. El resultado indica que tener vivir en hogares con padres más educados, tener más libros en el hogar y ser niña disminuyen el apoyo a prácticas autoritarias. Además, indica que el efecto del conocimiento cívico se mantiene muy similar, aún controlando por este set de variables. Finalmente, el modelo 3 ingresa los efectos fijos del país y año del estudio (codificadas como variables dummy) para controlar las diferencias entre países y entre año de estudio. El resultado muestra que el conocimiento cívico tiende a disminuir el apoyo a prácticas autoritarias de los gobiernos, independiente del país o el año de estudio que se observe.
+
+
+La tabla 7 presenta los modelos estimados con el índice de confianza en instituciones cívica como variable dependiente. El modelo 1 ingresa conocimiento cívico como principal predictor. El resultado indica que a mayores niveles de conocimiento se observan menores niveles confianza institucional. Esto se traduce en que jóvenes que obtienen un bajo desempeño en la prueba de conocimiento obtienen 53,79 puntos en la escala confianza en instituciones (un poco por encima del promedio de la escala). En contraste, jóvenes que obtienen un alto desempeño en la prueba de conocimiento (sobre 562 puntos) obtienen 46,23 puntos en la escala de confianza en instituciones (esto es un poco por debajo del promedio de la escala). El modelo 2 ingresa la escala de apoyo a prácticas autoritarias como predictor. Se observa que, controlado por este indicador, el efecto del conocimiento se observa más atenuado. Además, se aprecia que quienes apoyan más las prácticas autoritarias tienden a presentar mayores niveles de confianza en instituciones.
+
+Este resultado presenta una contradicción, jóvenes que adhieren a principios autoritarios (anti democráticos) adhieren más a instituciones políticas lo que resulta difícil de justificar. Para desenredar este aspecto se estimó el modelo 3 que ingresa un término de interacción entre conocimiento cívico con apoyo a prácticas autoritarias. El resultado permite despejar en parte la contradicción presentada, representado en la figura 5.
+
+Por un lado, en jóvenes que no apoyan las prácticas autoritarias (e.g. con 30 puntos de apoyo prácticas autoritarias) el conocimiento cívico tiene un efecto positivo. Es decir, jóvenes poco autoritarios con bajo conocimiento desconfían mucho en las instituciones y su confianza aumenta a medida que aumenta el nivel de conocimiento, como indica la teoría política (cita). Sin embargo, los niveles de confianza se observan siempre por debajo del promedio internacional para este grupo de jóvenes. Por otro lado, en jóvenes que si apoyan las prácticas autoritarias (e.g. con 70 puntos de apoyo a prácticas autoritarias) el conocimiento cívico tiene un efecto negativo. Es decir, jóvenes autoritarios con bajo conocimiento confían ampliamente en las instituciones y a mayor conocimiento cívico disminuyen los niveles de confianza institucional, contrario a lo indica la teoría política.
+
+El modelo 4 ingresa una serie de controles estadísticos. El resultado indica que tener más libros en el hogar y ser niña disminuyen la confianza institucional, mientras que conversar sobre temas sociales y políticos con familiares y amigos aumentaría la confianza. Finalmente, el modelo 5 ingresa los efectos fijos del país y año del estudio (codificadas como variables dummy) para controlar las diferencias entre países y entre año de estudio. El resultado en los modelos 4 y 5 muestran que el efecto de interacción presentado se mantiene muy similar, controlado por ese set de variables e independiente del país o el año de estudio que se observe.
+
+\begin{center}
+Table 6: Regression Models: Support Authoritarianism and Civic Knowledge in Latin América
+\end{center}
+
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{l c c c }
+\hline
+ & Model 1 & Model 2 & Model 3 \\
+\hline
+(Intercept)          & $85.49^{***}$ & $85.93^{***}$ & $85.44^{***}$ \\
+                     & $(0.21)$      & $(0.30)$      & $(0.34)$      \\
+Civic knowledge     & $-0.08^{***}$ & $-0.08^{***}$ & $-0.08^{***}$ \\
+                     & $(0.00)$      & $(0.00)$      & $(0.00)$      \\
+Parent's education  &               & $-0.06^{*}$   & $0.05$        \\
+                     &               & $(0.03)$      & $(0.03)$      \\
+Books at home        &               & $-0.28^{***}$ & $-0.23^{***}$ \\
+                     &               & $(0.04)$      & $(0.04)$      \\
+Girl (vs boy)        &               & $-1.37^{***}$ & $-1.32^{***}$ \\
+                     &               & $(0.08)$      & $(0.08)$      \\
+Political discussion &               & $0.00$        & $-0.00$       \\
+                     &               & $(0.00)$      & $(0.00)$      \\
+2016(vs 2009)        &               &               & $1.04^{***}$  \\
+                     &               &               & $(0.08)$      \\
+Colombia             &               &               & $0.79^{***}$  \\
+                     &               &               & $(0.17)$      \\
+Dominican Republic   &               &               & $-0.42$       \\
+                     &               &               & $(0.25)$      \\
+Guatemala            &               &               & $0.10$        \\
+                     &               &               & $(0.32)$      \\
+México               &               &               & $0.55^{***}$  \\
+                     &               &               & $(0.15)$      \\
+Paraguay             &               &               & $-0.50$       \\
+                     &               &               & $(0.39)$      \\
+Peru                 &               &               & $0.06$        \\
+                     &               &               & $(0.21)$      \\
+\hline
+R$^2$                & 0.36          & 0.36          & 0.36          \\
+Adj. R$^2$           & 0.36          & 0.36          & 0.36          \\
+Num. obs.            & 54769         & 52148         & 52148         \\
+RMSE                 & 99.05         & 99.25         & 99.04         \\
+\hline
+\multicolumn{4}{l}{\scriptsize{$^{***}p<0.001$, $^{**}p<0.01$, $^*p<0.05$}}
+\end{tabular}
+\label{tab6}
+\end{center}
+\end{table}
+
+\break
+\begin{center}
+Table 7: Regression Models: Institutional Trust and Civic Knowledge in Latin América
+\end{center}
+
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{l c c c c c }
+\hline
+ & Model 1 & Model 2 & Model 3 & Model 4 & Model 5 \\
+\hline
+(Intercept)                & $35.46^{***}$ & $42.89^{***}$ & $13.74^{***}$ & $11.94^{***}$ & $13.20^{***}$ \\
+                           & $(0.20)$      & $(0.51)$      & $(1.25)$      & $(1.28)$      & $(1.29)$      \\
+Support authoritarianism   & $0.28^{***}$  & $0.23^{***}$  & $0.81^{***}$  & $0.75^{***}$  & $0.72^{***}$  \\
+                           & $(0.00)$      & $(0.01)$      & $(0.02)$      & $(0.02)$      & $(0.02)$      \\
+Civic knowledge            &               & $-0.01^{***}$ & $0.05^{***}$  & $0.04^{***}$  & $0.04^{***}$  \\
+                           &               & $(0.00)$      & $(0.00)$      & $(0.00)$      & $(0.00)$      \\
+Authoritarianim x knwledge &               &               & $-0.00^{***}$ & $-0.00^{***}$ & $-0.00^{***}$ \\
+                           &               &               & $(0.00)$      & $(0.00)$      & $(0.00)$      \\
+Parent's education         &               &               &               & $0.02$        & $-0.02$       \\
+                           &               &               &               & $(0.03)$      & $(0.03)$      \\
+Books at home              &               &               &               & $-0.31^{***}$ & $-0.27^{***}$ \\
+                           &               &               &               & $(0.04)$      & $(0.04)$      \\
+Girl (vs boys)             &               &               &               & $-0.67^{***}$ & $-0.73^{***}$ \\
+                           &               &               &               & $(0.09)$      & $(0.09)$      \\
+Political discussion       &               &               &               & $0.11^{***}$  & $0.11^{***}$  \\
+                           &               &               &               & $(0.00)$      & $(0.00)$      \\
+2016 (vs 2009)             &               &               &               &               & $0.06$        \\
+                           &               &               &               &               & $(0.10)$      \\
+Colombia                   &               &               &               &               & $-0.32$       \\
+                           &               &               &               &               & $(0.19)$      \\
+Dominican Repuiblic        &               &               &               &               & $2.61^{***}$  \\
+                           &               &               &               &               & $(0.29)$      \\
+Guatemala                  &               &               &               &               & $-3.47^{***}$ \\
+                           &               &               &               &               & $(0.37)$      \\
+México                     &               &               &               &               & $-0.19$       \\
+                           &               &               &               &               & $(0.18)$      \\
+Paraguay                   &               &               &               &               & $-0.25$       \\
+                           &               &               &               &               & $(0.46)$      \\
+Peru                       &               &               &               &               & $-2.51^{***}$ \\
+                           &               &               &               &               & $(0.24)$      \\
+\hline
+R$^2$                      & 0.05          & 0.09          & 0.10          & 0.11          & 0.12          \\
+Adj. R$^2$                 & 0.05          & 0.09          & 0.10          & 0.11          & 0.12          \\
+Num. obs.                  & 51954         & 51794         & 51794         & 50281         & 50281         \\
+RMSE                       & 117.01        & 114.45        & 113.75        & 113.41        & 112.94        \\
+\hline
+\multicolumn{6}{l}{\scriptsize{$^{***}p<0.001$, $^{**}p<0.01$, $^*p<0.05$}}
+\end{tabular}
+\end{center}
+\end{table}
+
+\break
+
+
+```{r, echo=FALSE, fig.align='center', fig.cap='Interaction support suthoritarianism with civic knowledge on Institutional trust'}
+library(knitr)
+include_graphics("C:/Users/Daniel Miranda/Dropbox (Personal)/book_authoritarianism/Results/graph/g8b.png", dpi=NA)
+```
+
+
+\break
+
+# Discussion and conclussion
+
+El presente capítulo se propuso, por un lado, evaluar el efecto que tiene el autoritarismo sobre la evaluación de las instituciones cívico-políticas. Por otro lado, se propuso explorar el rol que juega el conocimiento cívico sobre esta relación. En un primer momento se describieron los niveles de confianza y autoritarismo para los distintos países participantes en el estudio. Luego se estimaron una serie de modelos de regresión que permiten deprender algunas conclusiones respecto de los objetivos propuesto.
+
+Respecto de la confianza institucional aparecen algunos resultados relevantes de comentar. Primero, se observan en general mayores niveles de confianza que en población adulta. Esto lleva preguntarse si ¿son estas generaciones más confiadas que los adultos actuales? o si ¿sucede algo durante el trascurso hacia la vida adulta que disminuye las confianzas?. Segundo, se observan ciertas consistencias con la población adulta. Esto es principalmente que las instituciones políticas son las peor evaluadas. En ese sentido es posible preguntarse si algo de la confianza de los jóvenes tienen sus raíces en los niveles de confianza de los adultos cuidadores. O dicho de otro modo, ¿en qué medida se produce una socialización intergerenacional de la confianza institucional?. Y tercero, se observa que Chile y Colombia muestra bajan relevantes en varias instituciones, mientras que México y República dominicana se mantienen y hasta aumentan en muy pocas instituciones. Esto genera la pregunta acerca de ¿cuales podrían ser los factores macro que pueden dar cuenta de los cambios temporales de los países?
+
+En cuanto a la hipotesis principal, se observa que jóvenes con mayores niveles autoritarismo tienden a evaluar más positivamente las instituciones, en línea con el argumento central de este artículo. Como lo anticipa claramente Altemeyer, la valoración de la autoridad tiene un correlato en aquellas instituciones que representan también a la autoridad. Sin embargo, resulta interesante notar que la evaluación de la confianza institucional en jóvenes con alto conocimiento es similar entre ellos, independiente de los niveles de los niveles de apoyo a prácticas anti-democráticas. Esto parece indicar un proceso evaluativo guiado por el conocimiento disponible. En el otro extremo, jóvenes con bajo conocimiento muestran diferencias importantes en su evaluación de las instituciones, influenciada por los niveles de apoyo a prácticas autoritarias (ver figura 5). Esto parece indicar que ante la falta de conocimiento otros aspectos ligados a la comprensión de la sociedad entran en juego. Para este caso, en ausencia de conocimiento preciso sobre mecanismos legales e institucionales que controlan la organización política y social prima la actitud hacia las prácticas autoritarias de los gobiernos como elemento orientador de la evaluación institucional. En ese sentido, el conocimiento cívico puede funcionar como una especie de inoculación ante la influencia de ideas anti-democráticas como son las prácticas autoritarias presentadas a los estudiantes participantes del estudio ICCS 2009 y 2016.
+
+El apoyo a las prácticas autoritarias puede ser vinculado fácilmente con el continuo izquierda derecha. En esa asociación, las personas de derecha tienden a presentar mayores niveles de autoritarismo y las personas de izquierda menos. Por tanto, es posible pensar que la posición política también esta jugando un rol sobre la evaluación que estos hacen de las instituciones. No es posible despejar ese aspecto con estos datos pero queda abierta la pregunta sobre el comportamiento que tendría la posición política al momento evaluación institucional en contextos de alto y bajo conocimiento.
+
+A modo de hipótesis, siguiendo los resultados observados, ante altos niveles de conocimiento se produce una evaluación institucional más consistente entre los sujetos (las personas tienden a tener una evaluación similar). En este caso, esa evaluación es más media-baja. Es decir, personas que manejan mejor los conceptos sobre la vida en democracia tienden a ser más bien críticos de sus instituciones. Por el contrario, antes bajos niveles de conocimiento cívico se produce amplia discrepancia en la forma que se evalúan las instituciones. Es en este escenario, que es el más común en América Latina según los resultados en las evaluaciones de conocimiento conocidas, las posiciones ideológicas juegan un rol relevante. Por ejemplo, personas con grados de autoritarismo más alto presentan una mejor evaluación de las instituciones, mientras que personas menos autoritarias o de izquierdas son aún más críticas de la institucionalidad. Lo sustancial aquí, es que el juicio sobre las instituciones se hace en un ausencia importante de conocimientos. Es por ésta razón que se hace relevante la promoción del conocimiento sobre la democracia, no para mejorar la evaluación institucional sino para que el juicio que se hace sobre estas sea basado en la información, conocimiento y aspectos lógicos relevantes y no sobre la base de aspectos puramente ideológicos. Esto no es una negación de la relevancia de las ideologías, sino más bien que estas deben fundarse en el conocimiento de juego democrático. Por lo tanto, para nutrir una cultura política democrática es central promover el conocimiento político [@dudley2002].
+
+
+
+\break
+
+# References

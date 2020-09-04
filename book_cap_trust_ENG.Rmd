@@ -15,7 +15,22 @@ header-includes:
 - \usepackage{chngcntr}
 linkcolor: blue
 csl: apa.csl
-abstract: Trust in political institutions represents a central component of democratic systems. When citizens lack confidence in state bodies as the government and the parliament, the legitimacy of democracy is dangerously challenged. In the case of Latin America we observe a critical scenario, with a steady decrease of institutional trust in the last decade, accompanied by alarming levels of support for authoritarian regimes. Most of the evidence in this regards refers to adult  population, leaving sidelined the young generations who certainly have a stake in the future of democracy in the region. Focusing on the role of the acquisition of civic knowledge at school as a protecting factor of democracy, this research analyzes the role of civic knowledge to understand trust in civic institutions and authoritarian attitudes in eighth-grade students. The data corresponds to the International Civic and Citizenship Education Study (ICCS) 2009 and 2016, in which seven Latin American Countries have participated. The results indicates a puzzling role of civic knowledge, as it diminishes trust in institutions but at the same time reduces authoritarian beliefs, in a similar way in the Latin American countries across time. The consequences for democracy and citizenship education are addressed in the conclusion. \par  \vspace{0.5cm}   \textit{\textbf{Keywords:}} \textit{Institutional Trust, Authoritarianism, Civic Knowledge, Latin American Students.}
+abstract: Trust in political institutions represents a central component of democratic
+  systems. When citizens lack confidence in state bodies as the government and the
+  parliament, the legitimacy of democracy is dangerously challenged. In the case of
+  Latin America we observe a critical scenario, with a steady decrease of institutional
+  trust in the last decade, accompanied by alarming levels of support for authoritarian
+  regimes. Most of the evidence in this regards refers to adult  population, leaving
+  sidelined the young generations who certainly have a stake in the future of democracy
+  in the region. Focusing on the role of the acquisition of civic knowledge at school
+  as a protecting factor of democracy, this research analyzes the role of civic knowledge
+  to understand trust in civic institutions and authoritarian attitudes in eighth-grade
+  students. The data corresponds to the International Civic and Citizenship Education
+  Study (ICCS) 2009 and 2016, in which seven Latin American Countries have participated.
+  The results indicates a puzzling role of civic knowledge, as it diminishes trust
+  in institutions but at the same time reduces authoritarian beliefs, in a similar
+  way in the Latin American countries across time. The consequences for democracy
+  and citizenship education are addressed in the conclusion.
 
 link-citations: yes
 urlcolor: blue
@@ -65,13 +80,9 @@ The data analyzed in this research corresponds to the International Civic and Ci
 
 The ICCS 2009-2016 Latin America dataset contemplates a nationally representative sample of 29,896 eighth grade students for 2009 and 25,319 for 2016. The selection of the students is made through a stratified random sampling in two stages. In the first stage a minimum of 150 schools per country was selected and at least one course per school was chosen randomly, including as participants all the students of that course [@schulz2011]. The sample sizes of students and schools for each country-year are summarized below:
 
-\begin{center}
 Table 1. Distribution students ICCS per country/year
-\end{center}
-```{r, echo=FALSE, fig.align='center', warning=FALSE}
-library(knitr)
-include_graphics("Results/graph/tab1.png")
-```
+
+![](Results/graph/tab1.png)
 
 The International Civic and Citizenship Education Study (ICCS) includes a test of civic knowledge that assesses students' knowledge and citizen reasoning. At the same time, it also includes a questionnaire that measures students' perceptions, attitudes and background on issues related to citizenship, participation in school, school climate, among other variables. Finally, it consider a series of instruments to capture information from teachers, schools and educational systems [@schulz2011].
 
@@ -79,174 +90,106 @@ The International Civic and Citizenship Education Study (ICCS) includes a test o
 
 _Dependent Variables_
 
-The first dependent variable of this study is political trust, evaluated by twelve indicators that consider civic institutions of a political nature, the media and interpersonal trust <<interpersonal trust in political trust indicator?? no way ... y otro indicador que está solo en 2016? fuera>>. Responses rated their trust level under the following categories: \textit {"completely", "quite", "a little", "not at all"}. The following table describes each ICCS indicator for 2009 and 2016:
-
-\break
-\begin{center}
-Table 2. Dependt Variable: Institutional trust in students
-\end{center}
-```{r, echo=FALSE, fig.align='center', warning=FALSE}
-library(knitr)
-include_graphics("Results/graph/tab2.png")
-```
-
-The second dependent variable is support for authoritarianism. This scale is constructed from nine indicators that identify the extent to which students support undemocratic practices and two items that measure the justification of dictatorships for reasons such as economic benefits, order and security. Students rated their level of agreement as _"strongly agree", "agree", "disagree", "strongly disagree"_ for each of these questions.
+The first dependent variable of this study is political trust index, evaluated in this chapter by four indicators that consider civic institutions of a political nature. Responses rated their trust level under the following categories: \textit {"completely", "quite", "a little", "not at all"}. The following table describes each ICCS indicator for 2009 and 2016:
 
 
-\begingroup
-\parskip=0pt
-\begin{center}
-Table 3. Dependt Variable: Support for authoritarianism in students  (continue)
-\end{center}
-```{r, echo=FALSE, fig.align='center'}
-include_graphics("Results/graph/tab2b.png")
-```
-\endgroup
+Table 2. Trust in political institutions
+
+![](Results/graph/tab2_short.png)
+
+
+The second dependent variable is support for authoritarianism. This scale is constructed from three indicators that identify the extent to which students support undemocratic practices. Where considered items that measure the concentration of power and justification of dictatorships for economic and order reasons. Students rated their level of agreement as _"strongly agree", "agree", "disagree", "strongly disagree"_ for each of these questions.
+
+
+Table 3. Support for authoritarian practices
+
+![](Results/graph/tab2b_short.png)
+
+Both variables were estimated using confirmatory factor analyses which shows adequate fit indexes. Once estimated the measurement model, the latent measures were rescaled to mean 50 and standard deviation 10 for better interpretation.
 
 _Independent Variables_
 
 The main independent variable is the civic knowledge score achieved in the international ICCS test. The civic knowledge test consists of a set of 79 items that are applied organized in seven different formats, in which each student answers a booklet containing three subgroups of questions. To estimate the level of civic knowledge based on this design, an Item Response Theory (IRT) model is used to estimate five plausible values as a score. This variable presents an international average of 500 points and a standard deviation of 100. The scores for each of the countries in 2009 and 2016 are summarized below:
 
-\begin{center}
 Table 4. Independent Variable: Civic Knowledge Score
-\end{center}
-```{r, echo=FALSE, fig.align='center'}
-library(knitr)
-include_graphics("Results/graph/tab3.png")
-```
+
+![](Results/graph/tab3.png)
+
 The rest of the independent variables fulfill the objective of controlling the statistical association between support for authoritarianism, trust in political institutions and civic knowledge. In this sense, a *proxy* is used to assess the student's socio-economic and cultural background based on the highest educational level reached by the father or mother as well as by the number of books at home. Additionally, we included the student's gender and the level of political discussion that the student conducts with friends and family outside the classroom.
 
 ## Analytical Strategy
 
-Firstly we present the differences between countries in 2009 and 2016 in both dependent variables (institutional trust and authoritarianism). Confirmatory factor analyzes are performed for estimating the latent variables from the multiple indicators associated to each dependent variable. Finally, <<OLS ?>> regression models are estimated at the aggregate level to assess the association between civic knowledge and the described scales.
-\break
+Firstly we present the differences across countries in 2009 and 2016 in both dependent variables (institutional trust and authoritarianism), using the specic items and the scales. Additionally, four multilevel regression models are estimated at the aggregate level to assess the association between civic knowledge and each described scales. Firts we estimate a null model (without predictors) which provide a decomposition of variance between schools whitin students allowing to interpret the percentage of variance atributed to school level (Intraclass Correlation - ICC). Second, we estimate a model adding the main predictor, civic knowledge. For a better understanding of regression coeficients we divide the scale in 100. The next model include the control variables for testing the stability of civic knowledge effect beyond socioeconomic individual variables. And the fouth model include the fixed effects of country and time, for testing the stability of civic knowledge between countries and time variation.
+
 
 # Results
 
-This section describes the main results of the study. First, descriptive changes between 2009 and 2016 are presented at the general level for institutional trust and support for authoritarianism for each country in the study. Secondly, the associations between the variables are explored descriptively and then estimated by OLS regression models at the aggregate level for the Latin American context.
+This section describes the main results of the study. First, we present a description for the levels of institutional trust and support for authoritarianism for each country in the study. Additionally, its presented a comparison of the scales between countries and time of the study. Secondly, the associations between the variables are explored descriptively. Finally, a set multilevel models its presented.
 
 ## Descriptive results
 
-Table 5 shows an overall comparison of trust in institutions between countries and years. A first general observation based on this table is that young people tend to show higher levels of trust in all the institutions evaluated when compared to adults survey results. For instance, the 2018 Latinobarometer report show figures such as that 48% of the respondents trust the armed forces, 35% the police, 21% the Congress and 13% the political parties, all of them below or way below than the results from ICCS.
-
-Secondly, as in the adult population, political institutions, particularly political parties, are those that receive the lowest levels of trust ^[The Dominican Republic has much higher levels of trust than other countries, although following the same trends among institutions.]. In 2009 between 26% (Guatemala) and 35% (Colombia and Mexico) trust political parties, while in 2016 between 28% (Colombia) and 33% (Chile and Peru) do so. In contrast, the institutions that receive the highest levels of trust are the Armed Forces, Schools, the Media and the United Nations. For instance, in 2009 the Armed Forces received between 81% (Colombia) and 61% (Paraguay) of trust, while in 2016 between 78% (Colombia) and 64% (Peru). Schools have somewhat higher levels of trust. In 2009 they obtained between 88 % ( Guatemala) and 72% (Mexico), while in 2016 between 85% (Colombia) and 71% (Chile).
-
-<<no corresponde a institutional trust
-Third, medium levels of interpersonal trust are observed. In 2009, young people declared that they trust people between 47% (Guatemala and Mexico) and 57% (Paraguay), while in 2016 between 43% (Colombia) and 52% (Mexico). Although Latin America is recognized as a region of the world that presents a lot of interpersonal mistrust in the adult population [@latinobarometro2018], it is striking that in the 8th grade school population this mistrust is not so extreme.
->>
-
-Finally, regarding the change or stability of trust between 2009 and 2016, there is some diversity between countries. On the one hand, the Dominican Republic and Mexico tend to remain stable or even increase their trust levels for most of the institutions evaluated. It is noteworthy that in Mexico trust in the Armed Forces and the courts of law have increased by 9% and 12%, respectively. On the other hand, Chile and Colombia show a general downward trend in trust in most of the institutions evaluated. In Chile, trust in the central government, local governments, the courts of justice, the police, the parliament and trust in people drop significantly, while in Colombia trust in the central government, the political parties and trust in people fall significantly.
-
-\break
+Figure 1 shows an item by item comparison of trust in olitical institutions between countries. Firts, it can be observed that the political parties receive the lowest levels of trust and Government recieve the highest trust in all observed countries while Parliament and Courts are in the mid level. Secondly, considering the general trend between countries it seems that Dominican Republic and Paraguay are the trusters countries while Peru and Guatemala are the distrusters. Thirdly, draw the attention the variability between institutions. For instance, in Guatemala and Peru the level of trust between institutions is closer than Paraguay or Colombia in where it can be observed higher distance between institutional trust. This indicate different ranges of trust across institutions.  Finally, in a general way, young people tend to show higher levels of trust in all the institutions evaluated when compared to adults survey results [@bargsted2017]. For instance, the 2018 Latinobarometer report that 21% of the respondents trust in the Parliament and 13% the political parties, all of them below or way below than the results from ICCS.
 
 
-\begin{center}
-Table 5. Institutional Trust in Latin América by country/year
-\end{center}
-```{r echo=FALSE, fig.align='center'}
-library(knitr)
-include_graphics("Results/graph/tab4.png", dpi=NA)
+Figure 1. Institutional Trust in Latin América by country
 
-```
+![](Results/graph/trust_items.png)
 
-Table 6 summarizes the levels of support for authoritarian practices in the 7 participating countries in 2009 and 2016. Three aspects stand out. First, the items that obtain less support are related to interruption or violation of rights and freedom of expression. These are: "It is better for government leaders to make decisions without consulting anybody", "People in government must enforce their authority even if it menas violating the rights of some citizens", "People whose opinions are different than those of the government must be considered its enemies” and "the government should close communications media that are critical". In the latter, changes that occur between 2009 and 2016 in Mexico and Colombia is striking. From 32% to 71% of support and from 16% to 31%, respectively. Secondly, it is observed that those authoritarian practices that received more support (more than a third) by young people are: "People in government loose part of their authority when they admit their mistakes", "The most important opinion of a country should be that of the president", "Concentration of power in one person guarantees order "," Dictatorships are justified when they bring order and safety" and "Dictatorships are justified when they bring economic benefits". Particularly striking is the high support obtained by items related to bring economic, social and order benefits. This aspect has been widely discussed as an alarm about the persistence of authoritarian beliefs in Latin America [@schulz2018, @sandoval-hernandez2019]. Finally, between 2009 and 2016 there is some stability in support for this type of practice with a couple of exceptions, as the increase observed in Colombia and Mexico regarding closing the critical media, and the fall observed in Chile for five authoritarian practices.
-
-\begin{center}
-Table 6. Support Authoritarianism in Latin América by country/year
-\end{center}
-```{r, echo=FALSE, fig.align='center'}
-library(knitr)
-include_graphics("Results/graph/tab5.png", dpi=NA)
-```
-
-Regarding the role that civic knowledge plays in supporting authoritarian practices and trust levels, we observe that at higher levels of civic knowledge the levels of support for authoritarian practices decrease, whereas  trust levels also decrease (See figures 1 and 2). Young people who better understand the conceptual aspects of the political system tend to undermine the authoritarian practices of governments, since they seem to understand better that such practices are inconsistent with democratic life. However, those same young people better prepared in civic knowledge trust less in the institutions that compose the political system. Additionally, it is possible to observe that those who support authoritarian practices tend to trust more civic-political institutions (see figure 1), somewhat counterintuitive in light of the theoretical assumptions presented above.
-
-```{r, echo=FALSE, fig.align='center', fig.cap='Trust in civic institutions, Support for authoritarianism and Civic knowledge'}
-library(knitr)
-include_graphics("Results/graph/corr.png", dpi=NA)
-
-```
-
-```{r, echo=FALSE, fig.align='center', fig.cap='Trust in civic institutions and Civic Knowledge in students'}
-library(knitr)
-include_graphics("Results/graph/trudic.png", dpi=NA)
-
-```
+Regarding to average level and temporal change (or stability) of trust between 2009 and 2016, there is some diversity between countries. On the one hand, Dominican Republic and Paraguay obtain the higher level of trust (above the scaled average = 50) while Mexico, Colombia, Peru, Guatemala and Chile present the lower level of trust (under the scaled average = 50). On the other hand, about the differences between 2009 and 2016, Guatemala maintain the level of trust, Mexico increse slightly the average and Colombia and particularly Chile decrease the levels of trust in this period.
 
 
+Figure 2. Scale of Institutional Trust in Latin América by country/year
 
-\break
+![](Results/graph/trust_country.png)
 
-<<generación de índices, escalas? >>
+
+Figure 3 shows an item by item comparison of support for authoritarian practices between countries. First, it can be observed that the average levels for the three evaluated authoritarian practices are above the midpoint of the scale. In other words, there is high support for the concentration of power and dictatorships would be supported if this brings order, economic benefits and security. This aspect has been widely discussed as an alarm about the persistence of authoritarian beliefs in Latin America [@ schulz2018, @ sandoval-hernandez2019]. Second, considering the general pattern, the Dominican Republic, Guatemala and Peru show the greatest tendency towards authoritarianism, while Colombia, Mexico and Chile show the least. And third, regarding the dispersion between the three evaluated practices, the closeness between them is surprising. Only Guatemala and Colombia show some dispersion, but in most countries similar levels of support among the three forms of authoritarianism.
+
+ 
+
+Figure 3. Support Authoritarianism in Latin América by country
+
+![](Results/graph/auth_items.png)
+
+
+Regarding to average level and temporal change (or stability) of authoritarianism between 2009 and 2016, there is some diversity between countries. On the one hand, Dominican Republic, Guatemala, Peru and Paraguay obtain the higher level of support for authoritarian practices (above the scaled average = 50), Mexico and Colombia are observed slightly above the average and Chile present the lower level of authoritarianism (under the scaled average = 50). On the other hand, about the differences between 2009 and 2016, Dominican Republic and Mexico increse the level, Colombia decrease mildly and Chile decrease clearly it average level in this period.
+
+Figure  4. Scale of Support Authoritarianism in Latin América by country/year
+
+![](Results/graph/aut_country.png)
+
+Regarding the role that civic knowledge plays in supporting authoritarian practices and trust levels, we observe that at higher levels of civic knowledge the levels of support for authoritarian practices decrease (correlations between Peru=-0.246 and Dominican Republic=-0.331), whereas  trust levels also decrease (correlations between Chile=-0.133 and Paraguay=-0.400). Although these correlations are not uniform they go in the same direction in all countries. Young students who better comprehend the conceptual aspects of the political system tend to support in lesser extent the authoritarian practices of governments, since they seem to understand better that such practices are inconsistent with democratic life. However, those same young people better prepared in civic knowledge trust less in the institutions that compose the political system. Thus, greater civic knowledge improves one source of democratic legitimacy (less authoritarianism) but erodes another (less trust in institutions). Additionally, it is possible to observe that those who support authoritarian practices tend to trust more civic-political institutions, somewhat counterintuitive in light of the theoretical assumptions presented above.
+
+
+Figure 5. Trust in civic institutions, Support for authoritarianism and Civic knowledge
+
+![](Results/graph/correlations.png)
+
 
 
 ## Regression models
 
-The previous descriptive results depict a puzzling role of civic knowledge regarding trust in institutions and authoritarianism. In order to advance in the understanding of these associations, we estimated a series of regression models, which are presented in Table 6. The first three models have institutional trust as dependent variable, whereas the second set of three models are for authoritarianism. In Model 1 we observe that higher levels of civic knowledge are associated to lower levels of institutional trust. This means that, students who perform poorly on the knowledge test obtain 53.79 points in average in political trust, whereas those with high performance obtain 46.23 points, which is slightly below the scale average. Model 2 enters a series of statistical controls. The result indicates that having more books at home and being a girl decreases institutional trust, while talking about social and political issues with family and friends would increase it. Finally, Model 3 enters the fixed effects of the country and year of the study (coded as dummy variables) to control for differences between countries and between year of study. The result shows that the observed effects remain rather similar controlled by country and year.
+The previous descriptive results depict a puzzling role of civic knowledge regarding trust in institutions and authoritarianism. In order to advance in the understanding of these associations, we estimated a series of multilevel regression models.
 
-The following three models present the scale of support for authoritarian practices as a dependent variable. Model 4 enters civic knowledge as the main predictor. The result indicates that at higher levels of civic knowledge, lower levels of support for authoritarian practices are observed. This translates into that young people who perform poorly on the knowledge test (below 311 points) obtain 60.86 points on the scale of support in authoritarian practices (this is more than one standard deviation above the scale average). In contrast, young people who obtain a high performance in the knowledge test (out of 562 points) obtain in average 40.99 points on authoritarianism (this is one standard deviation below the scale average). Model 5 enters a series of statistical controls. The result indicates that living in homes with more educated parents, having more books at home and being a girl decrease the support for authoritarian practices. Furthermore, it indicates that the effect of civic knowledge remains very stable even controlling for this set of variables. Finally, Model 6 enters the fixed effects of the country and year of the study (coded as dummy variables) to control for differences between countries and between year of study, with no remarkable changes to previous models.
+The first table 6 have institutional trust as dependent variable. In order to describe the variance decomposition of political trust, a null multilevel model was estimated, allowing for the description of the proportion of variance associated with school level. As can be observed, 17% of variance is associated with the school level. This proportion is slightly high considering previous evidence about attitudinal outcomes in educational studies. This means that a relevant part of the variance is linked to school characteristics. In Model 1 we observe that higher levels of civic knowledge are associated to lower levels of institutional trust. This means that, students who perform poorly on the knowledge test (for instance 300 points) obtain 55.64 points in average in political trust, whereas those with high performance (for instance 700 points) obtain 42.60 points, which is below the scale average. Model 2 enters a series of statistical controls. The result indicates that having more books at home and being a girl decreases institutional trust, while talking about social and political issues with family and friends would increase it. Finally, Model 3 enters the fixed effects of the country and year of the study (coded as dummy variables) to control for differences between countries and between year of study. The result shows that the observed effects remain rather similar controlled by country and year.
+
+The second table 7 present four models for the scale of support for authoritarian practices as a dependent variable. In order to describe the variance decomposition of authoritarianism, a null multilevel model was estimated, allowing for the description of the proportion of variance associated with school level. As can be observed, 11% of variance is associated with the school level. This proportion is common for attitudinal variables considering previous evidence. This means that a small part of the variance is linked to school characteristics. Model 1, in this table, enters civic knowledge as the main predictor. The result indicates that at higher levels of civic knowledge, lower levels of support for authoritarian practices are observed. This translates into that young people who perform poorly on the knowledge test (for instance 300 points) obtain 55.56 points on the scale of support in authoritarian practices wich is a half of standard deviation above the scale average. In contrast, young people who obtain a high performance in the knowledge test (For instance 700 points) obtain in average 41.06 points on authoritarianism which this is closer to one standard deviation below the scale average. Model 2 enters a series of statistical controls. The result indicates that living in homes with more educated parents, having more books at home and being a girl decrease the support for authoritarian practices. Furthermore, it indicates that the effect of civic knowledge remains very stable even controlling for this set of variables. Finally, Model 3 enters the fixed effects of the country and year of the study (coded as dummy variables) to control for differences between countries and between year of study, with no remarkable changes to previous models.
 
 \break
 
-\begin{center}
-Table 6: Regression Models: Trust in civic institutions, Support Authoritarianism and Civic Knowledge in Latin América
-\end{center}
+Table 6: Regression Models: Trust in civic institutions on Civic Knowledge in Latin América
 
-\begin{table}[h!]
-\begin{center}
-\begin{tabular}{l c c c c c c }
-\hline
- & Trust 1 & Trust 2 & Trust 3 & Authori 1 & Authori 2 & Authori 3 \\
-\hline
-(Intercept)          & $63.10^{***}$ & $57.64^{***}$ & $57.29^{***}$ & $85.49^{***}$ & $85.93^{***}$ & $85.44^{***}$ \\
-                     & $(0.26)$      & $(0.35)$      & $(0.40)$      & $(0.21)$      & $(0.30)$      & $(0.34)$      \\
-Civic knowledge      & $-0.03^{***}$ & $-0.03^{***}$ & $-0.03^{***}$ & $-0.08^{***}$ & $-0.08^{***}$ & $-0.08^{***}$ \\
-                     & $(0.00)$      & $(0.00)$      & $(0.00)$      & $(0.00)$      & $(0.00)$      & $(0.00)$      \\
-Parent's education   &               & $0.02$        & $0.01$        &               & $-0.06^{*}$   & $0.05$        \\
-                     &               & $(0.03)$      & $(0.03)$      &               & $(0.03)$      & $(0.03)$      \\
-Books at home        &               & $-0.32^{***}$ & $-0.27^{***}$ &               & $-0.28^{***}$ & $-0.23^{***}$ \\
-                     &               & $(0.04)$      & $(0.04)$      &               & $(0.04)$      & $(0.04)$      \\
-Girl (vs boy)        &               & $-1.06^{***}$ & $-1.09^{***}$ &               & $-1.37^{***}$ & $-1.32^{***}$ \\
-                     &               & $(0.09)$      & $(0.09)$      &               & $(0.08)$      & $(0.08)$      \\
-Political discussion &               & $0.12^{***}$  & $0.12^{***}$  &               & $0.00$        & $-0.00$       \\
-                     &               & $(0.00)$      & $(0.00)$      &               & $(0.00)$      & $(0.00)$      \\
-2016 (vs 2009)       &               &               & $0.40^{***}$  &               &               & $1.04^{***}$  \\
-                     &               &               & $(0.10)$      &               &               & $(0.08)$      \\
-Colombia             &               &               & $-0.26$       &               &               & $0.79^{***}$  \\
-                     &               &               & $(0.20)$      &               &               & $(0.17)$      \\
-Dominican Republic   &               &               & $2.72^{***}$  &               &               & $-0.42$       \\
-                     &               &               & $(0.30)$      &               &               & $(0.25)$      \\
-Guatemala            &               &               & $-3.60^{***}$ &               &               & $0.10$        \\
-                     &               &               & $(0.38)$      &               &               & $(0.32)$      \\
-Mexico               &               &               & $-0.06$       &               &               & $0.55^{***}$  \\
-                     &               &               & $(0.18)$      &               &               & $(0.15)$      \\
-Paraguay             &               &               & $-0.35$       &               &               & $-0.50$       \\
-                     &               &               & $(0.47)$      &               &               & $(0.39)$      \\
-Peru                 &               &               & $-2.67^{***}$ &               &               & $0.06$        \\
-                     &               &               & $(0.25)$      &               &               & $(0.21)$      \\
-\hline
-R$^2$                & 0.05          & 0.07          & 0.08          & 0.36          & 0.36          & 0.36          \\
-Adj. R$^2$           & 0.05          & 0.07          & 0.08          & 0.36          & 0.36          & 0.36          \\
-Num. obs.            & 51954         & 50420         & 50420         & 54769         & 52148         & 52148         \\
-RMSE                 & 117.01        & 116.37        & 115.84        & 99.05         & 99.25         & 99.04         \\
-\hline
-\multicolumn{7}{l}{\scriptsize{$^{***}p<0.001$, $^{**}p<0.01$, $^*p<0.05$}}
-\end{tabular}
-\label{tab6}
-\end{center}
-\end{table}
+![](Results/graph/model_trust.png)
+ 
+\break
 
+
+
+Table 7: Regression Models: Support Authoritarianism on Civic Knowledge in Latin América
+
+![](Results/graph/model_aut.png)
 
 # Discussion and conclusion
-
-Main issues:
-- political trust includes social trust??
-- autoritarismo: 
-- reemplazar tablas por gráficos, y gráficos en base a índices generales
-- indexes
-- models: ols?
--
-
 
 ... pendiente
 
