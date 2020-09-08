@@ -243,7 +243,7 @@ kable(table_freq_08, align = c("lcccccc")) %>%
 
 # Trust in institutions index (Government, Parliament, Political parties and Courts)
 ```{r}
-names(mergeiccs)
+#names(mergeiccs)
 
 mergesvy <-  mergeiccs %>%
         as_survey_design(
@@ -267,8 +267,8 @@ ggplot(trust, aes(, country)) +
   geom_point(aes(govern, shape="a. Government"), size=3) +
   #geom_point(aes(local, shape="a. Local Government"), size=3) +
   geom_point(aes(parliam, shape="b. Parliament"), size=3)+
-  geom_point(aes(polpar, shape="c. Political parties"), size=3)+
-  geom_point(aes(courts, shape="d. Courts"), size=3)+
+  geom_point(aes(courts, shape="c. Courts"), size=3)+
+  geom_point(aes(polpar, shape="d. Political parties"), size=3)+
   #geom_point(aes(police, shape="d. Police"), size=3)+
   theme(legend.title=element_blank())+
   #geom_point(aes(index, shape="e. Trust_average"))+
@@ -335,6 +335,7 @@ ggpairs(my_data, title="correlogram with ggpairs()", columns = 1:3, ggplot2::aes
 cfa_1 <- '
 #latent variables
 pol_trust =~ nac_gob + courts + parliament + pol_parties
+authori =~ dicta7 + dicta_safety + dicta_benefits
 '
 
 fit_1 <- cfa(cfa_1,data=mergeiccs)
@@ -358,36 +359,56 @@ fitMeasures(fit_1, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea"))
   for (fs in colnames(fscores)) {
     mergeiccs[idx, fs] <- fscores[ , fs]
   }
-  #head(mergeiccs)
+  #skim(mergeiccs)
+  
+ 
+## Rescaling trust mean=50, sd=10
+  mu.old <- mean(mergeiccs$pol_trust, na.rm=TRUE)
+ #mu.old
+  sd.old <- sd(mergeiccs$pol_trust, na.rm=TRUE)
+ #sd.old
+  scores.new <- (mergeiccs$pol_trust - mu.old)/sd.old
+  mergeiccs$trust <- (scores.new*10) + 50
+  
+## Rescaling trust mean=50, sd=10
+  mu.old <- mean(mergeiccs$authori, na.rm=TRUE)
+ #mu.old
+  sd.old <- sd(mergeiccs$authori, na.rm=TRUE)
+ #sd.old
+  scores.new <- (mergeiccs$authori - mu.old)/sd.old
+  mergeiccs$supdicta <- (scores.new*10) + 50
 
-## Rescaling variable to mean=50, sd=10
-  a=score.transform(mergeiccs$pol_trust, mu.new = 50, sd.new = 10, normalize = TRUE)
-  #names(a)
-  #head(a)
-  a1=as.data.frame(a)
-  #View(a1)
-  mergeiccs$trust=a1[, "new.scores"]
-  mergeiccs[mapply(is.infinite, mergeiccs)] <- NA
     
 ## Correlational checks
   #names(mergeiccs)
-  corr=mergeiccs %>%
+  corr1=mergeiccs %>%
     dplyr::select(pv1civ, s_intrust, pol_trust, trust)
-  #skim(corr)
-  cor(corr)
-  corr=na.omit(corr)
+  skim(corr1)
+  cor(corr1)
+  corr1=na.omit(corr1)
   
-  corMat  <- round(cor(corr), 2) # estimar matriz pearson
+  corMat  <- round(cor(corr1), 2) # estimar matriz pearson
   corMat # muestra matriz
   
   #M=cor(corMat) # matriz simple de correlaciones de los datos
   #corrplot(M, type="lower") # lower x bajo diagonal
+  
+  ## Correlational checks
+  #names(mergeiccs)
+  corr2=mergeiccs %>%
+    dplyr::select(pv1civ, l_autgov, authori, supdicta)
+  #skim(corr)
+  cor(corr2)
+  corr2=na.omit(corr2)
+  
+  corMat  <- round(cor(corr2), 2) # estimar matriz pearson
+  corMat # muestra matriz
 
 ```
 
 # Evaluation and rescaling of scales (authoritarianism index)
 
-```{r}
+```{r eval=FALSE, echo=FALSE}
 ###Authoritarianism
 
 cfa_2 <- '
@@ -452,14 +473,13 @@ my_data <- mergeiccs[, c("pv1civ", "trust", "supdicta", "country")]
 #skim(my_data)
 
 #png("correlations.png", width=1000, height=500)
-ggpairs(my_data, title="corrlations between scales", columns = 1:3, ggplot2::aes(colour=country), columnLabels = c("Civic knowledge", "Trust", "Authoritarianism"))
+ggpairs(my_data, title="correlations between scales", columns = 1:3, ggplot2::aes(colour=country), columnLabels = c("Civic knowledge", "Trust", "Authoritarianism"))
 #dev.off()
 
 ### GRAPHS by country
 
 
 #png("trust_country.png", width=1000, height=500)
-
 ggplot(mergeiccs, aes(fill=factor(country), y=trust, x=factor(time))) + 
   coord_cartesian(ylim=c(40, 60))+
   stat_summary(fun= "mean", geom = "bar")+
@@ -473,8 +493,7 @@ ggplot(mergeiccs, aes(fill=factor(country), y=trust, x=factor(time))) +
 #dev.off()
 
 #table(mergeiccs$time, mergeiccs$country)
-#png("aut_country.png", width=1000, height=500) 
-
+png("aut_country.png", width=1000, height=500) 
 ggplot(mergeiccs, aes(fill=factor(country), y=supdicta, x=factor(time))) + 
   coord_cartesian(ylim=c(40, 60))+
   stat_summary(fun= "mean", geom = "bar")+
@@ -485,8 +504,7 @@ ggplot(mergeiccs, aes(fill=factor(country), y=supdicta, x=factor(time))) +
     theme_ipsum() +
     theme(legend.position="none") +
     xlab("")
-
-#dev.off()
+dev.off()
 
 #getwd()
 

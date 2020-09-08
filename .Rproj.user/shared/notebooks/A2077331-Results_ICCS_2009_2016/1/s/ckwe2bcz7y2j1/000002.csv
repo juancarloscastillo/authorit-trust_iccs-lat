@@ -1,0 +1,14 @@
+"0","m1a <- lmer(trust ~ civic_know100 +  (1 | idsch),  data=mergeiccs )
+m1a <- lmer(trust ~ civic_know100 +  (1 | idsch),  data=mergeiccs )
+m2a <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion +  (1 | idsch),  data=mergeiccs)
+m2a <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion +  (1 | idsch),  data=mergeiccs)
+m3a <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + factor(Country)+ (1 | idsch),  data=mergeiccs )
+m3a <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) + factor(Country)+ (1 | idsch),  data=mergeiccs )
+m4a <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) * factor(Country)+ (1 | idsch),  data=mergeiccs )
+"
+"2","fixed-effect model matrix is rank deficient so dropping 3 columns / coefficients
+"
+"0","m4a <- lmer(trust ~ civic_know100 + parental_education + books_at_home + gender + political_discussion + factor(time) * factor(Country)+ (1 | idsch),  data=mergeiccs )"
+"2","fixed-effect model matrix is rank deficient so dropping 3 columns / coefficients
+"
+"0","tab_model(m0a, m1a, m2a, m3a ,show.ci = FALSE, dv.labels = c(""M0: Null"",""M1: Trust"", ""M2: Trust"", ""M3: Trust"") , auto.label = TRUE)"

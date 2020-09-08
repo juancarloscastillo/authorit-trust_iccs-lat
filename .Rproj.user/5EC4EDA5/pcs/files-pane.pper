@@ -1,6 +1,10 @@
 {
-    "path" : "C:/Users/Daniel Miranda/Dropbox (MIDE)/MIDEUC/1.publicaciones/authorit_trust/authorit-trust_iccs-lat/Results",
+    "path" : "C:/Users/Daniel Miranda/Dropbox (MIDE)/MIDEUC/1.publicaciones/authorit_trust/authorit-trust_iccs-lat/Results/graph",
     "sortOrder" : [
+        {
+            "ascending" : false,
+            "columnIndex" : 4
+        },
         {
             "ascending" : true,
             "columnIndex" : 2

@@ -1,0 +1,6 @@
+"0","fit_2 <- cfa(cfa_2,data=mergeiccs)
+"
+"2","Error in lavaan::lavaan(model = cfa_2, data = mergeiccs, model.type = ""cfa"",  : 
+  lavaan ERROR: some latent variable names collide with observed
+		variable names: authori
+"
